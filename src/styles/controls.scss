@@ -1,0 +1,67 @@
+// Shared native inputs and dropdowns; semantic tokens follow the active theme.
+// Loaded once globally so attribute directives need no wrappers or style copies.
+@layer components {
+  .field-input {
+    inline-size: 100%;
+    min-inline-size: 0;
+    // 44px floor — the touch-target minimum, and enough to stop iOS zooming in.
+    min-block-size: 2.75rem;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-card);
+    color: var(--text-strong);
+    font: inherit;
+    font-size: 1rem;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard);
+  }
+
+  .field-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .field-input:hover:not(:disabled):not([readonly]) {
+    border-color: var(--text-muted);
+  }
+
+  .field-input:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+  }
+
+  .field-input[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+
+  .field-input[aria-invalid='true']:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent);
+  }
+
+  .field-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Native chrome follows color-scheme, including the popup and RTL arrow.
+  select.dropdown-input {
+    appearance: auto;
+    cursor: pointer;
+  }
+
+  select.dropdown-input option,
+  select.dropdown-input optgroup {
+    background-color: var(--surface-card);
+    color: var(--text-strong);
+  }
+
+  textarea.field-input {
+    min-block-size: 8rem;
+    resize: vertical;
+    line-height: 1.6;
+  }
+}

@@ -1,0 +1,49 @@
+<section
+  id="about"
+  appSectionSpy
+  class="relative overflow-hidden border-b border-border-subtle bg-surface-card"
+>
+  <div class="ambient-glow -bottom-96 -start-64" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div appReveal>
+        <p
+          class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+        >
+          <span class="size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+          <span>{{ t('about.eyebrow') }}</span>
+        </p>
+
+        <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('about.title') }}</h2>
+
+        <!-- ~65 characters at this size — the readable measure for body copy. -->
+        <p class="mt-6 max-w-prose text-lg text-text-muted">{{ t('about.lede') }}</p>
+        <p class="mt-4 max-w-prose text-text-muted">{{ t('about.body') }}</p>
+      </div>
+
+      <!--
+        Four pillars, staggered by 60 ms so they arrive as a sequence rather than
+        as one block. `track` is the stable id, not the index — the list never
+        reorders, but an index key would break the day it does.
+      -->
+      <ul class="grid gap-4 sm:grid-cols-2">
+        @for (pillar of pillars; track pillar.id; let i = $index) {
+          <li
+            appReveal
+            [revealDelay]="i * 60"
+            class="rounded-lg border border-border-glass bg-surface-glass p-6 shadow-sm transition-[transform,border-color] duration-(--duration-base) ease-standard hover:-translate-y-1 hover:border-border-strong"
+          >
+            <span
+              class="flex size-11 items-center justify-center rounded-md bg-primary-soft text-primary"
+            >
+              <app-icon [name]="pillar.icon" class="size-5" />
+            </span>
+            <h3 class="mt-5 text-base font-semibold">{{ t(pillar.titleKey) }}</h3>
+            <p class="mt-2 text-sm text-text-muted">{{ t(pillar.textKey) }}</p>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</section>

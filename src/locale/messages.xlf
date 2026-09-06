@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="fr" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="layout.skipToContent" datatype="html">
+        <source>Aller au contenu principal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.home.title" datatype="html">
+        <source><x id="site" equiv-text="SITE"/> — Build. Launch. Grow.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.about.title" datatype="html">
+        <source>À propos — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.services.title" datatype="html">
+        <source>Services — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.portfolio.title" datatype="html">
+        <source>Réalisations — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.portfolioDetail.title" datatype="html">
+        <source>Projet — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.start.title" datatype="html">
+        <source>Démarrer un projet — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.confirmation.title" datatype="html">
+        <source>Demande envoyée — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="route.notFound.title" datatype="html">
+        <source>Page introuvable — <x id="site" equiv-text="SITE"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.routes.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="about.eyebrow" datatype="html">
+        <source>À propos</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/about/about.page.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="about.title" datatype="html">
+        <source>Une équipe produit, pas une agence de plus</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/about/about.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="about.lede" datatype="html">
+        <source> Notre vision, notre mission, notre façon de travailler et les technologies sur lesquelles nous nous engageons. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/about/about.page.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="about.scaffold" datatype="html">
+        <source>Contenu à rédiger : vision, mission, approche, technologies.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/about/about.page.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.hero.eyebrow" datatype="html">
+        <source>Studio digital · Maroc</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">21,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.hero.title" datatype="html">
+        <source> Build. <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;text-primary&quot;&gt;"/>Launch.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> Grow. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.hero.lede" datatype="html">
+        <source> Nous concevons et développons des produits web pour les entreprises marocaines : sites vitrines, plateformes e-commerce et applications métier. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">34,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.hero.cta" datatype="html">
+        <source> Démarrer un projet </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.hero.secondaryCta" datatype="html">
+        <source> Voir nos réalisations </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">51,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.hero.voiceHint" datatype="html">
+        <source> Nouveau : décrivez votre projet à voix haute et laissez l&apos;assistant remplir le formulaire pour vous. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">59,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.agency.chip" datatype="html">
+        <source>L&apos;agence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">82,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.agency.title" datatype="html">
+        <source> Moderne. Professionnel. Minimal. Orienté technologie. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">86,89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.agency.lede" datatype="html">
+        <source> Nous construisons des expériences numériques performantes, qui associent une technologie récente à une conception sobre et lisible. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">90,94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.services.title" datatype="html">
+        <source> Ce que nous faisons </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">101,103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.services.lede" datatype="html">
+        <source> Trois expertises, une même exigence : un produit rapide, accessible et tenu dans le temps. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">104,108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.services.all" datatype="html">
+        <source> Tous les services <x id="START_TAG_APP_ICON" ctype="x-app_icon" equiv-text="&lt;app-icon name=&quot;arrow-right&quot; class=&quot;size-4 rtl:rotate-180&quot; /&gt;"/><x id="CLOSE_TAG_APP_ICON" ctype="x-app_icon" equiv-text="&lt;app-icon name=&quot;arrow-right&quot; class=&quot;size-4 rtl:rotate-180&quot; /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">113,118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.title" datatype="html">
+        <source> Réalisations récentes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">145,149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.all" datatype="html">
+        <source> Voir tout <x id="START_TAG_APP_ICON" ctype="x-app_icon" equiv-text="&lt;app-icon name=&quot;arrow-right&quot; class=&quot;size-4 rtl:rotate-180&quot; /&gt;"/><x id="CLOSE_TAG_APP_ICON" ctype="x-app_icon" equiv-text="&lt;app-icon name=&quot;arrow-right&quot; class=&quot;size-4 rtl:rotate-180&quot; /&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">153,156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.cta.title" datatype="html">
+        <source> Une idée de projet ? Parlez-nous-en. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">212,214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.cta.lede" datatype="html">
+        <source> Décrivez votre besoin en quelques phrases — au clavier ou à la voix — et nous revenons vers vous avec une proposition. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">215,218</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.cta.button" datatype="html">
+        <source> Démarrer un projet </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.html</context>
+          <context context-type="linenumber">223,226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.service.web.title" datatype="html">
+        <source>Sites et applications web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.service.web.summary" datatype="html">
+        <source>Des interfaces rapides, accessibles et pensées pour le mobile d&apos;abord.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.service.ecommerce.title" datatype="html">
+        <source>E-commerce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.service.ecommerce.summary" datatype="html">
+        <source>Boutiques en ligne, paiement local et parcours d&apos;achat optimisés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.service.ai.title" datatype="html">
+        <source>Intégration d&apos;IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.service.ai.summary" datatype="html">
+        <source>Assistants, extraction de données et automatisations utiles au métier.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.neuralLedger.summary" datatype="html">
+        <source>Tableau de bord financier temps réel, avec catégorisation automatique des écritures.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.tag.ai" datatype="html">
+        <source>IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.tag.fintech" datatype="html">
+        <source>Finance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.auraCommerce.summary" datatype="html">
+        <source>Boutique en ligne multilingue, paiement local et tunnel d&apos;achat repensé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.tag.web" datatype="html">
+        <source>Web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="home.work.tag.retail" datatype="html">
+        <source>Commerce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/home/home.page.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFound.title" datatype="html">
+        <source> Cette page n&apos;existe pas. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.page.html</context>
+          <context context-type="linenumber">5,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFound.lede" datatype="html">
+        <source> Le lien est peut-être obsolète, ou l&apos;adresse a été mal saisie. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.page.html</context>
+          <context context-type="linenumber">9,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFound.backHome" datatype="html">
+        <source> Retour à l&apos;accueil </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.page.html</context>
+          <context context-type="linenumber">18,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="notFound.startProject" datatype="html">
+        <source> Démarrer un projet </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/not-found/not-found.page.html</context>
+          <context context-type="linenumber">25,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolioDetail.back" datatype="html">
+        <source> ← Retour aux réalisations </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio-detail.page.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolioDetail.scaffold" datatype="html">
+        <source> Le détail vient de GET /portfolio_projects/:slug — capture d&apos;écran, fonctionnalités, stack et lien de démo. L&apos;état « projet introuvable » reste à traiter. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio-detail.page.html</context>
+          <context context-type="linenumber">15,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.eyebrow" datatype="html">
+        <source>Réalisations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.page.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.title" datatype="html">
+        <source>Des projets livrés, pas des maquettes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.lede" datatype="html">
+        <source> Une sélection de projets, filtrable par catégorie. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.page.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.scaffold" datatype="html">
+        <source> La grille vient de GET /portfolio_projects (paramètre ?category=). Le filtre par catégorie et la navigation vers /portfolio/:slug restent à construire. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.page.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="services.eyebrow" datatype="html">
+        <source>Services</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/services/services.page.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="services.title" datatype="html">
+        <source>Ce que nous construisons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/services/services.page.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="services.lede" datatype="html">
+        <source> Du site vitrine à l&apos;application métier, avec la même exigence de performance et d&apos;accessibilité. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/services/services.page.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="services.scaffold" datatype="html">
+        <source> Le catalogue vient de GET /services. À brancher via core/api/content.api.ts et un resolver, avec mise en cache dans un signal store. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/services/services.page.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmation.eyebrow" datatype="html">
+        <source> Demande envoyée </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/confirmation.page.html</context>
+          <context context-type="linenumber">6,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmation.title" datatype="html">
+        <source> Merci, nous avons bien reçu votre demande. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/confirmation.page.html</context>
+          <context context-type="linenumber">10,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmation.lede" datatype="html">
+        <source> Notre équipe examine vos besoins et revient vers vous rapidement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/confirmation.page.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmation.scaffold" datatype="html">
+        <source> À brancher : le numéro de référence et la date renvoyés par POST /project_requests, transmis depuis la page précédente. Un accès direct à cette URL sans référence doit rediriger vers /start. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/confirmation.page.html</context>
+          <context context-type="linenumber">20,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="confirmation.backHome" datatype="html">
+        <source> Retour à l&apos;accueil </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/confirmation.page.html</context>
+          <context context-type="linenumber">32,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="start.eyebrow" datatype="html">
+        <source>Démarrer un projet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/start-project.page.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="start.title" datatype="html">
+        <source>Racontez-nous votre projet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/start-project.page.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="start.lede" datatype="html">
+        <source> Tapez votre demande, ou décrivez-la à voix haute : les champs se remplissent pendant que vous parlez. Rien n&apos;est envoyé tant que vous n&apos;avez pas cliqué sur « Envoyer ma demande ». </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/start-project.page.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="start.scaffold.voice" datatype="html">
+        <source> Panneau vocal à construire : notice de confidentialité, bouton micro, états du recorder, transcription. Voir core/audio/audio-recorder.service.ts et core/voice/voice-session.service.ts. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/start-project.page.html</context>
+          <context context-type="linenumber">15,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="start.scaffold.form" datatype="html">
+        <source> Formulaire à construire : type de projet, budget, délai, technologies, description, puis le bloc contact. Formulaire réactif typé, provenance par champ dans ProjectFormState, règles de fusion dans core/voice/field-merge.ts. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/start-project/start-project.page.html</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="footer.tagline" datatype="html">
+        <source> Studio digital marocain — sites, applications et intégrations sur mesure. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="footer.navLabel" datatype="html">
+        <source>Navigation de pied de page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.about" datatype="html">
+        <source>À propos</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.services" datatype="html">
+        <source>Services</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.portfolio" datatype="html">
+        <source>Réalisations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">31,34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="footer.startProject" datatype="html">
+        <source>Démarrer un projet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">37,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="footer.copyright" datatype="html">
+        <source> © <x id="INTERPOLATION" equiv-text="{{ year }}"/> DabaDigital. Tous droits réservés. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-footer.component.html</context>
+          <context context-type="linenumber">47,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.homeLogoLabel" datatype="html">
+        <source>DabaDigital — accueil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.primaryLabel" datatype="html">
+        <source>Navigation principale</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.startProject" datatype="html">
+        <source> Démarrer un projet </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">41,45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">88,91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.closeMenu" datatype="html">
+        <source>Fermer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.openMenu" datatype="html">
+        <source>Menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.mobileLabel" datatype="html">
+        <source>Navigation mobile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.html</context>
+          <context context-type="linenumber">64,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.home" datatype="html">
+        <source>Accueil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/layout/site-header.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

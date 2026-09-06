@@ -1,0 +1,110 @@
+<footer class="border-t border-border-subtle bg-surface-card">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
+      <div class="max-w-sm">
+        <!-- Not a link, so the name is carried by adjacent screen-reader text. -->
+        <p class="flex items-center text-text-strong">
+          <app-logo class="h-7" />
+          <span class="sr-only">DabaDigital</span>
+        </p>
+        <p class="mt-4 text-sm text-text-muted">{{ t('footer.tagline') }}</p>
+
+        <ul class="mt-6 flex gap-2">
+          <!--
+            Icon-only links, so each carries its own accessible name — the brand
+            glyph alone announces as "link" and nothing more. `rel="noopener"`
+            because both open in a new tab.
+          -->
+          <li>
+            <a
+              [href]="company.linkedin"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              class="grid size-10 place-items-center rounded-sm border border-border-subtle text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:border-border-strong hover:text-text-strong"
+            >
+              <app-icon name="linkedin" class="size-[1.15rem]" />
+            </a>
+          </li>
+          <li>
+            <a
+              [href]="company.instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              class="grid size-10 place-items-center rounded-sm border border-border-subtle text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:border-border-strong hover:text-text-strong"
+            >
+              <app-icon name="instagram" class="size-[1.15rem]" />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <nav [attr.aria-label]="t('footer.navLabel')">
+        <h2 class="text-xs font-semibold tracking-widest text-text-muted uppercase">
+          {{ t('footer.sectionsLabel') }}
+        </h2>
+        <ul class="mt-4 space-y-1">
+          @for (section of sections(); track section.id) {
+            <li>
+              <a
+                routerLink="/"
+                [fragment]="section.id"
+                class="inline-flex min-h-9 items-center text-sm text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
+              >
+                {{ section.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="text-xs font-semibold tracking-widest text-text-muted uppercase">
+          {{ t('footer.contactLabel') }}
+        </h2>
+        <ul class="mt-4 space-y-1">
+          <li>
+            <a
+              [href]="'mailto:' + company.email"
+              class="inline-flex min-h-9 items-center text-sm break-all text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
+              >{{ company.email }}</a
+            >
+          </li>
+          <li>
+            <!-- LTR: a phone number reads left-to-right inside an Arabic page too. -->
+            <a
+              [href]="'tel:' + company.phoneHref"
+              dir="ltr"
+              class="inline-flex min-h-9 items-center text-sm text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
+              >{{ company.phone }}</a
+            >
+          </li>
+          <li class="pt-1 text-sm text-text-muted">{{ t('contact.locationValue') }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-border-subtle">
+    <div
+      class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6"
+    >
+      <p class="text-xs text-text-muted">{{ t('footer.copyright', { year: year() }) }}</p>
+
+      <!--
+        A fragment link rather than a scroll handler: it works with JavaScript
+        disabled, it is a real tab stop, and `scroll-behavior: smooth` on <html>
+        gives it the same motion a script would.
+      -->
+      <a
+        routerLink="/"
+        fragment="banner"
+        class="inline-flex min-h-9 items-center gap-1.5 text-xs font-medium text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
+      >
+        <app-icon name="arrow-up" class="size-3.5" />
+        {{ t('footer.backToTop') }}
+      </a>
+    </div>
+  </div>
+</footer>

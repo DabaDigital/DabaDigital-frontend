@@ -9,8 +9,20 @@ Sibling repo: `../DabaDigital-backend` (Rails API + MongoDB). The two share a co
 
 ## State of the repo
 
-Greenfield. The Angular workspace has not been generated yet. Target layout is in `README.md`
-§ Project structure; create it with `ng new` (standalone, no NgModules) before adding features.
+The Angular 20 workspace exists: routing, the site shell, the design tokens, i18n extraction, ESLint,
+Prettier, Vitest and Playwright are wired and green. The content pages and the whole voice stack are
+scaffolds — `core/api/`, `core/audio/` and `core/voice/` are empty, and every unbuilt section renders an
+`<app-scaffold-note>`. Grep for `app-scaffold-note` to find what is left; it must not survive to
+production.
+
+Two notes on the layout, which differ slightly from `README.md` § Project structure: the style layer
+lives at `src/styles/` (a sibling of `src/app/`, per Angular convention), and Tailwind has its own entry
+there — `tailwind.css` maps the tokens onto Tailwind's namespaces with `@theme inline`.
+
+**Global CSS must live in a cascade layer.** Tailwind v4 emits utilities into `@layer utilities`, and an
+*unlayered* rule outranks every layered one whatever its specificity — an unlayered `a { color: inherit }`
+silently defeats `class="text-primary"` on every link in the app. Base rules go in `@layer base`, shared
+classes in `@layer components`.
 
 ## Commands
 
@@ -18,10 +30,11 @@ Greenfield. The Angular workspace has not been generated yet. Target layout is i
 npm install
 npm start           # ng serve → http://localhost:4200 (backend must be on :3000)
 npm run build       # production build → dist/
-npm test            # unit tests
-npm run e2e         # Playwright
+npm test            # unit tests (Vitest)
+npm run e2e         # Playwright — needs `npx playwright install chromium` once
 npm run lint        # ESLint
 npm run format      # Prettier
+npm run i18n:extract # regenerate src/locale/messages.xlf
 ```
 
 The microphone requires a **secure context**. `localhost` works; any other dev host must be HTTPS or

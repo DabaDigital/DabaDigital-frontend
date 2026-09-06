@@ -1,0 +1,192 @@
+// Global stylesheet.
+//
+// Load order matters: ./styles/tailwind.css comes first (see angular.json), so it
+// establishes the `theme, base, components, utilities` layer order and defines the
+// tokens these rules read.
+//
+// Everything here MUST live in a cascade layer. An unlayered rule outranks every
+// Tailwind utility no matter its specificity — an unlayered `a { color: inherit }`
+// silently defeats `class="text-primary"` on every link in the app.
+
+@use './styles/tokens';
+@use './styles/controls';
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    // Fragment links are the whole navigation on the landing page, so the target
+    // must not land under the sticky header. `scroll-padding` is the fix that
+    // works for keyboard focus and `anchorScrolling` alike; a negative margin on
+    // each section would not.
+    scroll-padding-block-start: calc(var(--header-height) + 1rem);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--surface-page);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    // The theme flips the page ground; without this the swap is a hard cut.
+    // Colour-only, so nothing moves and nothing reflows.
+    transition:
+      background-color var(--duration-slow) var(--ease-standard),
+      color var(--duration-slow) var(--ease-standard);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  // Arabic sits lower on the line and has no case, so display type set for
+  // Latin reads cramped. A little more leading and no negative tracking.
+  :root[lang='ar'] h1,
+  :root[lang='ar'] h2,
+  :root[lang='ar'] h3,
+  :root[lang='ar'] h4 {
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  // A single visible focus style for the whole app. Removing it is never the fix.
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  // `!important` in an earlier layer beats `!important` in a later one, so this
+  // cannot be re-enabled by a transition or animation utility.
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  // Off-screen until focused — the first stop on the keyboard path through the site.
+  .skip-link {
+    position: absolute;
+    inset-block-start: 0.5rem;
+    inset-inline-start: 0.5rem;
+    z-index: 100;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-card);
+    color: var(--text-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  // Soft radial light behind a marketing section. Purely decorative, so every
+  // usage is `aria-hidden` and the element never takes pointer events. A
+  // radial-gradient is used rather than `filter: blur()` — blurring an element
+  // this large costs a full-viewport repaint on scroll.
+  //
+  // The size lives here, not in the markup, so the glow reads the same wherever
+  // it is placed; position it with logical inset utilities (`-top-*`, `-start-*`).
+  // Override the colour with `--glow-color` (defaults to the brand glow).
+  .ambient-glow {
+    position: absolute;
+    z-index: 0;
+    inline-size: 40rem;
+    block-size: 40rem;
+    background: radial-gradient(
+      circle at center,
+      var(--glow-color, var(--glow-primary)) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  // Engineering-paper grid behind the banner. Two 1px gradients rather than an
+  // image: it costs no request, stays crisp at every DPR, and recolours itself
+  // with the theme. Masked so it dissolves instead of stopping at a hard edge.
+  .tech-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(to right, var(--border-glass) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border-glass) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    pointer-events: none;
+  }
+
+  // Whole-card link. The anchor stays on the title so its accessible name is the
+  // project name — not the tag chips that precede it — while the pseudo-element
+  // stretches the hit area over the entire card. Requires `position: relative`
+  // on the card and `isolate` where the card also stacks its own layers.
+  .card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  // Focus lands on the small anchor, so the card mirrors it. Only suppress the
+  // anchor's own ring where `:has()` can actually draw the card's — otherwise
+  // the focus indicator would disappear entirely.
+  @supports selector(:has(*)) {
+    .card-hit:has(.card-link:focus-visible) {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+      border-radius: var(--radius-lg);
+    }
+
+    .card-hit .card-link:focus-visible {
+      outline: none;
+    }
+  }
+
+  // ── Scroll reveal ────────────────────────────────────────────────────────
+  // Driven by `shared/directives/reveal.directive.ts`, which adds `.is-revealed`
+  // the first time the element enters the viewport.
+  //
+  // The hidden starting state is declared *only* under `no-preference`. Doing it
+  // the other way round — hiding by default and unhiding for reduced motion —
+  // leaves the whole page blank for anyone the observer never fires for.
+  .reveal {
+    transition:
+      opacity var(--duration-reveal) var(--ease-out),
+      transform var(--duration-reveal) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal:not(.is-revealed) {
+      opacity: 0;
+      // Vertical only, so it needs no RTL mirror.
+      transform: translateY(1.5rem);
+    }
+  }
+}

@@ -1,0 +1,97 @@
+<!--
+  The glows and the grid are absolutely positioned and larger than the viewport,
+  so the section clips them — without `overflow-hidden` they would create
+  horizontal scroll on small screens.
+-->
+<section
+  id="banner"
+  appSectionSpy
+  class="relative isolate overflow-hidden border-b border-border-subtle"
+>
+  <div class="tech-grid" aria-hidden="true"></div>
+  <div class="ambient-glow -top-64 -start-48" aria-hidden="true"></div>
+  <div
+    class="ambient-glow -end-64 top-24 [--glow-color:var(--glow-accent)]"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="relative z-10 mx-auto grid max-w-6xl gap-12 px-4 pt-16 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pt-24 lg:pb-28"
+  >
+    <div>
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+      >
+        <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+        <span>{{ t('banner.eyebrow') }}</span>
+      </p>
+
+      <!--
+        Three beats, and the middle one carries the brand colour. Capped at 60px
+        (`text-6xl`) so the line holds in French — "Concevoir. Lancer. Grandir."
+        is nearly twice the width of the English, and Arabic sets taller again.
+      -->
+      <h1 class="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        {{ t('banner.title1') }}
+        <span class="text-primary">{{ t('banner.title2') }}</span>
+        {{ t('banner.title3') }}
+      </h1>
+
+      <p class="mt-6 max-w-xl text-lg text-text-muted">{{ t('banner.lede') }}</p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a appButton routerLink="/" fragment="contact" class="shadow-glow">
+          {{ t('banner.ctaPrimary') }}
+          <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
+        </a>
+        <a appButton="secondary" routerLink="/" fragment="projects">
+          {{ t('banner.ctaSecondary') }}
+        </a>
+      </div>
+
+      <!-- The icon is decorative: the sentence beside it already says what it is. -->
+      <p class="mt-8 flex max-w-md items-start gap-2.5 text-sm text-text-muted">
+        <app-icon name="sparkles" class="mt-1 size-4 text-primary" />
+        <span>{{ t('banner.voiceHint') }}</span>
+      </p>
+
+      <!--
+        A description list, not a row of divs: each figure is a value described by
+        its label, and a screen reader reads the pair. The term has to precede the
+        description in the DOM, so `flex-col-reverse` puts the number on top
+        visually without inverting the markup. `tabular-nums` keeps the three
+        columns aligned when the digits differ in width.
+      -->
+      <dl
+        class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border-subtle pt-8"
+        [attr.aria-label]="t('banner.statsLabel')"
+      >
+        <div class="flex flex-col-reverse">
+          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat1Label') }}</dt>
+          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
+            {{ t('banner.stat1Value') }}
+          </dd>
+        </div>
+        <div class="flex flex-col-reverse">
+          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat2Label') }}</dt>
+          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
+            {{ t('banner.stat2Value') }}
+          </dd>
+        </div>
+        <div class="flex flex-col-reverse">
+          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat3Label') }}</dt>
+          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
+            {{ t('banner.stat3Value') }}
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- `aspect-[4/3]` reserves the box before the SVG paints, so nothing shifts. -->
+    <div
+      class="relative aspect-[4/3] overflow-hidden rounded-xl border border-border-glass bg-surface-glass text-primary shadow-lg"
+    >
+      <app-hero-visual class="h-full w-full" />
+    </div>
+  </div>
+</section>

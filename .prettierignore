@@ -1,0 +1,7 @@
+dist/
+node_modules/
+out-tsc/
+.angular/
+coverage/
+playwright-report/
+test-results/

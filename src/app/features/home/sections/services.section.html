@@ -1,0 +1,73 @@
+<section
+  id="services"
+  appSectionSpy
+  class="relative overflow-hidden border-b border-border-subtle bg-surface-card"
+>
+  <div class="ambient-glow inset-x-0 -bottom-96 mx-auto" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+    <div appReveal class="max-w-2xl">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+      >
+        <span class="size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+        <span>{{ t('services.eyebrow') }}</span>
+      </p>
+      <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('services.title') }}</h2>
+      <p class="mt-4 text-lg text-text-muted">{{ t('services.lede') }}</p>
+    </div>
+
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (service of services; track service.id; let i = $index) {
+        <li
+          appReveal
+          [revealDelay]="i * 50"
+          class="group relative flex flex-col rounded-lg border border-border-glass bg-surface-glass p-6 shadow-sm transition-[transform,border-color,box-shadow] duration-(--duration-base) ease-standard hover:-translate-y-1 hover:border-border-strong hover:shadow-md"
+        >
+          <!--
+            The index is ornament, not content — it repeats nothing a screen
+            reader needs and would read as "zero one" before every card title.
+          -->
+          <span
+            class="absolute end-6 top-6 font-display text-sm font-semibold text-text-muted/60 tabular-nums"
+            aria-hidden="true"
+          >
+            {{ number(i) }}
+          </span>
+
+          <span
+            class="flex size-12 items-center justify-center rounded-md bg-primary-soft text-primary transition-colors duration-(--duration-base) ease-standard group-hover:bg-primary group-hover:text-primary-contrast"
+          >
+            <app-icon [name]="service.icon" class="size-5" />
+          </span>
+
+          <h3 class="mt-5 text-lg font-semibold">{{ t(service.titleKey) }}</h3>
+          <p class="mt-2 text-sm text-text-muted">{{ t(service.textKey) }}</p>
+        </li>
+      }
+    </ul>
+
+    <!-- Closing CTA for anyone whose need is not on the list above. -->
+    <div
+      appReveal
+      class="relative isolate mt-12 overflow-hidden rounded-xl border border-border-glass bg-surface-glass p-8 shadow-md sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-10"
+    >
+      <div class="ambient-glow -top-80 -end-32" aria-hidden="true"></div>
+
+      <div class="relative z-10 max-w-xl">
+        <h3 class="text-xl font-semibold sm:text-2xl">{{ t('services.ctaTitle') }}</h3>
+        <p class="mt-2 text-text-muted">{{ t('services.ctaText') }}</p>
+      </div>
+
+      <a
+        appButton
+        routerLink="/"
+        fragment="contact"
+        class="relative z-10 mt-6 shrink-0 shadow-glow sm:mt-0"
+      >
+        {{ t('nav.cta') }}
+        <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
+      </a>
+    </div>
+  </div>
+</section>

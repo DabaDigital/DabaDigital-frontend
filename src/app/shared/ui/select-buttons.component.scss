@@ -1,0 +1,70 @@
+@layer components {
+  :host {
+    display: block;
+    min-inline-size: 0;
+  }
+
+  fieldset {
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .option {
+    position: relative;
+  }
+
+  .option span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    background-color: var(--surface-glass);
+    color: var(--text-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .option input:not(:disabled) + span:hover {
+    border-color: var(--border-strong);
+    background-color: var(--surface-muted);
+    color: var(--text-strong);
+  }
+
+  .option input:checked + span {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: var(--primary-contrast);
+  }
+
+  .option input:checked:not(:disabled) + span:hover {
+    border-color: var(--primary-hover);
+    background-color: var(--primary-hover);
+    color: var(--primary-contrast);
+  }
+
+  .option input:focus-visible + span {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .option input:disabled + span {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
