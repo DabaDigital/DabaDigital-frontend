@@ -179,6 +179,26 @@ export const EN: Catalog = {
   'contact.privacy':
     'Your details are used only to answer your request. They are not shared with anyone.',
 
+  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  'contact.voice.privacy':
+    "Your voice is processed by an external AI service to fill in this form. Audio is never stored.",
+  'contact.voice.start': 'Describe your project',
+  'contact.voice.stop': 'Stop',
+  'contact.voice.listening': 'Listening…',
+  'contact.voice.stateRequestingPermission': 'Waiting for microphone access…',
+  'contact.voice.stateConnecting': 'Connecting…',
+  'contact.voice.stateProcessing': 'Analyzing…',
+  'contact.voice.unsupported':
+    "Voice input isn't available in this browser — you can still fill in the form below.",
+  'contact.voice.errorPermission':
+    'Microphone access is required to use voice input. You can still complete the form manually.',
+  'contact.voice.errorUnavailable':
+    'Voice input is temporarily unavailable. You can still complete the form manually.',
+  'contact.voice.badgeHint': 'Extracted from your description',
+  'contact.voice.undo': 'Undo',
+  'contact.voice.accept': 'Use this',
+  'contact.voice.dismiss': 'Dismiss',
+
   // ── Footer ────────────────────────────────────────────────────────────────
   'footer.tagline': 'Moroccan digital studio — websites, applications and custom integrations.',
   'footer.navLabel': 'Footer navigation',

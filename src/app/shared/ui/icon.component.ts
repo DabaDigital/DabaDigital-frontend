@@ -174,6 +174,21 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <path d="m8.5 11.5 3 3 9.5-9.7" />
         }
 
+        <!-- ── Voice assistant ───────────────────────────────────────────── -->
+        @case ('mic') {
+          <rect x="9" y="2.5" width="6" height="11" rx="3" />
+          <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
+          <path d="M12 17.5V21" />
+          <path d="M8.5 21h7" />
+        }
+        @case ('stop') {
+          <rect x="7" y="7" width="10" height="10" rx="2" />
+        }
+        @case ('undo') {
+          <path d="M7 7 3 11l4 4" />
+          <path d="M3 11h11a6 6 0 0 1 0 12h-2" />
+        }
+
         <!-- ── Social ────────────────────────────────────────────────────── -->
         @case ('linkedin') {
           <path d="M16 8.5a5.5 5.5 0 0 1 5.5 5.5v6.5h-3.8V14a1.7 1.7 0 0 0-3.4 0v6.5H10.5V8.9h3.8v1.4" />
@@ -235,6 +250,10 @@ export type IconName =
   | 'clock'
   | 'alert'
   | 'check-circle'
+  // voice assistant
+  | 'mic'
+  | 'stop'
+  | 'undo'
   // social
   | 'linkedin'
   | 'instagram';

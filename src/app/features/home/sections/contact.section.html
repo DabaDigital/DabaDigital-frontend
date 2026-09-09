@@ -143,6 +143,78 @@
             [attr.aria-label]="t('contact.form.label')"
             class="space-y-5"
           >
+            <!-- Recorder state changes and applied fields, announced without watching the form. -->
+            <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
+
+            <!-- ── Voice assistant ──────────────────────────────────────────
+              Degrades to nothing rather than an error: with the env switch off,
+              an unsupported browser, or an insecure context, this block simply
+              doesn't render and the manual form below is the whole page.
+            -->
+            @if (voiceEnabled && voiceSupported) {
+              <div class="rounded-lg border border-border-glass bg-surface-glass p-4">
+                @if (!privacyAcknowledged()) {
+                  <p class="text-xs text-text-muted">{{ t('contact.voice.privacy') }}</p>
+                }
+                <div class="mt-3 flex flex-wrap items-center gap-3">
+                  <button
+                    appButton="secondary"
+                    type="button"
+                    [attr.aria-pressed]="isRecording()"
+                    [attr.aria-label]="isRecording() ? t('contact.voice.stop') : t('contact.voice.start')"
+                    (click)="toggleRecording()"
+                  >
+                    <app-icon [name]="isRecording() ? 'stop' : 'mic'" class="size-4" />
+                    {{ isRecording() ? t('contact.voice.stop') : t('contact.voice.start') }}
+                  </button>
+                  @switch (recorderState()) {
+                    @case ('recording') {
+                      <span class="inline-flex items-center gap-1.5 text-sm text-text-muted">
+                        <span
+                          class="size-2 animate-pulse rounded-full bg-danger motion-reduce:animate-none"
+                          aria-hidden="true"
+                        ></span>
+                        {{ t('contact.voice.listening') }}
+                      </span>
+                    }
+                    @case ('requesting-permission') {
+                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateRequestingPermission') }}</span>
+                    }
+                    @case ('connecting') {
+                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateConnecting') }}</span>
+                    }
+                    @case ('processing') {
+                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateProcessing') }}</span>
+                    }
+                  }
+                </div>
+                @if (recorderState() === 'error') {
+                  <p role="alert" class="mt-3 text-sm text-danger">{{ voiceUnavailableMessage() }}</p>
+                }
+                @if (transcript()) {
+                  <p class="mt-3 max-h-24 overflow-y-auto rounded-sm bg-surface-card p-2.5 text-sm text-text-muted">
+                    {{ transcript() }}
+                  </p>
+                }
+              </div>
+            } @else if (voiceEnabled && !voiceSupported) {
+              <p class="text-xs text-text-muted">{{ t('contact.voice.unsupported') }}</p>
+            }
+
+            @if (suggestions().length > 0) {
+              <div class="flex flex-wrap gap-2" role="status">
+                @for (suggestion of suggestions(); track suggestion) {
+                  <app-suggestion-chip
+                    [text]="suggestionText(suggestion)"
+                    [acceptLabel]="t('contact.voice.accept')"
+                    [dismissLabel]="t('contact.voice.dismiss')"
+                    (accept)="acceptSuggestionChip(suggestion)"
+                    (dismiss)="dismissSuggestion(suggestion)"
+                  />
+                }
+              </div>
+            }
+
             <!--
               WCAG 3.3.1 error summary. `role="alert"` so it is announced the
               moment it appears, and it is placed before the fields so a screen
@@ -163,10 +235,19 @@
             <div class="grid gap-5 sm:grid-cols-2">
               <!-- Name -->
               <div>
-                <label for="contact-fullName" class="block text-sm font-medium text-text-strong">
-                  {{ t('contact.name.label') }}
-                  <span class="text-danger" aria-hidden="true">*</span>
-                </label>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-fullName" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.name.label') }}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  @if (fields().fullName.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('fullName')"
+                    />
+                  }
+                </div>
                 <input
                   appInput
                   id="contact-fullName"
@@ -192,10 +273,19 @@
 
               <!-- Email -->
               <div>
-                <label for="contact-email" class="block text-sm font-medium text-text-strong">
-                  {{ t('contact.email.label') }}
-                  <span class="text-danger" aria-hidden="true">*</span>
-                </label>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-email" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.email.label') }}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  @if (fields().email.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('email')"
+                    />
+                  }
+                </div>
                 <!--
                   `type="email"` for the mobile keyboard, `dir="ltr"` because an
                   address is never RTL even on an Arabic page.
@@ -232,12 +322,21 @@
 
               <!-- Company (optional) -->
               <div>
-                <label for="contact-company" class="block text-sm font-medium text-text-strong">
-                  {{ t('contact.company.label') }}
-                  <span class="ms-1 text-xs font-normal text-text-muted"
-                    >({{ t('contact.optional') }})</span
-                  >
-                </label>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-company" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.company.label') }}
+                    <span class="ms-1 text-xs font-normal text-text-muted"
+                      >({{ t('contact.optional') }})</span
+                    >
+                  </label>
+                  @if (fields().companyName.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('companyName')"
+                    />
+                  }
+                </div>
                 <input
                   appInput
                   id="contact-company"
@@ -251,10 +350,19 @@
 
               <!-- Project type -->
               <div>
-                <label for="contact-projectType" class="block text-sm font-medium text-text-strong">
-                  {{ t('contact.type.label') }}
-                  <span class="text-danger" aria-hidden="true">*</span>
-                </label>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-projectType" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.type.label') }}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  @if (fields().projectType.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('projectType')"
+                    />
+                  }
+                </div>
                 <app-dropdown-list
                   inputId="contact-projectType"
                   formControlName="projectType"
@@ -279,12 +387,21 @@
 
             <!-- Budget (optional) -->
             <div>
-              <label for="contact-budget" class="block text-sm font-medium text-text-strong">
-                {{ t('contact.budget.label') }}
-                <span class="ms-1 text-xs font-normal text-text-muted"
-                  >({{ t('contact.optional') }})</span
-                >
-              </label>
+              <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <label for="contact-budget" class="block text-sm font-medium text-text-strong">
+                  {{ t('contact.budget.label') }}
+                  <span class="ms-1 text-xs font-normal text-text-muted"
+                    >({{ t('contact.optional') }})</span
+                  >
+                </label>
+                @if (fields().budget.source === 'voice') {
+                  <app-ai-badge
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('budget')"
+                  />
+                }
+              </div>
               <app-dropdown-list
                 inputId="contact-budget"
                 formControlName="budget"
@@ -296,10 +413,19 @@
 
             <!-- Message -->
             <div>
-              <label for="contact-message" class="block text-sm font-medium text-text-strong">
-                {{ t('contact.message.label') }}
-                <span class="text-danger" aria-hidden="true">*</span>
-              </label>
+              <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <label for="contact-message" class="block text-sm font-medium text-text-strong">
+                  {{ t('contact.message.label') }}
+                  <span class="text-danger" aria-hidden="true">*</span>
+                </label>
+                @if (fields().description.source === 'voice') {
+                  <app-ai-badge
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('description')"
+                  />
+                }
+              </div>
               <textarea
                 appInput
                 id="contact-message"
