@@ -1,0 +1,20 @@
+<div class="mx-auto max-w-6xl px-4 pt-16 pb-16 sm:px-6">
+  <a
+    routerLink="/portfolio"
+    class="text-sm font-semibold text-primary hover:text-primary-hover"
+    i18n="@@portfolioDetail.back"
+  >
+    ← Retour aux réalisations
+  </a>
+
+  <h1 class="mt-6 text-4xl font-bold tracking-tight">{{ slug() }}</h1>
+
+  <div class="mt-8">
+    <app-scaffold-note>
+      <p i18n="@@portfolioDetail.scaffold">
+        Le détail vient de GET /portfolio_projects/:slug — capture d'écran, fonctionnalités, stack
+        et lien de démo. L'état « projet introuvable » reste à traiter.
+      </p>
+    </app-scaffold-note>
+  </div>
+</div>

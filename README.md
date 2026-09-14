@@ -33,15 +33,30 @@ instead of typing.
 
 Bootstrap phase. This README is the implementation contract; the code is being scaffolded against it.
 
+> **Superseded since this was written — read before building the voice stack:** the voice mic lands on
+> the Home page's existing **Contact section**, not a separate `/start` page, and transcription is
+> **OpenAI `gpt-live-transcribe` over a direct browser↔OpenAI WebRTC connection** (an ephemeral token
+> from `POST /voice/realtime_session`), not the browser's Web Speech API and not chunked
+> `MediaRecorder` blobs posted to the backend. See `../Claude.md` § MVP scope and § Key decisions, and
+> `CLAUDE.md` § State of the repo, for the current call. The sections below (Routes, Project structure,
+> The voice assistant, Form state) describe the original `/start`-page / chunked-audio design and need a
+> pass to match once that work starts — treat them as directional, not literal, for the voice flow and
+> target-form fields until they're updated alongside the code.
+
 | Area | Status |
 | --- | --- |
-| Angular workspace + routing + layout | ☐ |
-| Home / About / Services / Portfolio pages | ☐ |
-| Manual project request form | ☐ |
-| Audio recorder + permission handling | ☐ |
-| Voice session service (chunked turns) | ☐ |
-| AI field badges + manual-edit protection | ☐ |
-| Confirmation screen | ☐ |
+| Angular workspace + routing + layout | ☑ |
+| Design tokens + Tailwind + dark mode | ☑ |
+| Tooling: ESLint, Prettier, Vitest, Playwright, i18n extraction | ☑ |
+| Home / About / Services / Portfolio pages | ☐ Home written; the other three are scaffolds awaiting the content API |
+| Manual project request form | ☑ Home page Contact section — six fields, validated, submits to `/project_requests` |
+| WebRTC session + mic permission handling | ☑ `core/voice/realtime-voice.service.ts` — support/permission paths unit-tested; the connected handshake itself is unverified against a real OpenAI session (needs `OPENAI_API_KEY`) |
+| Voice extraction turn loop (debounced, sequential) | ☑ |
+| AI field badges + manual-edit protection + suggestion chips + undo | ☑ |
+| `/start` page, confirmation screen | ☐ superseded — voice landed on the Home Contact form instead, see the note above |
+
+Unbuilt sections render an `<app-scaffold-note>` so an unfinished page is obvious in the browser rather
+than merely empty. Grep for `app-scaffold-note` to find the remaining work.
 
 ---
 
@@ -104,10 +119,11 @@ over HTTPS or the microphone button will be disabled with an explanatory message
 | --- | --- |
 | `npm start` | dev server on `:4200` |
 | `npm run build` | production build to `dist/` |
-| `npm test` | unit tests |
-| `npm run e2e` | Playwright end-to-end tests |
+| `npm test` | unit tests (Vitest, via the `@angular/build:unit-test` builder) |
+| `npm run e2e` | Playwright end-to-end tests — run `npx playwright install chromium` once first |
 | `npm run lint` | ESLint |
-| `npm run format` | Prettier |
+| `npm run format` | Prettier (`format:check` in CI) |
+| `npm run i18n:extract` | regenerate `src/locale/messages.xlf` |
 
 ---
 
@@ -155,27 +171,39 @@ Content pages are prefetched with a resolver and cached in a signal store, so na
 ## Project structure
 
 ```text
-src/app/
-├── core/
-│   ├── api/            # http clients: content.api.ts, voice.api.ts, project-request.api.ts
-│   ├── audio/          # audio-recorder.service.ts  (getUserMedia + MediaRecorder)
-│   ├── voice/          # voice-session.service.ts   (turn loop, operation queue)
-│   │                   # field-merge.ts             (pure merge rules — unit tested)
-│   └── models/         # project-form.model.ts, voice-operation.model.ts
-├── features/
-│   ├── home/  about/  services/  portfolio/
-│   └── start-project/
-│       ├── start-project.page.ts
-│       ├── components/
-│       │   ├── voice-panel.component.ts     # mic button, states, privacy notice
-│       │   ├── transcript-panel.component.ts
-│       │   ├── project-form.component.ts
-│       │   ├── ai-field.component.ts        # input wrapper + ✨ badge + revert
-│       │   └── suggestion-chip.component.ts # low-confidence values: accept / dismiss
-│       └── confirmation.page.ts
-├── shared/             # ui primitives, pipes, directives
-└── styles/             # tokens.scss, tailwind entry
+src/
+├── environments/       # environment.ts + .development.ts / .production.ts (fileReplacements)
+├── locale/             # messages.xlf — regenerate with `npm run i18n:extract`
+├── styles/
+│   ├── tokens.scss     # the design tokens, as CSS custom properties (light + dark)
+│   └── tailwind.css    # Tailwind entry; `@theme inline` maps the tokens onto its namespaces
+├── styles.scss         # base + component layers (everything inside `@layer`)
+└── app/
+    ├── core/
+    │   ├── api/        # http clients: content.api.ts, voice.api.ts, project-request.api.ts
+    │   ├── audio/      # audio-recorder.service.ts  (getUserMedia + MediaRecorder)
+    │   ├── voice/      # voice-session.service.ts   (turn loop, operation queue)
+    │   │               # field-merge.ts             (pure merge rules — unit tested)
+    │   └── models/     # project-form.model.ts, voice-operation.model.ts
+    ├── features/
+    │   ├── home/  about/  services/  portfolio/  not-found/
+    │   └── start-project/
+    │       ├── start-project.page.ts
+    │       ├── components/
+    │       │   ├── voice-panel.component.ts     # mic button, states, privacy notice
+    │       │   ├── transcript-panel.component.ts
+    │       │   ├── project-form.component.ts
+    │       │   ├── ai-field.component.ts        # input wrapper + ✨ badge + revert
+    │       │   └── suggestion-chip.component.ts # low-confidence values: accept / dismiss
+    │       └── confirmation.page.ts
+    └── shared/
+        ├── layout/     # site-header, site-footer
+        ├── ui/         # page-header, scaffold-note
+        ├── pipes/
+        └── directives/
 ```
+
+Routes are lazy-loaded with `loadComponent`, so each page is its own chunk.
 
 The rule that keeps this testable: **`field-merge.ts` is pure.** It takes the current state, the
 incoming operations and the locked-field set, and returns the next state. No HTTP, no signals, no DOM —

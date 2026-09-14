@@ -1,0 +1,488 @@
+<section id="contact" appSectionSpy class="relative overflow-hidden">
+  <div class="ambient-glow -top-72 -start-56" aria-hidden="true"></div>
+  <div
+    class="ambient-glow -end-64 bottom-0 [--glow-color:var(--glow-accent)]"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+    <div appReveal class="max-w-2xl">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+      >
+        <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+        <span>{{ t('contact.eyebrow') }}</span>
+      </p>
+      <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('contact.title') }}</h2>
+      <p class="mt-4 text-lg text-text-muted">{{ t('contact.lede') }}</p>
+    </div>
+
+    <div class="mt-12 grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12">
+      <!-- ── Direct channels ────────────────────────────────────────────────
+        Listed beside the form, not under it: someone who would rather email
+        should not have to scroll past a form to find out they can.
+      -->
+      <aside
+        appReveal
+        class="h-fit rounded-xl border border-border-glass bg-surface-glass p-6 shadow-sm sm:p-8"
+      >
+        <h3 class="text-lg font-semibold">{{ t('contact.infoTitle') }}</h3>
+
+        <dl class="mt-6 space-y-5">
+          <div class="flex items-start gap-3">
+            <span
+              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
+            >
+              <app-icon name="mail" class="size-4" />
+            </span>
+            <div class="min-w-0">
+              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
+                {{ t('contact.emailLabel') }}
+              </dt>
+              <!-- `break-all` so a long address cannot widen the card past the grid column. -->
+              <dd class="mt-0.5">
+                <a
+                  [href]="'mailto:' + details.email"
+                  class="font-medium break-all text-text-strong underline decoration-border-strong underline-offset-4 transition-colors duration-(--duration-fast) ease-standard hover:decoration-primary"
+                  >{{ details.email }}</a
+                >
+              </dd>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span
+              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
+            >
+              <app-icon name="phone" class="size-4" />
+            </span>
+            <div>
+              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
+                {{ t('contact.phoneLabel') }}
+              </dt>
+              <!--
+                `dir="ltr"` is required: a phone number is read left-to-right even
+                inside an Arabic page, and without it the leading + jumps to the
+                wrong end of the string.
+              -->
+              <dd class="mt-0.5">
+                <a
+                  [href]="'tel:' + details.phoneHref"
+                  dir="ltr"
+                  class="inline-block font-medium text-text-strong underline decoration-border-strong underline-offset-4 transition-colors duration-(--duration-fast) ease-standard hover:decoration-primary"
+                  >{{ details.phone }}</a
+                >
+              </dd>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span
+              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
+            >
+              <app-icon name="map-pin" class="size-4" />
+            </span>
+            <div>
+              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
+                {{ t('contact.locationLabel') }}
+              </dt>
+              <dd class="mt-0.5 font-medium text-text-strong">{{ t('contact.locationValue') }}</dd>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span
+              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
+            >
+              <app-icon name="clock" class="size-4" />
+            </span>
+            <div>
+              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
+                {{ t('contact.hoursLabel') }}
+              </dt>
+              <dd class="mt-0.5 font-medium text-text-strong">{{ t('contact.hoursValue') }}</dd>
+            </div>
+          </div>
+        </dl>
+
+        <p class="mt-8 border-t border-border-subtle pt-5 text-xs text-text-muted">
+          {{ t('contact.privacy') }}
+        </p>
+      </aside>
+
+      <!-- ── The form ───────────────────────────────────────────────────── -->
+      <div
+        appReveal
+        [revealDelay]="80"
+        class="rounded-xl border border-border-glass bg-surface-card p-6 shadow-md sm:p-8"
+      >
+        @if (status() === 'success' && sent(); as confirmation) {
+          <!--
+            `role="status"` rather than `role="alert"`: the success replaces the
+            form in place, so it is announced politely without interrupting.
+          -->
+          <div role="status" class="py-8 text-center">
+            <span
+              class="mx-auto flex size-14 items-center justify-center rounded-full bg-success-soft text-success"
+            >
+              <app-icon name="check-circle" class="size-7" />
+            </span>
+            <h3 class="mt-5 text-xl font-semibold">{{ t('contact.successTitle') }}</h3>
+            <p class="mx-auto mt-2 max-w-sm text-text-muted">
+              {{ t('contact.successText', { name: confirmation.name, email: confirmation.email }) }}
+            </p>
+            <button appButton="secondary" type="button" (click)="reset()" class="mt-6">
+              {{ t('contact.successAgain') }}
+            </button>
+          </div>
+        } @else {
+          <form
+            [formGroup]="form"
+            (ngSubmit)="onSubmit()"
+            novalidate
+            [attr.aria-label]="t('contact.form.label')"
+            class="space-y-5"
+          >
+            <!-- Recorder state changes and applied fields, announced without watching the form. -->
+            <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
+
+            <!-- ── Voice assistant ──────────────────────────────────────────
+              Degrades to nothing rather than an error: with the env switch off,
+              an unsupported browser, or an insecure context, this block simply
+              doesn't render and the manual form below is the whole page.
+            -->
+            @if (voiceEnabled && voiceSupported) {
+              <div class="rounded-lg border border-border-glass bg-surface-glass p-4">
+                @if (!privacyAcknowledged()) {
+                  <p class="text-xs text-text-muted">{{ t('contact.voice.privacy') }}</p>
+                }
+                <div class="mt-3 flex flex-wrap items-center gap-3">
+                  <button
+                    appButton="secondary"
+                    type="button"
+                    [attr.aria-pressed]="isRecording()"
+                    [attr.aria-label]="isRecording() ? t('contact.voice.stop') : t('contact.voice.start')"
+                    (click)="toggleRecording()"
+                  >
+                    <app-icon [name]="isRecording() ? 'stop' : 'mic'" class="size-4" />
+                    {{ isRecording() ? t('contact.voice.stop') : t('contact.voice.start') }}
+                  </button>
+                  @switch (recorderState()) {
+                    @case ('recording') {
+                      <span class="inline-flex items-center gap-1.5 text-sm text-text-muted">
+                        <span
+                          class="size-2 animate-pulse rounded-full bg-danger motion-reduce:animate-none"
+                          aria-hidden="true"
+                        ></span>
+                        {{ t('contact.voice.listening') }}
+                      </span>
+                    }
+                    @case ('requesting-permission') {
+                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateRequestingPermission') }}</span>
+                    }
+                    @case ('connecting') {
+                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateConnecting') }}</span>
+                    }
+                    @case ('processing') {
+                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateProcessing') }}</span>
+                    }
+                  }
+                </div>
+                @if (recorderState() === 'error') {
+                  <p role="alert" class="mt-3 text-sm text-danger">{{ voiceUnavailableMessage() }}</p>
+                }
+                @if (transcript()) {
+                  <p class="mt-3 max-h-24 overflow-y-auto rounded-sm bg-surface-card p-2.5 text-sm text-text-muted">
+                    {{ transcript() }}
+                  </p>
+                }
+              </div>
+            } @else if (voiceEnabled && !voiceSupported) {
+              <p class="text-xs text-text-muted">{{ t('contact.voice.unsupported') }}</p>
+            }
+
+            @if (suggestions().length > 0) {
+              <div class="flex flex-wrap gap-2" role="status">
+                @for (suggestion of suggestions(); track suggestion) {
+                  <app-suggestion-chip
+                    [text]="suggestionText(suggestion)"
+                    [acceptLabel]="t('contact.voice.accept')"
+                    [dismissLabel]="t('contact.voice.dismiss')"
+                    (accept)="acceptSuggestionChip(suggestion)"
+                    (dismiss)="dismissSuggestion(suggestion)"
+                  />
+                }
+              </div>
+            }
+
+            <!--
+              WCAG 3.3.1 error summary. `role="alert"` so it is announced the
+              moment it appears, and it is placed before the fields so a screen
+              reader reaches it on the way back up from the submit button.
+            -->
+            @if (errorCount() > 0) {
+              <p
+                role="alert"
+                class="flex items-start gap-2.5 rounded-sm border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
+              >
+                <app-icon name="alert" class="mt-0.5 size-4 flex-none text-danger" />
+                <span>{{ t('contact.errorSummary', { count: errorCount() }) }}</span>
+              </p>
+            }
+
+            <p class="text-xs text-text-muted">{{ t('contact.requiredHint') }}</p>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <!-- Name -->
+              <div>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-fullName" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.name.label') }}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  @if (fields().fullName.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('fullName')"
+                    />
+                  }
+                </div>
+                <input
+                  appInput
+                  id="contact-fullName"
+                  type="text"
+                  formControlName="fullName"
+                  autocomplete="name"
+                  required
+                  [placeholder]="t('contact.name.placeholder')"
+                  [attr.aria-invalid]="showsError('fullName')"
+                  [attr.aria-describedby]="showsError('fullName') ? 'contact-fullName-error' : null"
+                  class="mt-1.5"
+                />
+                @if (showsError('fullName')) {
+                  <p
+                    id="contact-fullName-error"
+                    class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
+                  >
+                    <app-icon name="alert" class="size-3.5 flex-none" />
+                    {{ t('contact.name.error') }}
+                  </p>
+                }
+              </div>
+
+              <!-- Email -->
+              <div>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-email" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.email.label') }}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  @if (fields().email.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('email')"
+                    />
+                  }
+                </div>
+                <!--
+                  `type="email"` for the mobile keyboard, `dir="ltr"` because an
+                  address is never RTL even on an Arabic page.
+                -->
+                <input
+                  appInput
+                  id="contact-email"
+                  type="email"
+                  formControlName="email"
+                  autocomplete="email"
+                  inputmode="email"
+                  dir="ltr"
+                  required
+                  [placeholder]="t('contact.email.placeholder')"
+                  [attr.aria-invalid]="showsError('email')"
+                  [attr.aria-describedby]="showsError('email') ? 'contact-email-error' : null"
+                  class="mt-1.5"
+                />
+                @if (showsError('email')) {
+                  <p
+                    id="contact-email-error"
+                    class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
+                  >
+                    <app-icon name="alert" class="size-3.5 flex-none" />
+                    <!-- Two different failures, two different fixes. -->
+                    {{
+                      form.controls.email.hasError('required')
+                        ? t('contact.email.errorRequired')
+                        : t('contact.email.errorFormat')
+                    }}
+                  </p>
+                }
+              </div>
+
+              <!-- Company (optional) -->
+              <div>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-company" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.company.label') }}
+                    <span class="ms-1 text-xs font-normal text-text-muted"
+                      >({{ t('contact.optional') }})</span
+                    >
+                  </label>
+                  @if (fields().companyName.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('companyName')"
+                    />
+                  }
+                </div>
+                <input
+                  appInput
+                  id="contact-company"
+                  type="text"
+                  formControlName="company"
+                  autocomplete="organization"
+                  [placeholder]="t('contact.company.placeholder')"
+                  class="mt-1.5"
+                />
+              </div>
+
+              <!-- Project type -->
+              <div>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <label for="contact-projectType" class="block text-sm font-medium text-text-strong">
+                    {{ t('contact.type.label') }}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                  </label>
+                  @if (fields().projectType.source === 'voice') {
+                    <app-ai-badge
+                      [hint]="t('contact.voice.badgeHint')"
+                      [undoLabel]="t('contact.voice.undo')"
+                      (undo)="undoField('projectType')"
+                    />
+                  }
+                </div>
+                <app-dropdown-list
+                  inputId="contact-projectType"
+                  formControlName="projectType"
+                  [options]="projectTypeOptions()"
+                  [placeholder]="t('contact.type.placeholder')"
+                  [required]="true"
+                  [invalid]="showsError('projectType')"
+                  [describedBy]="showsError('projectType') ? 'contact-projectType-error' : null"
+                  class="mt-1.5"
+                />
+                @if (showsError('projectType')) {
+                  <p
+                    id="contact-projectType-error"
+                    class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
+                  >
+                    <app-icon name="alert" class="size-3.5 flex-none" />
+                    {{ t('contact.type.error') }}
+                  </p>
+                }
+              </div>
+            </div>
+
+            <!-- Budget (optional) -->
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <label for="contact-budget" class="block text-sm font-medium text-text-strong">
+                  {{ t('contact.budget.label') }}
+                  <span class="ms-1 text-xs font-normal text-text-muted"
+                    >({{ t('contact.optional') }})</span
+                  >
+                </label>
+                @if (fields().budget.source === 'voice') {
+                  <app-ai-badge
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('budget')"
+                  />
+                }
+              </div>
+              <app-dropdown-list
+                inputId="contact-budget"
+                formControlName="budget"
+                [options]="budgetOptions()"
+                [placeholder]="t('contact.budget.placeholder')"
+                class="mt-1.5"
+              />
+            </div>
+
+            <!-- Message -->
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <label for="contact-message" class="block text-sm font-medium text-text-strong">
+                  {{ t('contact.message.label') }}
+                  <span class="text-danger" aria-hidden="true">*</span>
+                </label>
+                @if (fields().description.source === 'voice') {
+                  <app-ai-badge
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('description')"
+                  />
+                }
+              </div>
+              <textarea
+                appInput
+                id="contact-message"
+                formControlName="message"
+                rows="5"
+                required
+                [placeholder]="t('contact.message.placeholder')"
+                [attr.aria-invalid]="showsError('message')"
+                [attr.aria-describedby]="
+                  showsError('message') ? 'contact-message-error' : 'contact-message-hint'
+                "
+                class="mt-1.5"
+              ></textarea>
+              @if (showsError('message')) {
+                <p
+                  id="contact-message-error"
+                  class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
+                >
+                  <app-icon name="alert" class="size-3.5 flex-none" />
+                  {{
+                    form.controls.message.hasError('required')
+                      ? t('contact.message.errorRequired')
+                      : t('contact.message.errorShort')
+                  }}
+                </p>
+              } @else {
+                <!-- Persistent helper text, not a placeholder that vanishes on focus. -->
+                <p id="contact-message-hint" class="mt-1.5 text-sm text-text-muted">
+                  {{ t('contact.message.hint') }}
+                </p>
+              }
+            </div>
+
+            <!-- Network failure, with the address to fall back on. -->
+            @if (status() === 'error') {
+              <p
+                role="alert"
+                class="flex items-start gap-2.5 rounded-sm border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
+              >
+                <app-icon name="alert" class="mt-0.5 size-4 flex-none text-danger" />
+                <span>{{ t('contact.errorSend', { email: details.email }) }}</span>
+              </p>
+            }
+
+            <button
+              appButton
+              type="submit"
+              [loading]="status() === 'submitting'"
+              [attr.aria-label]="status() === 'submitting' ? t('contact.submitting') : null"
+              class="w-full shadow-glow sm:w-auto"
+            >
+              {{ status() === 'error' ? t('contact.retry') : t('contact.submit') }}
+              <app-icon name="send" class="size-4 rtl:-scale-x-100" />
+            </button>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</section>

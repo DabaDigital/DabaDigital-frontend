@@ -1,0 +1,118 @@
+<section id="projects" appSectionSpy class="relative overflow-hidden border-b border-border-subtle">
+  <div
+    class="ambient-glow -end-72 top-32 [--glow-color:var(--glow-accent)]"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+    <div appReveal class="max-w-2xl">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+      >
+        <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+        <span>{{ t('projects.eyebrow') }}</span>
+      </p>
+      <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('projects.title') }}</h2>
+      <p class="mt-4 text-lg text-text-muted">{{ t('projects.lede') }}</p>
+    </div>
+
+    <div class="mt-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <app-select-buttons
+        [options]="filters()"
+        [label]="t('projects.filterLabel')"
+        [(value)]="activeFilter"
+      />
+      <app-search-input
+        class="w-full lg:max-w-sm"
+        [label]="t('projects.searchLabel')"
+        [placeholder]="t('projects.searchPlaceholder')"
+        [clearLabel]="t('projects.clearSearch')"
+        [(value)]="searchQuery"
+      />
+    </div>
+
+    <!--
+      The grid changes without any focus moving, so a screen-reader user gets no
+      feedback at all from the click. This announces the new count for them; it is
+      `sr-only` because the sighted equivalent is the grid itself.
+    -->
+    <p class="sr-only" role="status" aria-live="polite">
+      {{ t('projects.countLabel', { count: visible().length }) }}
+    </p>
+
+    @if (visible().length > 0) {
+      <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!--
+          Whole-card link: the anchor sits on the title so its accessible name is
+          the project name, and `.card-link` stretches the hit area over the card.
+          See the `.card-hit` / `.card-link` pair in src/styles.scss.
+
+          `track project.slug` matters here beyond convention — filtering rebuilds
+          the list, and the slug is what lets Angular keep the surviving cards
+          rather than re-creating every one of them.
+        -->
+        @for (project of visible(); track project.slug; let i = $index) {
+          <li
+            appReveal
+            [revealDelay]="i * 50"
+            class="card-hit group relative isolate flex flex-col overflow-hidden rounded-lg border border-border-glass bg-surface-glass shadow-sm transition-[transform,border-color,box-shadow] duration-(--duration-base) ease-standard hover:-translate-y-1 hover:border-border-strong hover:shadow-md"
+          >
+            <div
+              class="relative aspect-[4/3] overflow-hidden border-b border-border-glass text-text-strong"
+            >
+              <app-work-thumb
+                [tone]="project.tone"
+                class="h-full w-full transition-transform duration-(--duration-slow) ease-standard group-hover:scale-105"
+              />
+            </div>
+
+            <div class="flex flex-1 flex-col p-6">
+              <ul class="flex flex-wrap items-center gap-2">
+                @for (category of project.categories; track category) {
+                  <li
+                    class="rounded-full border border-border-glass bg-surface-muted px-2.5 py-1 text-xs font-medium tracking-wide text-text-body uppercase"
+                  >
+                    {{ categoryLabel(category) }}
+                  </li>
+                }
+                <li class="ms-auto text-xs text-text-muted tabular-nums">{{ project.year }}</li>
+              </ul>
+
+              <h3 class="mt-4 text-xl font-semibold">
+                <a [routerLink]="['/portfolio', project.slug]" class="card-link">
+                  {{ project.name }}
+                </a>
+              </h3>
+              <p class="mt-2 flex-1 text-sm text-text-muted">{{ t(project.summaryKey) }}</p>
+
+              <!--
+                Decorative: the card's own link already carries the accessible
+                name, and a second focusable "read more" would just double every
+                card's tab stop.
+              -->
+              <p
+                class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
+                aria-hidden="true"
+              >
+                {{ t('projects.viewCase') }}
+                <app-icon
+                  name="arrow-up-right"
+                  class="size-4 transition-transform duration-(--duration-fast) ease-standard group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:-scale-x-100"
+                />
+              </p>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="mt-8 rounded-lg border border-dashed border-border-strong px-6 py-16 text-center">
+        <p class="text-text-muted">
+          {{ t(searchQuery().trim() ? 'projects.searchEmpty' : 'projects.empty') }}
+        </p>
+        <button appButton="secondary" type="button" (click)="resetFilters()" class="mt-4">
+          {{ t('projects.emptyAction') }}
+        </button>
+      </div>
+    }
+  </div>
+</section>

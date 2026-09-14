@@ -1,0 +1,18 @@
+<app-page-header>
+  <ng-container pageEyebrow i18n="@@portfolio.eyebrow">Réalisations</ng-container>
+  <ng-container pageTitle i18n="@@portfolio.title"
+    >Des projets livrés, pas des maquettes</ng-container
+  >
+  <ng-container pageLede i18n="@@portfolio.lede">
+    Une sélection de projets, filtrable par catégorie.
+  </ng-container>
+</app-page-header>
+
+<div class="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+  <app-scaffold-note>
+    <p i18n="@@portfolio.scaffold">
+      La grille vient de GET /portfolio_projects (paramètre ?category=). Le filtre par catégorie et
+      la navigation vers /portfolio/:slug restent à construire.
+    </p>
+  </app-scaffold-note>
+</div>

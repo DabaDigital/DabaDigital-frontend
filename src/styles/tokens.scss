@@ -1,0 +1,231 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Design tokens — the single source of truth for colour, radius, type and motion.
+//
+// Everything is a CSS custom property so that Tailwind (see ./tailwind.css) and
+// component styles read the same values. Dark mode redefines tokens; it never
+// restyles components.
+//
+// Component styles use the semantic layer only (`--text-muted`, `--primary`…).
+// Reaching for a palette primitive or a raw hex inside a component is a bug.
+//
+// ── Theme resolution ─────────────────────────────────────────────────────────
+// Three states, in the order the cascade resolves them:
+//
+//   1. `:root`                                → light (the default)
+//   2. `@media (prefers-color-scheme: dark)`  → dark, unless the visitor pinned light
+//   3. `:root[data-theme='dark']`             → dark, whatever the OS says
+//
+// `data-theme` is written by `core/theme/theme.service.ts` and pre-applied by the
+// inline bootstrap in `index.html`, so the first paint is already correct.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// The dark semantic layer, declared once and emitted into both selectors below.
+// Duplicating it by hand is how the two copies drift apart.
+@mixin dark-semantics {
+  --surface-page: var(--palette-neutral-950);
+  --surface-card: var(--palette-neutral-900);
+  --surface-raised: var(--palette-neutral-800);
+  --surface-muted: var(--palette-neutral-800);
+  --surface-inverse: var(--palette-neutral-50);
+
+  --text-strong: var(--palette-neutral-50);
+  --text-body: var(--palette-neutral-200);
+  --text-muted: var(--palette-neutral-400);
+  --text-inverse: var(--palette-neutral-950);
+
+  --border-subtle: var(--palette-neutral-800);
+  --border-strong: var(--palette-neutral-700);
+
+  // Dark mode lightens the brand rather than inverting it: #59a2e8 on the page
+  // ground clears 7:1, where the light-mode #1a66bd would sit at 1.4:1.
+  --primary: var(--palette-brand-400);
+  --primary-hover: var(--palette-brand-300);
+  --primary-soft: var(--palette-brand-950);
+  --primary-contrast: var(--palette-neutral-950);
+
+  --accent: var(--palette-accent-400);
+  --accent-soft: var(--palette-accent-700);
+  --accent-contrast: var(--palette-neutral-950);
+
+  --success: var(--palette-success-300);
+  --success-soft: #0d3220;
+  --danger: var(--palette-danger-300);
+  --danger-soft: #3d1616;
+
+  --focus-ring: var(--palette-brand-300);
+
+  --surface-glass: color-mix(in srgb, var(--palette-white) 4%, transparent);
+  --border-glass: color-mix(in srgb, var(--palette-white) 10%, transparent);
+  --glow-primary: color-mix(in srgb, var(--palette-brand-400) 20%, transparent);
+  --glow-accent: color-mix(in srgb, var(--palette-accent-400) 12%, transparent);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 45%);
+  --shadow-lg: 0 12px 40px rgb(0 0 0 / 55%);
+  --shadow-glow: 0 8px 32px color-mix(in srgb, var(--palette-brand-400) 28%, transparent);
+}
+
+:root {
+  color-scheme: light dark;
+
+  // ── Palette primitives ─────────────────────────────────────────────────────
+  --palette-neutral-50: #f7f8fa;
+  --palette-neutral-100: #eef0f4;
+  --palette-neutral-200: #dde1e9;
+  --palette-neutral-300: #c2c9d6;
+  --palette-neutral-400: #94a0b5;
+  --palette-neutral-500: #6b7891;
+  --palette-neutral-600: #4f5b73;
+  --palette-neutral-700: #3b465b;
+  --palette-neutral-800: #27303f;
+  --palette-neutral-900: #171d27;
+  --palette-neutral-950: #0d1117;
+
+  // The brand ramp is built around #07528f — the blue of the DabaDigital
+  // wordmark in `public/dabadigital.png`, and the value already declared as
+  // `<meta name="theme-color">`. It replaces an indigo ramp that matched
+  // nothing the company actually ships.
+  --palette-brand-50: #eff6fe;
+  --palette-brand-100: #d9eafd;
+  --palette-brand-200: #bcdbfb;
+  --palette-brand-300: #8ec4f7;
+  --palette-brand-400: #59a2e8;
+  --palette-brand-500: #3181d8;
+  --palette-brand-600: #1a66bd;
+  --palette-brand-700: #07528f;
+  --palette-brand-800: #0a4273;
+  --palette-brand-900: #0d3760;
+  --palette-brand-950: #08243f;
+
+  // Warm terracotta — the complement of the brand blue, and the one colour on
+  // the page that is allowed to be loud. Used for a second data hue and for
+  // "new" markers, never for a primary action.
+  --palette-accent-100: #fde6dd;
+  --palette-accent-200: #fbcbba;
+  --palette-accent-300: #f7a68b;
+  --palette-accent-400: #f27a5a;
+  --palette-accent-500: #e2593a;
+  --palette-accent-600: #c94326;
+  --palette-accent-700: #a7331e;
+
+  --palette-success-500: #16a34a;
+  --palette-success-300: #6ee7a8;
+  --palette-warning-500: #d97706;
+  --palette-danger-500: #dc2626;
+  --palette-danger-300: #fca5a5;
+
+  --palette-white: #ffffff;
+
+  // ── Semantic colour — light ────────────────────────────────────────────────
+  --surface-page: var(--palette-neutral-50);
+  --surface-card: var(--palette-white);
+  --surface-raised: var(--palette-white);
+  --surface-muted: var(--palette-neutral-100);
+  --surface-inverse: var(--palette-neutral-950);
+
+  --text-strong: var(--palette-neutral-950);
+  --text-body: var(--palette-neutral-800);
+  --text-muted: var(--palette-neutral-500);
+  --text-inverse: var(--palette-neutral-50);
+
+  --border-subtle: var(--palette-neutral-200);
+  --border-strong: var(--palette-neutral-300);
+
+  --primary: var(--palette-brand-600);
+  --primary-hover: var(--palette-brand-700);
+  --primary-soft: var(--palette-brand-50);
+  --primary-contrast: var(--palette-white);
+
+  --accent: var(--palette-accent-600);
+  --accent-soft: var(--palette-accent-100);
+  --accent-contrast: var(--palette-white);
+
+  --success: var(--palette-success-500);
+  --success-soft: #e7f7ee;
+  --warning: var(--palette-warning-500);
+  --danger: var(--palette-danger-500);
+  --danger-soft: #fdeaea;
+
+  --focus-ring: var(--palette-brand-500);
+
+  // ── Glass & ambient light ──────────────────────────────────────────────────
+  // The marketing sections layer translucent panels over soft radial glows. Both
+  // read differently per theme — light mode needs a near-opaque white wash to
+  // stay legible, dark mode needs a barely-there one — so they are tokens, not
+  // rgba() literals sprinkled through templates. Derived with `color-mix` so the
+  // palette above stays the only place a hex lives.
+  --surface-glass: color-mix(in srgb, var(--palette-white) 70%, transparent);
+  --border-glass: color-mix(in srgb, var(--palette-neutral-950) 8%, transparent);
+  --glow-primary: color-mix(in srgb, var(--palette-brand-500) 14%, transparent);
+  --glow-accent: color-mix(in srgb, var(--palette-accent-400) 10%, transparent);
+
+  // ── Radius ─────────────────────────────────────────────────────────────────
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-pill: 9999px;
+
+  // ── Elevation ──────────────────────────────────────────────────────────────
+  --shadow-sm: 0 1px 2px rgb(13 17 23 / 6%);
+  --shadow-md: 0 4px 16px rgb(13 17 23 / 8%);
+  --shadow-lg: 0 12px 40px rgb(13 17 23 / 12%);
+  --shadow-glow: 0 8px 32px color-mix(in srgb, var(--palette-brand-600) 24%, transparent);
+
+  // ── Type ───────────────────────────────────────────────────────────────────
+  // One display face for headings, one neutral sans for UI. The Arabic faces are
+  // first in the stack for `ar` (see `[lang='ar']` below) because Arabic is the
+  // primary locale here, not a fallback bolted onto a Latin stack.
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  // ── Motion — short and functional (150–250 ms) ─────────────────────────────
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+  // Section reveals are the one exception: they run longer because they travel
+  // further, and they only ever play once per element.
+  --duration-reveal: 620ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  // ── Layout ─────────────────────────────────────────────────────────────────
+  --container-max: 72rem;
+  --header-height: 4rem;
+}
+
+// Arabic is the primary locale, so it gets a real Arabic type stack rather than
+// a Latin stack with a fallback appended. Cairo carries the display weights;
+// Noto Sans Arabic carries body copy at the same optical size as Inter.
+:root[lang='ar'] {
+  --font-display: 'Cairo', 'Noto Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Noto Sans Arabic', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+}
+
+// ── Semantic colour — dark ───────────────────────────────────────────────────
+// Only the semantic layer moves. No component knows dark mode exists.
+//
+// The two blocks below are the same declarations at the same specificity (0,2,0),
+// so source order decides: an explicit `data-theme` always wins over the OS.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-semantics;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include dark-semantics;
+}
+
+// Keep native UI — scrollbars, date pickers, form control chrome — in step with
+// the pinned theme. Without this, a visitor who forces light on a dark OS gets
+// white cards with a black scrollbar.
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}

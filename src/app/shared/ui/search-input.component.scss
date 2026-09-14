@@ -1,0 +1,59 @@
+@layer components {
+  :host {
+    display: block;
+    min-inline-size: 0;
+  }
+
+  .search-field {
+    position: relative;
+  }
+
+  .search-control {
+    padding-inline: 2.75rem;
+  }
+
+  // The labelled clear button is available consistently across browsers.
+  .search-control::-webkit-search-cancel-button,
+  .search-control::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  .search-icon {
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-block-start: 50%;
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: var(--text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .clear-button {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .clear-button:hover:not(:disabled) {
+    background-color: var(--surface-muted);
+    color: var(--text-strong);
+  }
+
+  .clear-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

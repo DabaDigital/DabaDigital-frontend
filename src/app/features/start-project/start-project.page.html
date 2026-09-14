@@ -1,0 +1,32 @@
+<app-page-header>
+  <ng-container pageEyebrow i18n="@@start.eyebrow">Démarrer un projet</ng-container>
+  <ng-container pageTitle i18n="@@start.title">Racontez-nous votre projet</ng-container>
+  <ng-container pageLede i18n="@@start.lede">
+    Tapez votre demande, ou décrivez-la à voix haute : les champs se remplissent pendant que vous
+    parlez. Rien n'est envoyé tant que vous n'avez pas cliqué sur « Envoyer ma demande ».
+  </ng-container>
+</app-page-header>
+
+<div class="mx-auto grid max-w-6xl gap-8 px-4 pb-16 sm:px-6 lg:grid-cols-5">
+  @if (voiceEnabled) {
+    <section class="lg:col-span-2">
+      <app-scaffold-note>
+        <p i18n="@@start.scaffold.voice">
+          Panneau vocal à construire : notice de confidentialité, bouton micro, états du recorder,
+          transcription. Voir core/audio/audio-recorder.service.ts et
+          core/voice/voice-session.service.ts.
+        </p>
+      </app-scaffold-note>
+    </section>
+  }
+
+  <section [class]="voiceEnabled ? 'lg:col-span-3' : 'lg:col-span-5'">
+    <app-scaffold-note>
+      <p i18n="@@start.scaffold.form">
+        Formulaire à construire : type de projet, budget, délai, technologies, description, puis le
+        bloc contact. Formulaire réactif typé, provenance par champ dans ProjectFormState, règles de
+        fusion dans core/voice/field-merge.ts.
+      </p>
+    </app-scaffold-note>
+  </section>
+</div>
