@@ -44,6 +44,10 @@ __screenshots__/
 /blob-report
 /playwright/.cache
 
+# Supabase local CLI state
+/supabase/.temp
+/supabase/.branches
+
 # System files
 .DS_Store
 Thumbs.db

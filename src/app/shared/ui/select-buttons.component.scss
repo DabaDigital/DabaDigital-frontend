@@ -21,10 +21,11 @@
     position: relative;
   }
 
-  .option span {
+  .option-face {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
     min-block-size: 2.75rem;
     padding: 0.5rem 1rem;
     border: 1px solid var(--border-subtle);
@@ -40,31 +41,65 @@
       background-color var(--duration-fast) var(--ease-standard);
   }
 
-  .option input:not(:disabled) + span:hover {
+  .option-count {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+
+  .option input:not(:disabled) + .option-face:hover {
     border-color: var(--border-strong);
     background-color: var(--surface-muted);
     color: var(--text-strong);
   }
 
-  .option input:checked + span {
+  .option input:checked + .option-face {
     border-color: var(--primary);
     background-color: var(--primary);
     color: var(--primary-contrast);
   }
 
-  .option input:checked:not(:disabled) + span:hover {
+  .option input:checked:not(:disabled) + .option-face:hover {
     border-color: var(--primary-hover);
     background-color: var(--primary-hover);
     color: var(--primary-contrast);
   }
 
-  .option input:focus-visible + span {
+  .option input:focus-visible + .option-face {
     outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
   }
 
-  .option input:disabled + span {
+  .option input:disabled + .option-face {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  // ── Tabs — a quiet segmented control for dense toolbars ──────────────────
+  :host([data-variant='tabs']) .options {
+    gap: 0.25rem;
+  }
+
+  :host([data-variant='tabs']) .option-face {
+    min-block-size: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    border-color: transparent;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+  }
+
+  :host([data-variant='tabs']) .option input:not(:disabled) + .option-face:hover {
+    border-color: transparent;
+    background-color: var(--surface-muted);
+    color: var(--text-strong);
+  }
+
+  :host([data-variant='tabs']) .option input:checked + .option-face,
+  :host([data-variant='tabs']) .option input:checked:not(:disabled) + .option-face:hover {
+    border-color: var(--border-subtle);
+    background-color: var(--surface-muted);
+    color: var(--text-strong);
   }
 }

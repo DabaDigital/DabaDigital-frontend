@@ -1,8 +1,35 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/api/admin-auth.service';
 
 const SITE = 'DabaDigital';
 
 export const routes: Routes = [
+  {
+    path: 'admin/login',
+    loadComponent: () => import('./features/admin/admin-login.page').then((m) => m.AdminLoginPage),
+    title: 'DabaDigital — Admin',
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    canActivateChild: [adminGuard],
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () => import('./features/admin/admin.page').then((m) => m.AdminPage),
+        data: { section: 'overview' },
+      },
+      ...(['projects', 'categories', 'services', 'social', 'contact', 'messages'] as const).map(
+        (section) => ({
+          path: section,
+          loadComponent: () => import('./features/admin/admin.page').then((m) => m.AdminPage),
+          data: { section },
+        }),
+      ),
+    ],
+    title: 'DabaDigital — Admin',
+  },
   {
     // No `title` on purpose. The landing page's title follows the runtime
     // language, so `HomePage` sets it itself — see the effect in that component.

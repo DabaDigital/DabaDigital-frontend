@@ -1,5 +1,19 @@
 # DabaDigital — Frontend
 
+## Admin dashboard (Supabase)
+
+The `/admin` workspace manages projects, project categories, services, social media, contact details,
+and client messages. It includes Supabase email/password sign-in, protected routes, an explicit admin
+allowlist, draft/publish controls, and English/French/Arabic editing. The public website now reads
+published content from the same Supabase tables; its contact form submits directly to the private inbox.
+
+**Setup:** [Supabase configuration, database migration, and first admin account](supabase/README.md).
+Add the chosen project's URL and publishable key to `public/supabase-config.json`. Until configured,
+the public site retains its bundled content and admin sign-in is disabled with a setup message.
+
+**Checks:** `npm run test:database`, `npm test -- --watch=false`, `npm run e2e`, `npm run lint`,
+and `npm run build`. The original voice-assistant design notes below describe the separate Rails path.
+
 Angular application for the DabaDigital corporate portfolio: presentation site (Home, About, Services,
 Portfolio) plus the **AI Voice Project Assistant** — a contact form a visitor can fill in by speaking
 instead of typing.
@@ -31,7 +45,8 @@ instead of typing.
 
 ## Project status
 
-Bootstrap phase. This README is the implementation contract; the code is being scaffolded against it.
+The public website and Supabase admin workspace are implemented. The original voice-assistant roadmap
+below remains separate; follow the Supabase setup above for content, authentication, and client messages.
 
 | Area | Status |
 | --- | --- |
@@ -188,7 +203,8 @@ src/
     │       └── confirmation.page.ts
     └── shared/
         ├── layout/     # site-header, site-footer
-        ├── ui/         # page-header, scaffold-note
+        ├── ui/         # every form control, button and dialog — see shared/ui/README.md
+        │               # plus page-header, scaffold-note
         ├── pipes/
         └── directives/
 ```
@@ -426,7 +442,7 @@ Deploy as a static bundle behind any CDN or static host, with:
 
 **MVP (in scope now)** — the site's four content pages, the manual form, and voice filling of five
 fields (project type, budget, deadline, technologies, description) with corrections, manual-edit
-protection, review and submission. No authentication, no dashboard.
+protection, review and submission. The Supabase admin dashboard is described at the top of this file.
 
 **Next** — contact fields by voice; true streaming transcription over WebSocket instead of chunked
 turns; suggested budget ranges and service recommendations surfaced inline; an AI-generated project

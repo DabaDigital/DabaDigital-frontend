@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { RouterLink } from '@angular/router';
 
 import { I18nService } from '../../../core/i18n/i18n.service';
-import type { MessageKey } from '../../../core/i18n/messages/ar';
+import { ContentStore } from '../../../core/content.store';
+import type { ManagedProject } from '../../../core/models/content.model';
 import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { SectionSpyDirective } from '../../../shared/directives/section-spy';
 import { ButtonComponent } from '../../../shared/ui/button.component';
@@ -13,16 +14,6 @@ import {
   type SelectButtonOption,
 } from '../../../shared/ui/select-buttons.component';
 import { WorkThumbComponent } from '../components/work-thumb.component';
-import { PROJECTS, PROJECT_FILTERS, type Project, type ProjectCategory } from '../home.content';
-
-/** The chip label for each category, so a card's tags read the same as the filters. */
-const CATEGORY_LABEL: Readonly<Record<ProjectCategory, MessageKey>> = {
-  web: 'projects.filter.web',
-  ecommerce: 'projects.filter.ecommerce',
-  ai: 'projects.filter.ai',
-  mobile: 'projects.filter.mobile',
-};
-
 /**
  * Section 3 — the work, searchable and filterable by category.
  *
@@ -48,22 +39,29 @@ const CATEGORY_LABEL: Readonly<Record<ProjectCategory, MessageKey>> = {
 export class ProjectsSection {
   private readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
+  protected readonly content = inject(ContentStore);
 
-  protected readonly filters = computed<readonly SelectButtonOption[]>(() =>
-    PROJECT_FILTERS.map((filter) => ({ value: filter.id, label: this.t(filter.labelKey) })),
-  );
+  protected readonly filters = computed<readonly SelectButtonOption[]>(() => [
+    { value: 'all', label: this.t('projects.filter.all') },
+    ...this.content
+      .content()
+      .categories.map((category) => ({
+        value: category.id,
+        label: this.content.text(category.name),
+      })),
+  ]);
   protected readonly activeFilter = signal('all');
   protected readonly searchQuery = signal('');
 
-  protected readonly visible = computed<readonly Project[]>(() => {
+  protected readonly visible = computed<readonly ManagedProject[]>(() => {
     const filter = this.activeFilter();
     const query = this.normalizeSearch(this.searchQuery());
-    return PROJECTS.filter((project) => {
+    return this.content.projects().filter((project) => {
       const matchesCategory =
         filter === 'all' || project.categories.some((value) => value === filter);
       const searchText = [
         project.name,
-        this.t(project.summaryKey),
+        this.content.text(project.summary),
         ...project.categories.flatMap((category) => [category, this.categoryLabel(category)]),
       ].join(' ');
       return matchesCategory && (!query || this.normalizeSearch(searchText).includes(query));
@@ -75,8 +73,9 @@ export class ProjectsSection {
     this.searchQuery.set('');
   }
 
-  protected categoryLabel(category: ProjectCategory): string {
-    return this.t(CATEGORY_LABEL[category]);
+  protected categoryLabel(category: string): string {
+    const item = this.content.content().categories.find((item) => item.id === category);
+    return item ? this.content.text(item.name) : '';
   }
 
   private normalizeSearch(value: string): string {

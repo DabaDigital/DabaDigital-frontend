@@ -36,6 +36,44 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       focusable="false"
     >
       @switch (name()) {
+        @case ('dashboard') {
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        }
+        @case ('folder') {
+          <path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+          <path d="M3 10h18" />
+        }
+        @case ('layers') {
+          <path d="m12 3 10 5-10 5L2 8Z" />
+          <path d="m2 12 10 5 10-5M2 16l10 5 10-5" />
+        }
+        @case ('plus') {
+          <path d="M12 5v14M5 12h14" />
+        }
+        @case ('edit') {
+          <path d="m16 3 5 5-12 12-6 1 1-6Z" />
+          <path d="m13 6 5 5" />
+        }
+        @case ('trash') {
+          <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+        }
+        @case ('search') {
+          <circle cx="10.5" cy="10.5" r="7" />
+          <path d="m16 16 5 5" />
+        }
+        @case ('logout') {
+          <path d="M9 4H4v16h5M12 12h9m-4-4 4 4-4 4" />
+        }
+        @case ('calendar') {
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M16 3v4M8 3v4M3 11h18" />
+        }
+        @case ('refresh') {
+          <path d="M21 3v6h-6M3 21v-6h6M20 9a8 8 0 0 0-14-4L3 8M4 15a8 8 0 0 0 14 4l3-3" />
+        }
         <!-- ── Services ──────────────────────────────────────────────────── -->
         @case ('code') {
           <path d="m16 18 6-6-6-6" />
@@ -120,6 +158,25 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
         @case ('chevron-down') {
           <path d="m6 9.5 6 6 6-6" />
         }
+        @case ('chevron-left') {
+          <path d="m14.5 6-6 6 6 6" />
+        }
+        @case ('chevron-right') {
+          <path d="m9.5 6 6 6-6 6" />
+        }
+        @case ('minus') {
+          <path d="M5 12h14" />
+        }
+        @case ('upload') {
+          <path d="M12 15V3.5" />
+          <path d="m7 8.5 5-5 5 5" />
+          <path d="M20 15v3.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V15" />
+        }
+        @case ('image') {
+          <rect x="3" y="3" width="18" height="18" rx="2.5" />
+          <circle cx="9" cy="9" r="2" />
+          <path d="m21 15.5-4.6-4.6a1.5 1.5 0 0 0-2.1 0L5.5 20.5" />
+        }
         @case ('menu') {
           <path d="M3.5 7h17" />
           <path d="M3.5 12h17" />
@@ -176,7 +233,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
         <!-- ── Social ────────────────────────────────────────────────────── -->
         @case ('linkedin') {
-          <path d="M16 8.5a5.5 5.5 0 0 1 5.5 5.5v6.5h-3.8V14a1.7 1.7 0 0 0-3.4 0v6.5H10.5V8.9h3.8v1.4" />
+          <path
+            d="M16 8.5a5.5 5.5 0 0 1 5.5 5.5v6.5h-3.8V14a1.7 1.7 0 0 0-3.4 0v6.5H10.5V8.9h3.8v1.4"
+          />
           <rect x="2.5" y="8.9" width="3.8" height="11.6" rx="1" />
           <circle cx="4.4" cy="4.4" r="2" />
         }
@@ -204,6 +263,17 @@ export class IconComponent {
 }
 
 export type IconName =
+  | 'dashboard'
+  | 'folder'
+  | 'layers'
+  | 'plus'
+  | 'edit'
+  | 'trash'
+  | 'search'
+  | 'logout'
+  | 'calendar'
+  | 'refresh'
+
   // services
   | 'code'
   | 'bag'
@@ -222,6 +292,11 @@ export type IconName =
   // controls
   | 'check'
   | 'chevron-down'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'minus'
+  | 'upload'
+  | 'image'
   | 'menu'
   | 'close'
   | 'arrow-right'

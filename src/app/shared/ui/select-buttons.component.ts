@@ -14,13 +14,19 @@ export interface SelectButtonOption {
   readonly value: string;
   readonly label: string;
   readonly disabled?: boolean;
+  /** An optional tally after the label, e.g. how many rows a filter matches. */
+  readonly count?: number;
 }
 
 let nextSelectButtonsId = 0;
 
-/** A single-choice control with native radio keyboard behavior and optional form binding. */
+/**
+ * A single-choice control with native radio keyboard behavior and optional form binding.
+ * `pill` suits marketing filters; `tabs` is the quieter segmented look for toolbars.
+ */
 @Component({
   selector: 'app-select-buttons',
+  host: { '[attr.data-variant]': 'variant()' },
   template: `
     <fieldset [disabled]="isDisabled()">
       <legend class="sr-only">{{ label() }}</legend>
@@ -38,7 +44,12 @@ let nextSelectButtonsId = 0;
               (change)="select(option)"
               (blur)="markTouched()"
             />
-            <span>{{ option.label }}</span>
+            <span class="option-face"
+              >{{ option.label }}
+              @if (option.count !== undefined) {
+                <span class="option-count">{{ option.count }}</span>
+              }
+            </span>
           </label>
         }
       </div>
@@ -60,6 +71,7 @@ export class SelectButtonsComponent implements ControlValueAccessor {
   readonly options = input.required<readonly SelectButtonOption[]>();
   readonly label = input.required<string>();
   readonly name = input(this.groupId);
+  readonly variant = input<'pill' | 'tabs'>('pill');
   readonly value = model('');
   readonly disabled = input(false, { transform: booleanAttribute });
 

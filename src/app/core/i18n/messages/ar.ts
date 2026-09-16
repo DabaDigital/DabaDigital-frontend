@@ -1,3 +1,5 @@
+import { ADMIN_AR } from './admin';
+import { CONTROLS_AR } from './controls';
 /**
  * Arabic — the source catalogue.
  *
@@ -12,6 +14,8 @@
  * numbers and real client work before this goes live.
  */
 export const AR = {
+  ...ADMIN_AR,
+  ...CONTROLS_AR,
   // ── Document ──────────────────────────────────────────────────────────────
   'meta.title': 'دبا ديجيتال — نُصمّم. نُطلق. نُنمّي.',
 

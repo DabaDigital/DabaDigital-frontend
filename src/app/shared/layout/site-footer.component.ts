@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { COMPANY } from '../../core/company';
+import { ContentStore } from '../../core/content.store';
 import { I18nService } from '../../core/i18n/i18n.service';
 import type { MessageKey } from '../../core/i18n/messages/ar';
 import { IconComponent } from '../ui/icon.component';
@@ -23,9 +23,7 @@ const FOOTER_SECTIONS: readonly { id: string; key: MessageKey }[] = [
 export class SiteFooterComponent {
   protected readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
-  protected get company(): typeof COMPANY {
-    return COMPANY;
-  }
+  protected readonly content = inject(ContentStore);
 
   protected readonly sections = computed(() =>
     FOOTER_SECTIONS.map(({ id, key }) => ({ id, label: this.t(key) })),

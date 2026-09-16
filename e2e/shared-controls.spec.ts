@@ -2,7 +2,22 @@ import { expect, test, type Locator, type Page, type Route } from '@playwright/t
 
 test.use({ locale: 'en-US', colorScheme: 'light', reducedMotion: 'reduce' });
 
-const requestUrl = '**/project_requests';
+const requestUrl = '**/rest/v1/dd_messages';
+
+// Keep legacy content fixtures while testing the new Supabase submission path.
+test.beforeEach(async ({ page }) => {
+  await page.route('**/supabase-config.json', (route) =>
+    route.fulfill({
+      json: {
+        url: 'https://dabadigital-test.supabase.co',
+        publishableKey: 'sb_publishable_test_key',
+      },
+    }),
+  );
+  await page.route('https://dabadigital-test.supabase.co/rest/v1/**', (route) =>
+    route.fulfill({ status: 503, json: { message: 'Use bundled site content in control tests' } }),
+  );
+});
 const description = 'We need an accessible online store for our Moroccan customers.';
 
 async function chooseDropdown(page: Page, id: string, option: string): Promise<void> {
@@ -101,17 +116,17 @@ test('contact controls validate, show a busy button and submit only once', async
     await submit.click({ force: true });
     await page.locator('#contact-company').press('Enter');
     expect(requests).toHaveLength(1);
-    expect(requests[0]).toEqual({
-      project_request: expect.objectContaining({
+    expect(requests[0]).toEqual(
+      expect.objectContaining({
         full_name: 'Sara Alaoui',
         email: 'sara@example.com',
         company_name: 'Atlas Studio',
         project_type: 'ecommerce',
-        budget: expect.objectContaining({ amount: 20_000, currency: 'MAD' }),
+        budget: '20,000 – 50,000 MAD',
         description,
         locale: 'en',
       }),
-    });
+    );
 
     releaseResponse();
     await expect(page.getByRole('heading', { name: 'We have your request.' })).toBeVisible();

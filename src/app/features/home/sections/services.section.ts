@@ -6,7 +6,7 @@ import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { SectionSpyDirective } from '../../../shared/directives/section-spy';
 import { ButtonComponent } from '../../../shared/ui/button.component';
 import { IconComponent } from '../../../shared/ui/icon.component';
-import { SERVICES } from '../home.content';
+import { ContentStore } from '../../../core/content.store';
 
 /** Section 4 — the service catalogue. */
 @Component({
@@ -18,7 +18,8 @@ import { SERVICES } from '../home.content';
 export class ServicesSection {
   private readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
-  protected readonly services = SERVICES;
+  protected readonly content = inject(ContentStore);
+  protected readonly services = this.content.services;
 
   /**
    * `01`, `02`, … as an editorial index on each card.

@@ -1,7 +1,11 @@
+import { ADMIN_FR } from './admin';
 import type { Catalog } from './ar';
+import { CONTROLS_FR } from './controls';
 
 /** French. Typed as `Catalog`, so a missing or invented key fails the build. */
 export const FR: Catalog = {
+  ...ADMIN_FR,
+  ...CONTROLS_FR,
   // ── Document ──────────────────────────────────────────────────────────────
   'meta.title': 'DabaDigital — Concevoir. Lancer. Grandir.',
 

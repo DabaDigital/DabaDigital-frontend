@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ContactApi, type BudgetRange } from '../../../core/api/contact.api';
-import { COMPANY } from '../../../core/company';
+import { ContentStore } from '../../../core/content.store';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import type { MessageKey } from '../../../core/i18n/messages/ar';
 import type { ProjectType } from '../../../core/models/project-form.model';
@@ -14,17 +14,10 @@ import {
   DropdownListComponent,
   type DropdownOption,
 } from '../../../shared/ui/dropdown-list.component';
+import { FormFieldComponent } from '../../../shared/ui/form-field.component';
 import { InputDirective } from '../../../shared/ui/input.directive';
 import { IconComponent } from '../../../shared/ui/icon.component';
-
-/** Project types, in the order they are offered. Values are the backend enum. */
-const PROJECT_TYPES: readonly { value: ProjectType; labelKey: MessageKey }[] = [
-  { value: 'website', labelKey: 'contact.type.website' },
-  { value: 'web_app', labelKey: 'contact.type.webapp' },
-  { value: 'ecommerce', labelKey: 'contact.type.ecommerce' },
-  { value: 'mobile_app', labelKey: 'contact.type.mobile' },
-  { value: 'other', labelKey: 'contact.type.other' },
-];
+import { PROJECT_TYPES } from '../../../core/project-types';
 
 const BUDGET_RANGES: readonly { value: BudgetRange | ''; labelKey: MessageKey }[] = [
   { value: 's', labelKey: 'contact.budget.s' },
@@ -59,6 +52,7 @@ type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
     ReactiveFormsModule,
     ButtonComponent,
     DropdownListComponent,
+    FormFieldComponent,
     InputDirective,
     IconComponent,
     RevealDirective,
@@ -76,8 +70,14 @@ export class ContactSection {
   protected readonly t = this.i18n.t;
   // Read through a getter so separate Vitest entry bundles do not capture a
   // partially initialized module namespace while component specs run together.
-  protected get details(): typeof COMPANY {
-    return COMPANY;
+  protected readonly content = inject(ContentStore);
+  protected get contactEmail(): string {
+    return (
+      this.content
+        .contact()
+        .find((channel) => channel.href.startsWith('mailto:'))
+        ?.href.slice(7) ?? ''
+    );
   }
   protected readonly projectTypes = PROJECT_TYPES;
   protected readonly budgetRanges = BUDGET_RANGES;
@@ -128,6 +128,25 @@ export class ContactSection {
   protected showsError(field: (typeof FIELD_ORDER)[number]): boolean {
     const control = this.form.controls[field];
     return control.invalid && (control.touched || this.submitted());
+  }
+
+  /** The message the field shows right now; '' while it should not show one. */
+  protected fieldError(field: (typeof FIELD_ORDER)[number]): string {
+    if (!this.showsError(field)) {
+      return '';
+    }
+    // Two different failures, two different fixes.
+    const missing = this.form.controls[field].hasError('required');
+    switch (field) {
+      case 'fullName':
+        return this.t('contact.name.error');
+      case 'email':
+        return this.t(missing ? 'contact.email.errorRequired' : 'contact.email.errorFormat');
+      case 'projectType':
+        return this.t('contact.type.error');
+      case 'message':
+        return this.t(missing ? 'contact.message.errorRequired' : 'contact.message.errorShort');
+    }
   }
 
   protected onSubmit(): void {

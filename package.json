@@ -12,7 +12,9 @@
     "i18n:extract": "ng extract-i18n --output-path=src/locale",
     "lint": "ng lint",
     "format": "prettier --write \"src/**/*.{ts,html,scss,json}\" \"e2e/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"e2e/**/*.ts\""
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"e2e/**/*.ts\"",
+    "test:database": "node scripts/test-database.mjs",
+    "db:seed:generate": "node scripts/generate-content-seed.cjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -34,6 +36,7 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@supabase/supabase-js": "2.116.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -43,6 +46,7 @@
     "@angular/cli": "^20.3.35",
     "@angular/compiler-cli": "^20.3.0",
     "@angular/localize": "^20.3.30",
+    "@electric-sql/pglite": "0.5.8",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/angular": "^18.1.1",
@@ -52,6 +56,7 @@
     "jsdom": "^26.1.0",
     "postcss": "^8.5.26",
     "prettier": "^3.9.6",
+    "supabase": "2.117.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.2",
     "typescript-eslint": "8.46.4",
