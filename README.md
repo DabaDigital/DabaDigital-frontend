@@ -48,17 +48,27 @@ instead of typing.
 The public website and Supabase admin workspace are implemented. The original voice-assistant roadmap
 below remains separate; follow the Supabase setup above for content, authentication, and client messages.
 
+> **Superseded since this was written — read before building the voice stack:** the voice mic lands on
+> the Home page's existing **Contact section**, not a separate `/start` page, and transcription is
+> **OpenAI `gpt-live-transcribe` over a direct browser↔OpenAI WebRTC connection** (an ephemeral token
+> from `POST /voice/realtime_session`), not the browser's Web Speech API and not chunked
+> `MediaRecorder` blobs posted to the backend. See `../Claude.md` § MVP scope and § Key decisions, and
+> `CLAUDE.md` § State of the repo, for the current call. The sections below (Routes, Project structure,
+> The voice assistant, Form state) describe the original `/start`-page / chunked-audio design and need a
+> pass to match once that work starts — treat them as directional, not literal, for the voice flow and
+> target-form fields until they're updated alongside the code.
+
 | Area | Status |
 | --- | --- |
 | Angular workspace + routing + layout | ☑ |
 | Design tokens + Tailwind + dark mode | ☑ |
 | Tooling: ESLint, Prettier, Vitest, Playwright, i18n extraction | ☑ |
 | Home / About / Services / Portfolio pages | ☐ Home written; the other three are scaffolds awaiting the content API |
-| Manual project request form | ☐ |
-| Audio recorder + permission handling | ☐ |
-| Voice session service (chunked turns) | ☐ |
-| AI field badges + manual-edit protection | ☐ |
-| Confirmation screen | ☐ shell only, no reference number |
+| Manual project request form | ☑ Home page Contact section — six fields, validated, submits to `/project_requests` |
+| WebRTC session + mic permission handling | ☑ `core/voice/realtime-voice.service.ts` — support/permission paths unit-tested; the connected handshake itself is unverified against a real OpenAI session (needs `OPENAI_API_KEY`) |
+| Voice extraction turn loop (debounced, sequential) | ☑ |
+| AI field badges + manual-edit protection + suggestion chips + undo | ☑ |
+| `/start` page, confirmation screen | ☐ superseded — voice landed on the Home Contact form instead, see the note above |
 
 Unbuilt sections render an `<app-scaffold-note>` so an unfinished page is obvious in the browser rather
 than merely empty. Grep for `app-scaffold-note` to find the remaining work.

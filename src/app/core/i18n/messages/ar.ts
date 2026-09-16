@@ -179,6 +179,24 @@ export const AR = {
   'contact.successAgain': 'إرسال طلب آخر',
   'contact.privacy': 'نستعمل بياناتك للردّ على طلبك فقط. لا نشاركها مع أي جهة أخرى.',
 
+  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  'contact.voice.privacy':
+    'يُعالَج صوتك عبر خدمة ذكاء اصطناعي خارجية لملء هذا النموذج. لا يُحفظ التسجيل الصوتي أبداً.',
+  'contact.voice.start': 'صِف مشروعك',
+  'contact.voice.stop': 'إيقاف',
+  'contact.voice.listening': 'جارٍ الاستماع…',
+  'contact.voice.stateRequestingPermission': 'في انتظار الوصول إلى الميكروفون…',
+  'contact.voice.stateConnecting': 'جارٍ الاتصال…',
+  'contact.voice.stateProcessing': 'جارٍ التحليل…',
+  'contact.voice.unsupported': 'الإدخال الصوتي غير متوفر في هذا المتصفح — يمكنك ملء النموذج أدناه.',
+  'contact.voice.errorPermission':
+    'الوصول إلى الميكروفون ضروري لاستخدام الإدخال الصوتي. يمكنك دائماً ملء النموذج يدوياً.',
+  'contact.voice.errorUnavailable': 'الإدخال الصوتي غير متوفر مؤقتاً. يمكنك دائماً ملء النموذج يدوياً.',
+  'contact.voice.badgeHint': 'مُستخرَج من وصفك',
+  'contact.voice.undo': 'تراجع',
+  'contact.voice.accept': 'استخدم هذا',
+  'contact.voice.dismiss': 'تجاهل',
+
   // ── Footer ────────────────────────────────────────────────────────────────
   'footer.tagline': 'استوديو رقمي مغربي — مواقع، وتطبيقات، وتكامل على المقاس.',
   'footer.navLabel': 'تنقل التذييل',

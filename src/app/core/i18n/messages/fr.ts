@@ -188,6 +188,26 @@ export const FR: Catalog = {
   'contact.privacy':
     'Vos données servent uniquement à répondre à votre demande. Elles ne sont transmises à personne.',
 
+  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  'contact.voice.privacy':
+    "Votre voix est traitée par un service d'IA externe pour remplir ce formulaire. L'audio n'est jamais conservé.",
+  'contact.voice.start': 'Décrivez votre projet',
+  'contact.voice.stop': 'Arrêter',
+  'contact.voice.listening': 'À l’écoute…',
+  'contact.voice.stateRequestingPermission': 'En attente de l’accès au micro…',
+  'contact.voice.stateConnecting': 'Connexion…',
+  'contact.voice.stateProcessing': 'Analyse en cours…',
+  'contact.voice.unsupported':
+    'La saisie vocale n’est pas disponible sur ce navigateur — vous pouvez remplir le formulaire ci-dessous.',
+  'contact.voice.errorPermission':
+    'L’accès au micro est nécessaire pour utiliser la saisie vocale. Vous pouvez toujours remplir le formulaire manuellement.',
+  'contact.voice.errorUnavailable':
+    'La saisie vocale est temporairement indisponible. Vous pouvez toujours remplir le formulaire manuellement.',
+  'contact.voice.badgeHint': 'Extrait de votre description',
+  'contact.voice.undo': 'Annuler',
+  'contact.voice.accept': 'Utiliser',
+  'contact.voice.dismiss': 'Ignorer',
+
   // ── Footer ────────────────────────────────────────────────────────────────
   'footer.tagline': 'Studio digital marocain — sites, applications et intégrations sur mesure.',
   'footer.navLabel': 'Navigation de pied de page',

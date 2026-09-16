@@ -33,22 +33,26 @@ let nextFieldId = 0;
  * give a stable `fieldId` when something outside needs to find the control.
  *
  * The asterisk is `aria-hidden`; `aria-required` on the control says it instead.
- * An `error` replaces the hint rather than stacking under it.
+ * An `error` replaces the hint rather than stacking under it. Content marked
+ * `appFieldAside` sits beside the label — the voice assistant's ✨ badge, for one.
  */
 @Component({
   selector: 'app-form-field',
   imports: [IconComponent],
   providers: [{ provide: FORM_FIELD, useExisting: forwardRef(() => FormFieldComponent) }],
   template: `
-    <label class="form-field__label" [for]="controlId()">
-      {{ label() }}
-      @if (required()) {
-        <span class="form-field__required" aria-hidden="true">*</span>
-      }
-      @if (optionalLabel()) {
-        <span class="form-field__optional">({{ optionalLabel() }})</span>
-      }
-    </label>
+    <div class="form-field__header">
+      <label class="form-field__label" [for]="controlId()">
+        {{ label() }}
+        @if (required()) {
+          <span class="form-field__required" aria-hidden="true">*</span>
+        }
+        @if (optionalLabel()) {
+          <span class="form-field__optional">({{ optionalLabel() }})</span>
+        }
+      </label>
+      <ng-content select="[appFieldAside]" />
+    </div>
     <ng-content />
     @if (error()) {
       <p class="form-field__message form-field__message--error" [id]="errorId()">
@@ -66,6 +70,14 @@ let nextFieldId = 0;
         align-content: start;
         gap: 0.375rem;
         min-inline-size: 0;
+      }
+
+      .form-field__header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.25rem 0.75rem;
       }
 
       .form-field__label {
