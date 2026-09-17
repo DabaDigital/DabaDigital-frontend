@@ -1,0 +1,173 @@
+<button
+  #trigger
+  type="button"
+  role="combobox"
+  aria-haspopup="dialog"
+  class="date-trigger"
+  [id]="controlId()"
+  [attr.name]="name()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? panelId : null"
+  [attr.aria-describedby]="describedByIds()"
+  [attr.aria-invalid]="isInvalid() ? 'true' : 'false'"
+  [attr.aria-required]="isRequired()"
+  [disabled]="isDisabled()"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)"
+>
+  <span class="date-value" [class.date-placeholder]="!display()">{{
+    display() || placeholder()
+  }}</span>
+  <app-icon name="calendar" class="date-icon" />
+</button>
+
+@if (open()) {
+  <div
+    #panel
+    [appAnchoredPanel]="trigger"
+    panelWidth="content"
+    [id]="panelId"
+    role="dialog"
+    [attr.aria-label]="dialogLabel()"
+    tabindex="-1"
+    class="date-panel"
+    (keydown)="onPanelKeydown($event)"
+  >
+    <div class="date-header">
+      <button
+        type="button"
+        class="date-nav"
+        [attr.aria-label]="previousLabel()"
+        [disabled]="!canPrevious()"
+        (click)="pageBy(-1)"
+      >
+        <app-icon name="chevron-left" class="date-nav-icon rtl:-scale-x-100" />
+      </button>
+      @if (view() === 'years') {
+        <span class="date-title">{{ title() }}</span>
+      } @else {
+        <button
+          type="button"
+          class="date-title date-title--button"
+          [attr.aria-label]="t('controls.calendar.chooseYearFor', { period: title() })"
+          (click)="showYears()"
+        >
+          {{ title() }}
+          <app-icon name="chevron-down" class="date-title-icon" />
+        </button>
+      }
+      <button
+        type="button"
+        class="date-nav"
+        [attr.aria-label]="nextLabel()"
+        [disabled]="!canNext()"
+        (click)="pageBy(1)"
+      >
+        <app-icon name="chevron-right" class="date-nav-icon rtl:-scale-x-100" />
+      </button>
+    </div>
+    <!-- Paging changes the period without moving focus, so it is announced here. -->
+    <span class="sr-only" aria-live="polite">{{ title() }}</span>
+
+    @switch (view()) {
+      @case ('days') {
+        <table class="date-grid" role="grid" [attr.aria-label]="title()">
+          <thead>
+            <tr>
+              @for (weekday of weekdays(); track weekday.key) {
+                <th scope="col" [attr.abbr]="weekday.long">{{ weekday.short }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (week of weeks(); track $index) {
+              <tr>
+                @for (cell of week; track cell.key) {
+                  <td [attr.aria-selected]="cell.selected">
+                    <button
+                      type="button"
+                      data-cell
+                      class="date-cell"
+                      [class.date-cell--outside]="cell.outside"
+                      [class.date-cell--current]="cell.current"
+                      [class.date-cell--selected]="cell.selected"
+                      [attr.data-active]="cell.active ? '' : null"
+                      [attr.data-date]="cell.key"
+                      [attr.tabindex]="cell.active ? 0 : -1"
+                      [attr.aria-label]="cell.label"
+                      [attr.aria-current]="cell.current ? 'date' : null"
+                      [disabled]="cell.disabled"
+                      (click)="pick(cell)"
+                    >
+                      {{ cell.text }}
+                    </button>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+      @case ('months') {
+        <ng-container
+          [ngTemplateOutlet]="choices"
+          [ngTemplateOutletContext]="{ $implicit: monthRows() }"
+        />
+      }
+      @case ('years') {
+        <ng-container
+          [ngTemplateOutlet]="choices"
+          [ngTemplateOutletContext]="{ $implicit: yearRows() }"
+        />
+      }
+    }
+
+    <div class="date-footer">
+      <button
+        appButton="ghost"
+        size="sm"
+        type="button"
+        [disabled]="!currentSelectable()"
+        (click)="pickCurrent()"
+      >
+        {{ currentLabel() }}
+      </button>
+      @if (!isRequired() && value()) {
+        <button appButton="ghost" size="sm" type="button" (click)="clear()">
+          {{ t('controls.calendar.clear') }}
+        </button>
+      }
+    </div>
+  </div>
+}
+
+<ng-template #choices let-rows>
+  <table class="date-grid date-grid--choices" role="grid" [attr.aria-label]="title()">
+    <tbody>
+      @for (row of rows; track $index) {
+        <tr>
+          @for (cell of row; track cell.key) {
+            <td [attr.aria-selected]="cell.selected">
+              <button
+                type="button"
+                data-cell
+                class="date-cell"
+                [class.date-cell--current]="cell.current"
+                [class.date-cell--selected]="cell.selected"
+                [attr.data-active]="cell.active ? '' : null"
+                [attr.data-date]="cell.key"
+                [attr.tabindex]="cell.active ? 0 : -1"
+                [attr.aria-label]="cell.label"
+                [attr.aria-current]="cell.current ? 'date' : null"
+                [disabled]="cell.disabled"
+                (click)="pick(cell)"
+              >
+                {{ cell.text }}
+              </button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</ng-template>

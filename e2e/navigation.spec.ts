@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 test.use({ locale: 'en-US', reducedMotion: 'reduce' });
+test.beforeEach(async ({ page }) => {
+  await page.route('**/supabase-config.json', (route) => route.fulfill({ json: {} }));
+});
 
 test('the hero CTA leads to the project form', async ({ page }) => {
   await page.goto('/');

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   forwardRef,
@@ -10,23 +11,38 @@ import {
   model,
   signal,
   viewChild,
+  viewChildren,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 
-import { IconComponent } from './icon.component';
+import { AnchoredPanelDirective } from './anchored-panel.directive';
+import { FORM_FIELD, joinIds } from './form-field.component';
+import { IconComponent, type IconName } from './icon.component';
+import {
+  boundaryEnabledIndex,
+  indexByPrefix,
+  keepOptionInView,
+  nextEnabledIndex,
+} from './listbox-navigation';
 
 export interface DropdownOption {
   readonly value: string;
   readonly label: string;
   readonly disabled?: boolean;
+  /** Shown before the label, in the list and on the trigger. */
+  readonly icon?: IconName;
 }
 
 let nextDropdownId = 0;
 
-/** A themed select-only combobox with mouse, touch and complete keyboard operation. */
+/**
+ * A themed select-only combobox with mouse, touch and complete keyboard operation.
+ * Inside `app-form-field` it takes the field's id, describedby, invalid and
+ * required state; `inputId` and the matching inputs are for standalone use.
+ */
 @Component({
   selector: 'app-dropdown-list',
-  imports: [IconComponent],
+  imports: [AnchoredPanelDirective, IconComponent],
   host: {
     class: 'dropdown-list',
     '(document:click)': 'onDocumentClick($event)',
@@ -37,21 +53,24 @@ let nextDropdownId = 0;
       type="button"
       role="combobox"
       class="dropdown-trigger"
-      [id]="inputId()"
+      [id]="controlId()"
       [attr.name]="name()"
       [attr.aria-expanded]="open()"
       [attr.aria-controls]="listboxId"
       [attr.aria-activedescendant]="open() && activeIndex() >= 0 ? optionId(activeIndex()) : null"
-      [attr.aria-invalid]="invalid() ? 'true' : 'false'"
-      [attr.aria-describedby]="describedBy()"
-      [attr.aria-required]="required()"
+      [attr.aria-invalid]="isInvalid() ? 'true' : 'false'"
+      [attr.aria-describedby]="describedByIds()"
+      [attr.aria-required]="isRequired()"
       [disabled]="isDisabled()"
       (click)="toggle()"
       (keydown)="onTriggerKeydown($event)"
       (blur)="onTriggerBlur()"
     >
       <span class="dropdown-value" [class.dropdown-placeholder]="!selectedOption()">
-        {{ selectedOption()?.label ?? placeholder() }}
+        @if (selectedOption()?.icon; as icon) {
+          <app-icon [name]="icon" class="dropdown-option-icon" />
+        }
+        <span class="dropdown-text">{{ selectedOption()?.label ?? placeholder() }}</span>
       </span>
       <app-icon
         name="chevron-down"
@@ -62,13 +81,16 @@ let nextDropdownId = 0;
 
     @if (open()) {
       <div
+        #listbox
+        [appAnchoredPanel]="trigger"
         [id]="listboxId"
         role="listbox"
         class="dropdown-panel"
-        [attr.aria-labelledby]="inputId()"
+        [attr.aria-labelledby]="controlId()"
       >
         @for (option of options(); track option.value; let index = $index) {
           <button
+            #option
             type="button"
             role="option"
             class="dropdown-option"
@@ -82,7 +104,10 @@ let nextDropdownId = 0;
             (pointerenter)="activate(index)"
             (click)="select(option)"
           >
-            <span>{{ option.label }}</span>
+            @if (option.icon) {
+              <app-icon [name]="option.icon" class="dropdown-option-icon" />
+            }
+            <span class="dropdown-text">{{ option.label }}</span>
             @if (value() === option.value) {
               <app-icon name="check" class="dropdown-check" />
             }
@@ -104,7 +129,10 @@ let nextDropdownId = 0;
 export class DropdownListComponent implements ControlValueAccessor {
   private readonly generatedId = `app-dropdown-${nextDropdownId++}`;
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly field = inject(FORM_FIELD, { optional: true });
   private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  private readonly listbox = viewChild<ElementRef<HTMLElement>>('listbox');
+  private readonly optionElements = viewChildren<ElementRef<HTMLElement>>('option');
 
   readonly options = input.required<readonly DropdownOption[]>();
   readonly placeholder = input('');
@@ -120,6 +148,12 @@ export class DropdownListComponent implements ControlValueAccessor {
   protected readonly open = signal(false);
   protected readonly activeIndex = signal(-1);
   private readonly formDisabled = signal(false);
+  protected readonly controlId = computed(() => this.field?.controlId() ?? this.inputId());
+  protected readonly describedByIds = computed(() =>
+    joinIds(this.describedBy(), this.field?.describedBy()),
+  );
+  protected readonly isInvalid = computed(() => this.invalid() || !!this.field?.invalid());
+  protected readonly isRequired = computed(() => this.required() || !!this.field?.required());
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly selectedOption = computed(
     () => this.options().find((option) => option.value === this.value()) ?? null,
@@ -127,6 +161,16 @@ export class DropdownListComponent implements ControlValueAccessor {
 
   private onChange: (value: string) => void = () => undefined;
   private onTouched: () => void = () => undefined;
+
+  constructor() {
+    afterRenderEffect(() => {
+      const list = this.listbox()?.nativeElement;
+      const option = this.optionElements()[this.activeIndex()]?.nativeElement;
+      if (list && option) {
+        keepOptionInView(list, option);
+      }
+    });
+  }
 
   writeValue(value: string | null | undefined): void {
     this.value.set(value ?? '');
@@ -181,6 +225,7 @@ export class DropdownListComponent implements ControlValueAccessor {
     }
 
     if (event.key === 'Escape') {
+      // Cancelling the keydown also stops an enclosing modal dialog from closing.
       if (this.open()) {
         event.preventDefault();
         this.close();
@@ -213,7 +258,7 @@ export class DropdownListComponent implements ControlValueAccessor {
       if (!this.open()) {
         this.openList();
       } else {
-        this.moveActive(direction);
+        this.activeIndex.set(nextEnabledIndex(this.options(), this.activeIndex(), direction));
       }
       return;
     }
@@ -223,12 +268,12 @@ export class DropdownListComponent implements ControlValueAccessor {
       if (!this.open()) {
         this.openList();
       }
-      this.activeIndex.set(this.enabledBoundary(event.key === 'Home' ? 1 : -1));
+      this.activeIndex.set(boundaryEnabledIndex(this.options(), event.key === 'Home' ? 1 : -1));
       return;
     }
 
     if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
-      const index = this.findByPrefix(event.key);
+      const index = indexByPrefix(this.options(), this.activeIndex(), event.key);
       if (index >= 0) {
         event.preventDefault();
         if (!this.open()) {
@@ -258,53 +303,11 @@ export class DropdownListComponent implements ControlValueAccessor {
     const selected = this.options().findIndex(
       (option) => option.value === this.value() && !option.disabled,
     );
-    this.activeIndex.set(selected >= 0 ? selected : this.enabledBoundary(1));
+    this.activeIndex.set(selected >= 0 ? selected : boundaryEnabledIndex(this.options(), 1));
   }
 
   private close(): void {
     this.open.set(false);
     this.activeIndex.set(-1);
-  }
-
-  private moveActive(direction: 1 | -1): void {
-    const options = this.options();
-    if (options.length === 0) {
-      return;
-    }
-    let index = this.activeIndex();
-    options.some(() => {
-      index = (index + direction + options.length) % options.length;
-      if (!options[index]?.disabled) {
-        this.activeIndex.set(index);
-        return true;
-      }
-      return false;
-    });
-  }
-
-  private enabledBoundary(direction: 1 | -1): number {
-    const options = this.options();
-    let index = direction === 1 ? 0 : options.length - 1;
-    while (index >= 0 && index < options.length) {
-      if (!options[index]?.disabled) {
-        return index;
-      }
-      index += direction;
-    }
-    return -1;
-  }
-
-  private findByPrefix(character: string): number {
-    const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
-    const start = Math.max(this.activeIndex() + 1, 0);
-    const options = this.options();
-    for (const offset of options.keys()) {
-      const index = (start + offset) % options.length;
-      const option = options[index];
-      if (!option?.disabled && collator.compare(option.label.slice(0, 1), character) === 0) {
-        return index;
-      }
-    }
-    return -1;
   }
 }

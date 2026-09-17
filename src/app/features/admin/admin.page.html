@@ -1,0 +1,585 @@
+<div class="admin-shell">
+  <aside class="sidebar" [class.is-open]="menuOpen()">
+    <a routerLink="/admin" class="brand" aria-label="DabaDigital"
+      ><app-logo /><span class="admin-tag">ADMIN</span></a
+    >
+    <div class="workspace">
+      <span class="workspace-avatar">D<span>•</span></span>
+      <div>
+        <strong>DabaDigital</strong><small>{{ t('admin.workspace') }}</small>
+      </div>
+      <app-icon name="chevron-down" />
+    </div>
+    <nav [attr.aria-label]="t('admin.workspace')">
+      @for (item of nav; track item.id; let index = $index) {
+        @if (index === 1) {
+          <p class="nav-heading">{{ t('admin.manage') }}</p>
+        }
+        @if (item.id === 'messages') {
+          <p class="nav-heading">{{ t('admin.communication') }}</p>
+        }
+        <a
+          [routerLink]="item.id === 'overview' ? '/admin' : '/admin/' + item.id"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ariaCurrentWhenActive="page"
+        >
+          <app-icon [name]="item.icon" /><span>{{ t(item.label) }}</span>
+          @if (item.id === 'messages' && unread()) {
+            <span class="count-badge">{{ unread() }}</span>
+          }
+        </a>
+      }
+    </nav>
+    <div class="sidebar-bottom">
+      <a routerLink="/" class="site-link"
+        ><app-icon name="globe" />{{ t('admin.viewSite') }}<app-icon name="arrow-up-right"
+      /></a>
+      <div class="account">
+        <span class="account-avatar">{{ auth.email().slice(0, 1).toUpperCase() || 'D' }}</span>
+        <div>
+          <strong>{{ auth.email() }}</strong
+          ><small>{{ t('admin.workspace') }}</small>
+        </div>
+        <button
+          appButton="ghost"
+          size="icon"
+          type="button"
+          (click)="signOut()"
+          [attr.aria-label]="t('admin.signOut')"
+        >
+          <app-icon name="logout" />
+        </button>
+      </div>
+    </div>
+  </aside>
+  <div class="main-column">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <button
+          appButton="ghost"
+          size="icon"
+          type="button"
+          class="mobile-menu"
+          (click)="menuOpen.set(!menuOpen())"
+          [attr.aria-label]="t('admin.menu')"
+          [attr.aria-expanded]="menuOpen()"
+        >
+          <app-icon name="menu" /></button
+        ><span>DabaDigital</span><span class="slash">/</span
+        ><strong>{{ t(current().label) }}</strong>
+      </div>
+      <div class="topbar-actions">
+        <app-theme-toggle /><app-language-menu /><a
+          appButton="secondary"
+          size="sm"
+          routerLink="/"
+          class="preview-link"
+          >{{ t('admin.viewSite') }}<app-icon name="arrow-up-right"
+        /></a>
+      </div>
+    </header>
+    <div class="page-content">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">{{ t('admin.workspace') }}<span class="dot"></span>DabaDigital</p>
+          <h1>{{ t(section() === 'overview' ? 'admin.welcome' : current().label) }}</h1>
+          <p class="lede">{{ t(current().description) }}</p>
+        </div>
+        <div class="heading-action">
+          @if (current().add; as add) {
+            <button
+              appButton
+              size="sm"
+              type="button"
+              [disabled]="loading() || loadError()"
+              (click)="openEditor(section())"
+            >
+              <app-icon name="plus" />{{ t(add) }}
+            </button>
+          } @else if (section() === 'overview') {
+            <span class="date-label"
+              ><app-icon name="calendar" />{{ today | date: 'MMM d, yyyy' }}</span
+            >
+          } @else {
+            <button
+              appButton="secondary"
+              size="sm"
+              type="button"
+              [loading]="loading()"
+              (click)="load()"
+            >
+              <app-icon name="refresh" />{{ t('admin.refresh') }}
+            </button>
+          }
+        </div>
+      </div>
+      @if (notice()) {
+        <p class="notice" role="status"><app-icon name="check-circle" />{{ notice() }}</p>
+      }
+      @if (error() && !editing() && !deleting()) {
+        <p class="error" role="alert">{{ error() }}</p>
+      }
+      @if (loading()) {
+        <div class="empty-state" role="status">
+          <span class="loading-dot"></span>
+          <p>{{ t('admin.loading') }}</p>
+        </div>
+      } @else if (loadError()) {
+        <div class="empty-state panel" role="alert">
+          <app-icon name="alert" />
+          <h2>{{ t('admin.loadError') }}</h2>
+          <button appButton size="sm" type="button" (click)="load()">
+            {{ t('admin.retry') }}
+          </button>
+        </div>
+      } @else if (section() === 'overview') {
+        <div class="stats-grid">
+          <a routerLink="/admin/projects" class="stat-card"
+            ><div class="stat-label">
+              {{ t('admin.projects') }}<span class="stat-icon"><app-icon name="folder" /></span>
+            </div>
+            <strong>{{ data().projects.length }}</strong>
+            <p><span class="dot success"></span>{{ published() }} {{ t('admin.liveContent') }}</p>
+            <span class="stat-decoration" aria-hidden="true"></span
+          ></a>
+          <a routerLink="/admin/services" class="stat-card"
+            ><div class="stat-label">
+              {{ t('admin.services') }}<span class="stat-icon"><app-icon name="code" /></span>
+            </div>
+            <strong>{{ data().services.length }}</strong>
+            <p>{{ t('admin.servicesDesc') }}</p></a
+          >
+          <a routerLink="/admin/messages" class="stat-card"
+            ><div class="stat-label">
+              {{ t('admin.totalMessages')
+              }}<span class="stat-icon accent"><app-icon name="mail" /></span>
+            </div>
+            <strong>{{ messages().length }}</strong>
+            <p>
+              <span class="unread-value">{{ unread() }} {{ t('admin.new') }}</span
+              >{{ t('admin.unread') }}
+            </p></a
+          >
+          <a routerLink="/admin/projects" class="stat-card"
+            ><div class="stat-label">
+              {{ t('admin.draft') }}<span class="stat-icon"><app-icon name="edit" /></span>
+            </div>
+            <strong>{{ drafts() }}</strong>
+            <p>{{ t('admin.draftCount') }}</p></a
+          >
+        </div>
+        <div class="overview-grid">
+          <section class="panel recent-work">
+            <div class="panel-heading">
+              <h2>
+                {{ t('admin.recentProjects')
+                }}<span class="subtle-count">{{ data().projects.length }}</span>
+              </h2>
+              <a routerLink="/admin/projects" class="text-link"
+                >{{ t('admin.viewAll') }}<app-icon name="arrow-right"
+              /></a>
+            </div>
+            @for (project of recentProjects(); track project.id) {
+              <button class="project-row" (click)="openEditor('projects', project)">
+                <span class="project-thumb">
+                  @if (project.image_url) {
+                    <img [src]="project.image_url" alt="" />
+                  } @else {
+                    <app-work-thumb [tone]="project.tone" />
+                  }</span
+                ><span class="project-row-info"
+                  ><strong>{{ project.name }}</strong
+                  ><small
+                    >{{ project.categories.length ? categoryName(project.categories[0]) : '—'
+                    }}<span>·</span>{{ project.year }}</small
+                  ></span
+                ><span class="status" [class]="'status ' + project.status">{{
+                  statusLabel(project.status)
+                }}</span
+                ><app-icon name="arrow-up-right" class="row-arrow" />
+              </button>
+            }
+            @if (!data().projects.length) {
+              <div class="empty-state">
+                <app-icon name="folder" />
+                <p>{{ t('admin.emptyContent') }}</p>
+                <button
+                  appButton="secondary"
+                  size="sm"
+                  type="button"
+                  (click)="openEditor('projects')"
+                >
+                  {{ t('admin.addProject') }}
+                </button>
+              </div>
+            }
+          </section>
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>{{ t('admin.recentMessages') }}</h2>
+              <a routerLink="/admin/messages" class="text-link"
+                ><app-icon name="arrow-up-right" /><span class="sr-only">{{
+                  t('admin.viewAll')
+                }}</span></a
+              >
+            </div>
+            @for (message of messages().slice(0, 3); track message.id) {
+              <a routerLink="/admin/messages" class="recent-message"
+                ><span class="message-avatar">{{
+                  message.full_name.slice(0, 1).toUpperCase()
+                }}</span>
+                <div>
+                  <strong>{{ message.full_name }}</strong>
+                  <p>{{ message.description }}</p>
+                  <small
+                    >{{ message.created_at | date: 'MMM d' }}<span>·</span
+                    >{{ projectTypeLabel(message.project_type) }}</small
+                  >
+                </div>
+                @if (message.status === 'new') {
+                  <span class="dot"></span>
+                }
+              </a>
+            }
+            @if (!messages().length) {
+              <div class="empty-state inbox-empty">
+                <span class="empty-icon"><app-icon name="mail" /></span>
+                <h3>{{ t('admin.noMessages') }}</h3>
+                <p>{{ t('admin.noMessagesDesc') }}</p>
+              </div>
+            }
+          </section>
+        </div>
+        <section class="quick-actions">
+          <div>
+            <span class="eyebrow">DABADIGITAL STUDIO</span>
+            <h2>{{ t('admin.quickActions') }}</h2>
+            <p>{{ t('admin.quickDesc') }}</p>
+          </div>
+          <div class="quick-buttons">
+            <button appButton size="sm" type="button" (click)="openEditor('projects')">
+              <app-icon name="plus" />{{ t('admin.addProject') }}</button
+            ><a appButton="secondary" size="sm" routerLink="/admin/contact"
+              ><app-icon name="phone" />{{ t('admin.contact') }}</a
+            >
+          </div>
+        </section>
+      } @else if (section() === 'messages') {
+        <section class="panel inbox-panel">
+          <div class="toolbar">
+            <app-select-buttons
+              variant="tabs"
+              [label]="t('admin.filterLabel')"
+              [options]="messageFilterOptions()"
+              [value]="filter()"
+              (valueChange)="setFilter($event)"
+            />
+            <app-search-input
+              class="toolbar-search"
+              size="sm"
+              [label]="t('admin.searchLabel')"
+              [clearLabel]="t('admin.clearSearch')"
+              [placeholder]="t('admin.search')"
+              [value]="query()"
+              (valueChange)="setQuery($event)"
+            />
+          </div>
+          <div class="inbox-columns">
+            <div class="message-list">
+              @for (item of filteredMessages(); track item.id) {
+                <button
+                  class="message-item"
+                  [class.selected]="selectedMessage() === item.id"
+                  [class.unread]="item.status === 'new'"
+                  (click)="openMessage(item)"
+                >
+                  <div>
+                    <strong>{{ item.full_name }}</strong
+                    ><small>{{ item.created_at | date: 'MMM d' }}</small>
+                  </div>
+                  <span class="message-subject">{{ projectTypeLabel(item.project_type) }}</span>
+                  <p>{{ item.description }}</p>
+                  <span class="status" [class]="'status ' + item.status">{{
+                    statusLabel(item.status)
+                  }}</span>
+                </button>
+              } @empty {
+                <div class="empty-state">
+                  <app-icon name="mail" />
+                  <p>
+                    {{
+                      t(query() || filter() !== 'all' ? 'admin.noResults' : 'admin.noMessagesDesc')
+                    }}
+                  </p>
+                  @if (query() || filter() !== 'all') {
+                    <button appButton="ghost" size="sm" type="button" (click)="clear()">
+                      {{ t('admin.clear') }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+            <div class="message-detail">
+              @if (message(); as item) {
+                <div class="message-detail-header">
+                  <span class="message-avatar large">{{
+                    item.full_name.slice(0, 1).toUpperCase()
+                  }}</span>
+                  <div>
+                    <h2>{{ item.full_name }}</h2>
+                    <a [href]="replyHref(item)">{{ item.email }}</a>
+                  </div>
+                </div>
+                <dl class="message-meta">
+                  <div>
+                    <dt>{{ t('admin.company') }}</dt>
+                    <dd>{{ item.company_name || '—' }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('admin.projectType') }}</dt>
+                    <dd>{{ projectTypeLabel(item.project_type) }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('admin.budget') }}</dt>
+                    <dd>{{ item.budget || '—' }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('admin.received') }}</dt>
+                    <dd>{{ item.created_at | date: 'medium' }}</dd>
+                  </div>
+                </dl>
+                <p class="message-body" dir="auto">{{ item.description }}</p>
+                <div class="message-actions">
+                  <a appButton size="sm" [href]="replyHref(item)"
+                    ><app-icon name="send" class="rtl:-scale-x-100" />{{ t('admin.reply') }}</a
+                  ><button
+                    appButton="secondary"
+                    size="sm"
+                    type="button"
+                    [disabled]="busy() || item.status === 'replied'"
+                    (click)="setMessageStatus(item, 'replied')"
+                  >
+                    {{ t('admin.markReplied') }}</button
+                  ><button
+                    appButton="secondary"
+                    size="sm"
+                    type="button"
+                    [disabled]="busy()"
+                    (click)="
+                      setMessageStatus(item, item.status === 'archived' ? 'new' : 'archived')
+                    "
+                  >
+                    {{ t(item.status === 'archived' ? 'admin.markNew' : 'admin.archive') }}
+                  </button>
+                </div>
+              } @else {
+                <div class="empty-state choose-message">
+                  <span class="empty-icon"><app-icon name="mail" /></span>
+                  <h2>{{ t('admin.selectMessage') }}</h2>
+                  <p>{{ t('admin.selectMessageDesc') }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        </section>
+      } @else {
+        <section class="panel content-panel">
+          <div class="toolbar">
+            <app-select-buttons
+              variant="tabs"
+              [label]="t('admin.filterLabel')"
+              [options]="contentFilterOptions()"
+              [value]="filter()"
+              (valueChange)="setFilter($event)"
+            />
+            <app-search-input
+              class="toolbar-search"
+              size="sm"
+              [label]="t('admin.searchLabel')"
+              [clearLabel]="t('admin.clearSearch')"
+              [placeholder]="t(section() === 'projects' ? 'admin.searchProjects' : 'admin.search')"
+              [value]="query()"
+              (valueChange)="setQuery($event)"
+            />
+          </div>
+          @if (pageRows().length) {
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>{{ t('admin.name') }}</th>
+                    @if (section() === 'projects') {
+                      <th>{{ t('admin.category') }}</th>
+                      <th>{{ t('admin.year') }}</th>
+                    }
+                    <th>{{ t(section() === 'categories' ? 'admin.position' : 'admin.status') }}</th>
+                    <th class="actions-cell">{{ t('admin.actions') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (record of pageRows(); track record.id) {
+                    <tr>
+                      <td>
+                        <div class="record-title">
+                          @if ('tone' in record) {
+                            <span class="project-thumb">
+                              @if (record.image_url) {
+                                <img [src]="record.image_url" alt="" />
+                              } @else {
+                                <app-work-thumb [tone]="record.tone" />
+                              }
+                            </span>
+                          } @else {
+                            <span class="record-icon"
+                              ><app-icon [name]="recordIcon(record)"
+                            /></span>
+                          }
+                          <div>
+                            <button class="record-name" (click)="openEditor(section(), record)">
+                              {{ recordName(record) }}
+                            </button>
+                            <p>{{ recordDescription(record) }}</p>
+                          </div>
+                        </div>
+                      </td>
+                      @if ('categories' in record) {
+                        <td>
+                          <div class="category-badges">
+                            @for (category of record.categories; track category) {
+                              <span>{{ categoryName(category) }}</span>
+                            }
+                          </div>
+                        </td>
+                        <td class="muted">{{ record.year }}</td>
+                      }
+                      <td>
+                        @if ('status' in record) {
+                          <span [class]="'status ' + record.status">{{
+                            statusLabel(record.status)
+                          }}</span>
+                        } @else {
+                          <span class="muted">{{ record.position }}</span>
+                        }
+                      </td>
+                      <td>
+                        <div class="row-actions">
+                          <button
+                            appButton="ghost"
+                            size="icon"
+                            type="button"
+                            [attr.aria-label]="t('admin.edit') + ' ' + recordName(record)"
+                            (click)="openEditor(section(), record)"
+                          >
+                            <app-icon name="edit" /></button
+                          ><button
+                            appButton="danger-ghost"
+                            size="icon"
+                            type="button"
+                            [attr.aria-label]="t('admin.delete') + ' ' + recordName(record)"
+                            (click)="confirmDelete(record)"
+                          >
+                            <app-icon name="trash" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty-state">
+              <span class="empty-icon"><app-icon [name]="current().icon" /></span>
+              <h2>{{ t(query() || filter() !== 'all' ? 'admin.noResults' : 'admin.empty') }}</h2>
+              <p>{{ t('admin.emptyContent') }}</p>
+              @if (query() || filter() !== 'all') {
+                <button appButton="secondary" size="sm" type="button" (click)="clear()">
+                  {{ t('admin.clear') }}
+                </button>
+              } @else if (current().add; as add) {
+                <button appButton size="sm" type="button" (click)="openEditor(section())">
+                  {{ t(add) }}
+                </button>
+              }
+            </div>
+          }
+          <footer class="table-footer">
+            <span>{{ t('admin.range', { count: pageRows().length, total: rows().length }) }}</span>
+            <div>
+              <button
+                appButton="secondary"
+                size="sm"
+                type="button"
+                [disabled]="page() === 0"
+                (click)="page.set(page() - 1)"
+              >
+                {{ t('admin.previous') }}</button
+              ><button
+                appButton="secondary"
+                size="sm"
+                type="button"
+                [disabled]="(page() + 1) * 8 >= rows().length"
+                (click)="page.set(page() + 1)"
+              >
+                {{ t('admin.next') }}
+              </button>
+            </div>
+          </footer>
+        </section>
+      }
+      <footer class="workspace-footer">
+        <span>© {{ today | date: 'yyyy' }} DabaDigital</span
+        ><span>{{ t('admin.workspace') }}<span class="dot success"></span></span>
+      </footer>
+    </div>
+  </div>
+</div>
+@if (editing(); as item) {
+  <app-admin-editor
+    [section]="item.section"
+    [record]="item.record"
+    [categories]="data().categories"
+    [busy]="busy()"
+    [error]="error()"
+    (closed)="editing.set(null); error.set('')"
+    (saved)="save($event)"
+  />
+}
+@if (deleting(); as item) {
+  <app-dialog
+    alert
+    size="sm"
+    icon="trash"
+    tone="danger"
+    [heading]="t('admin.deleteTitle')"
+    [dismissible]="!busy()"
+    (dismissed)="cancelDelete()"
+  >
+    <p class="delete-name">{{ recordName(item.record) }}</p>
+    <p class="muted delete-description">{{ t('admin.deleteDesc') }}</p>
+    @if (error()) {
+      <p class="error delete-error" role="alert">{{ error() }}</p>
+    }
+    <button
+      appDialogActions
+      appButton="secondary"
+      size="sm"
+      type="button"
+      [disabled]="busy()"
+      (click)="cancelDelete()"
+    >
+      {{ t('admin.cancel') }}
+    </button>
+    <button
+      appDialogActions
+      appButton="danger"
+      size="sm"
+      type="button"
+      [loading]="busy()"
+      (click)="remove()"
+    >
+      {{ t('admin.delete') }}
+    </button>
+  </app-dialog>
+}

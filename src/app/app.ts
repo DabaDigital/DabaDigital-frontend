@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 
 import { I18nService } from './core/i18n/i18n.service';
 import { ThemeService } from './core/theme/theme.service';
@@ -13,6 +15,14 @@ import { SiteHeaderComponent } from './shared/layout/site-header.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  private readonly router = inject(Router);
+  protected readonly isAdmin = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event) => /^\/admin(?:\/|\?|$)/.test(event.urlAfterRedirects)),
+    ),
+    { initialValue: /^\/admin(?:\/|\?|$)/.test(this.router.url) },
+  );
   protected readonly i18n = inject(I18nService);
 
   /**

@@ -60,10 +60,19 @@
             <div
               class="relative aspect-[4/3] overflow-hidden border-b border-border-glass text-text-strong"
             >
-              <app-work-thumb
-                [tone]="project.tone"
-                class="h-full w-full transition-transform duration-(--duration-slow) ease-standard group-hover:scale-105"
-              />
+              @if (project.image_url) {
+                <img
+                  [src]="project.image_url"
+                  alt=""
+                  loading="lazy"
+                  class="h-full w-full object-cover"
+                />
+              } @else {
+                <app-work-thumb
+                  [tone]="project.tone"
+                  class="h-full w-full transition-transform duration-(--duration-slow) ease-standard group-hover:scale-105"
+                />
+              }
             </div>
 
             <div class="flex flex-1 flex-col p-6">
@@ -83,7 +92,7 @@
                   {{ project.name }}
                 </a>
               </h3>
-              <p class="mt-2 flex-1 text-sm text-text-muted">{{ t(project.summaryKey) }}</p>
+              <p class="mt-2 flex-1 text-sm text-text-muted">{{ content.text(project.summary) }}</p>
 
               <!--
                 Decorative: the card's own link already carries the accessible

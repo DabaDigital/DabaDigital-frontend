@@ -29,80 +29,30 @@
         <h3 class="text-lg font-semibold">{{ t('contact.infoTitle') }}</h3>
 
         <dl class="mt-6 space-y-5">
-          <div class="flex items-start gap-3">
-            <span
-              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
-            >
-              <app-icon name="mail" class="size-4" />
-            </span>
-            <div class="min-w-0">
-              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
-                {{ t('contact.emailLabel') }}
-              </dt>
-              <!-- `break-all` so a long address cannot widen the card past the grid column. -->
-              <dd class="mt-0.5">
-                <a
-                  [href]="'mailto:' + details.email"
-                  class="font-medium break-all text-text-strong underline decoration-border-strong underline-offset-4 transition-colors duration-(--duration-fast) ease-standard hover:decoration-primary"
-                  >{{ details.email }}</a
-                >
-              </dd>
+          @for (channel of content.contact(); track channel.id) {
+            <div class="flex items-start gap-3">
+              <span
+                class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
+                ><app-icon [name]="channel.icon" class="size-4"
+              /></span>
+              <div class="min-w-0">
+                <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
+                  {{ content.text(channel.label) }}
+                </dt>
+                <dd class="mt-0.5 font-medium text-text-strong" dir="auto">
+                  @if (channel.href) {
+                    <a
+                      [href]="channel.href"
+                      class="break-words underline decoration-border-strong underline-offset-4"
+                      >{{ content.text(channel.value) }}</a
+                    >
+                  } @else {
+                    {{ content.text(channel.value) }}
+                  }
+                </dd>
+              </div>
             </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <span
-              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
-            >
-              <app-icon name="phone" class="size-4" />
-            </span>
-            <div>
-              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
-                {{ t('contact.phoneLabel') }}
-              </dt>
-              <!--
-                `dir="ltr"` is required: a phone number is read left-to-right even
-                inside an Arabic page, and without it the leading + jumps to the
-                wrong end of the string.
-              -->
-              <dd class="mt-0.5">
-                <a
-                  [href]="'tel:' + details.phoneHref"
-                  dir="ltr"
-                  class="inline-block font-medium text-text-strong underline decoration-border-strong underline-offset-4 transition-colors duration-(--duration-fast) ease-standard hover:decoration-primary"
-                  >{{ details.phone }}</a
-                >
-              </dd>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <span
-              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
-            >
-              <app-icon name="map-pin" class="size-4" />
-            </span>
-            <div>
-              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
-                {{ t('contact.locationLabel') }}
-              </dt>
-              <dd class="mt-0.5 font-medium text-text-strong">{{ t('contact.locationValue') }}</dd>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <span
-              class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
-            >
-              <app-icon name="clock" class="size-4" />
-            </span>
-            <div>
-              <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
-                {{ t('contact.hoursLabel') }}
-              </dt>
-              <dd class="mt-0.5 font-medium text-text-strong">{{ t('contact.hoursValue') }}</dd>
-            </div>
-          </div>
+          }
         </dl>
 
         <p class="mt-8 border-t border-border-subtle pt-5 text-xs text-text-muted">
@@ -161,7 +111,9 @@
                     appButton="secondary"
                     type="button"
                     [attr.aria-pressed]="isRecording()"
-                    [attr.aria-label]="isRecording() ? t('contact.voice.stop') : t('contact.voice.start')"
+                    [attr.aria-label]="
+                      isRecording() ? t('contact.voice.stop') : t('contact.voice.start')
+                    "
                     (click)="toggleRecording()"
                   >
                     <app-icon [name]="isRecording() ? 'stop' : 'mic'" class="size-4" />
@@ -178,21 +130,31 @@
                       </span>
                     }
                     @case ('requesting-permission') {
-                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateRequestingPermission') }}</span>
+                      <span class="text-sm text-text-muted">{{
+                        t('contact.voice.stateRequestingPermission')
+                      }}</span>
                     }
                     @case ('connecting') {
-                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateConnecting') }}</span>
+                      <span class="text-sm text-text-muted">{{
+                        t('contact.voice.stateConnecting')
+                      }}</span>
                     }
                     @case ('processing') {
-                      <span class="text-sm text-text-muted">{{ t('contact.voice.stateProcessing') }}</span>
+                      <span class="text-sm text-text-muted">{{
+                        t('contact.voice.stateProcessing')
+                      }}</span>
                     }
                   }
                 </div>
                 @if (recorderState() === 'error') {
-                  <p role="alert" class="mt-3 text-sm text-danger">{{ voiceUnavailableMessage() }}</p>
+                  <p role="alert" class="mt-3 text-sm text-danger">
+                    {{ voiceUnavailableMessage() }}
+                  </p>
                 }
                 @if (transcript()) {
-                  <p class="mt-3 max-h-24 overflow-y-auto rounded-sm bg-surface-card p-2.5 text-sm text-text-muted">
+                  <p
+                    class="mt-3 max-h-24 overflow-y-auto rounded-sm bg-surface-card p-2.5 text-sm text-text-muted"
+                  >
                     {{ transcript() }}
                   </p>
                 }
@@ -232,67 +194,56 @@
 
             <p class="text-xs text-text-muted">{{ t('contact.requiredHint') }}</p>
 
+            <!--
+              Each `app-form-field` owns its control's id (`fieldId`), so the
+              label, `aria-describedby`, `aria-invalid` and the error message ids
+              all come from one place — and `focusField()` can find the control.
+            -->
             <div class="grid gap-5 sm:grid-cols-2">
-              <!-- Name -->
-              <div>
-                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                  <label for="contact-fullName" class="block text-sm font-medium text-text-strong">
-                    {{ t('contact.name.label') }}
-                    <span class="text-danger" aria-hidden="true">*</span>
-                  </label>
-                  @if (fields().fullName.source === 'voice') {
-                    <app-ai-badge
-                      [hint]="t('contact.voice.badgeHint')"
-                      [undoLabel]="t('contact.voice.undo')"
-                      (undo)="undoField('fullName')"
-                    />
-                  }
-                </div>
+              <app-form-field
+                fieldId="contact-fullName"
+                required
+                [label]="t('contact.name.label')"
+                [error]="fieldError('fullName')"
+              >
+                @if (fields().fullName.source === 'voice') {
+                  <app-ai-badge
+                    appFieldAside
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('fullName')"
+                  />
+                }
                 <input
                   appInput
-                  id="contact-fullName"
                   type="text"
                   formControlName="fullName"
                   autocomplete="name"
                   required
                   [placeholder]="t('contact.name.placeholder')"
-                  [attr.aria-invalid]="showsError('fullName')"
-                  [attr.aria-describedby]="showsError('fullName') ? 'contact-fullName-error' : null"
-                  class="mt-1.5"
                 />
-                @if (showsError('fullName')) {
-                  <p
-                    id="contact-fullName-error"
-                    class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
-                  >
-                    <app-icon name="alert" class="size-3.5 flex-none" />
-                    {{ t('contact.name.error') }}
-                  </p>
-                }
-              </div>
+              </app-form-field>
 
-              <!-- Email -->
-              <div>
-                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                  <label for="contact-email" class="block text-sm font-medium text-text-strong">
-                    {{ t('contact.email.label') }}
-                    <span class="text-danger" aria-hidden="true">*</span>
-                  </label>
-                  @if (fields().email.source === 'voice') {
-                    <app-ai-badge
-                      [hint]="t('contact.voice.badgeHint')"
-                      [undoLabel]="t('contact.voice.undo')"
-                      (undo)="undoField('email')"
-                    />
-                  }
-                </div>
+              <app-form-field
+                fieldId="contact-email"
+                required
+                [label]="t('contact.email.label')"
+                [error]="fieldError('email')"
+              >
+                @if (fields().email.source === 'voice') {
+                  <app-ai-badge
+                    appFieldAside
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('email')"
+                  />
+                }
                 <!--
                   `type="email"` for the mobile keyboard, `dir="ltr"` because an
                   address is never RTL even on an Arabic page.
                 -->
                 <input
                   appInput
-                  id="contact-email"
                   type="email"
                   formControlName="email"
                   autocomplete="email"
@@ -300,164 +251,97 @@
                   dir="ltr"
                   required
                   [placeholder]="t('contact.email.placeholder')"
-                  [attr.aria-invalid]="showsError('email')"
-                  [attr.aria-describedby]="showsError('email') ? 'contact-email-error' : null"
-                  class="mt-1.5"
                 />
-                @if (showsError('email')) {
-                  <p
-                    id="contact-email-error"
-                    class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
-                  >
-                    <app-icon name="alert" class="size-3.5 flex-none" />
-                    <!-- Two different failures, two different fixes. -->
-                    {{
-                      form.controls.email.hasError('required')
-                        ? t('contact.email.errorRequired')
-                        : t('contact.email.errorFormat')
-                    }}
-                  </p>
-                }
-              </div>
+              </app-form-field>
 
-              <!-- Company (optional) -->
-              <div>
-                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                  <label for="contact-company" class="block text-sm font-medium text-text-strong">
-                    {{ t('contact.company.label') }}
-                    <span class="ms-1 text-xs font-normal text-text-muted"
-                      >({{ t('contact.optional') }})</span
-                    >
-                  </label>
-                  @if (fields().companyName.source === 'voice') {
-                    <app-ai-badge
-                      [hint]="t('contact.voice.badgeHint')"
-                      [undoLabel]="t('contact.voice.undo')"
-                      (undo)="undoField('companyName')"
-                    />
-                  }
-                </div>
+              <app-form-field
+                fieldId="contact-company"
+                [label]="t('contact.company.label')"
+                [optionalLabel]="t('contact.optional')"
+              >
+                @if (fields().companyName.source === 'voice') {
+                  <app-ai-badge
+                    appFieldAside
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('companyName')"
+                  />
+                }
                 <input
                   appInput
-                  id="contact-company"
                   type="text"
                   formControlName="company"
                   autocomplete="organization"
                   [placeholder]="t('contact.company.placeholder')"
-                  class="mt-1.5"
                 />
-              </div>
+              </app-form-field>
 
-              <!-- Project type -->
-              <div>
-                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                  <label for="contact-projectType" class="block text-sm font-medium text-text-strong">
-                    {{ t('contact.type.label') }}
-                    <span class="text-danger" aria-hidden="true">*</span>
-                  </label>
-                  @if (fields().projectType.source === 'voice') {
-                    <app-ai-badge
-                      [hint]="t('contact.voice.badgeHint')"
-                      [undoLabel]="t('contact.voice.undo')"
-                      (undo)="undoField('projectType')"
-                    />
-                  }
-                </div>
+              <app-form-field
+                fieldId="contact-projectType"
+                required
+                [label]="t('contact.type.label')"
+                [error]="fieldError('projectType')"
+              >
+                @if (fields().projectType.source === 'voice') {
+                  <app-ai-badge
+                    appFieldAside
+                    [hint]="t('contact.voice.badgeHint')"
+                    [undoLabel]="t('contact.voice.undo')"
+                    (undo)="undoField('projectType')"
+                  />
+                }
                 <app-dropdown-list
-                  inputId="contact-projectType"
                   formControlName="projectType"
                   [options]="projectTypeOptions()"
                   [placeholder]="t('contact.type.placeholder')"
-                  [required]="true"
-                  [invalid]="showsError('projectType')"
-                  [describedBy]="showsError('projectType') ? 'contact-projectType-error' : null"
-                  class="mt-1.5"
                 />
-                @if (showsError('projectType')) {
-                  <p
-                    id="contact-projectType-error"
-                    class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
-                  >
-                    <app-icon name="alert" class="size-3.5 flex-none" />
-                    {{ t('contact.type.error') }}
-                  </p>
-                }
-              </div>
+              </app-form-field>
             </div>
 
-            <!-- Budget (optional) -->
-            <div>
-              <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                <label for="contact-budget" class="block text-sm font-medium text-text-strong">
-                  {{ t('contact.budget.label') }}
-                  <span class="ms-1 text-xs font-normal text-text-muted"
-                    >({{ t('contact.optional') }})</span
-                  >
-                </label>
-                @if (fields().budget.source === 'voice') {
-                  <app-ai-badge
-                    [hint]="t('contact.voice.badgeHint')"
-                    [undoLabel]="t('contact.voice.undo')"
-                    (undo)="undoField('budget')"
-                  />
-                }
-              </div>
+            <app-form-field
+              fieldId="contact-budget"
+              [label]="t('contact.budget.label')"
+              [optionalLabel]="t('contact.optional')"
+            >
+              @if (fields().budget.source === 'voice') {
+                <app-ai-badge
+                  appFieldAside
+                  [hint]="t('contact.voice.badgeHint')"
+                  [undoLabel]="t('contact.voice.undo')"
+                  (undo)="undoField('budget')"
+                />
+              }
               <app-dropdown-list
-                inputId="contact-budget"
                 formControlName="budget"
                 [options]="budgetOptions()"
                 [placeholder]="t('contact.budget.placeholder')"
-                class="mt-1.5"
               />
-            </div>
+            </app-form-field>
 
-            <!-- Message -->
-            <div>
-              <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                <label for="contact-message" class="block text-sm font-medium text-text-strong">
-                  {{ t('contact.message.label') }}
-                  <span class="text-danger" aria-hidden="true">*</span>
-                </label>
-                @if (fields().description.source === 'voice') {
-                  <app-ai-badge
-                    [hint]="t('contact.voice.badgeHint')"
-                    [undoLabel]="t('contact.voice.undo')"
-                    (undo)="undoField('description')"
-                  />
-                }
-              </div>
+            <!-- Persistent helper text, not a placeholder that vanishes on focus. -->
+            <app-form-field
+              fieldId="contact-message"
+              required
+              [label]="t('contact.message.label')"
+              [hint]="t('contact.message.hint')"
+              [error]="fieldError('message')"
+            >
+              @if (fields().description.source === 'voice') {
+                <app-ai-badge
+                  appFieldAside
+                  [hint]="t('contact.voice.badgeHint')"
+                  [undoLabel]="t('contact.voice.undo')"
+                  (undo)="undoField('description')"
+                />
+              }
               <textarea
                 appInput
-                id="contact-message"
                 formControlName="message"
                 rows="5"
                 required
                 [placeholder]="t('contact.message.placeholder')"
-                [attr.aria-invalid]="showsError('message')"
-                [attr.aria-describedby]="
-                  showsError('message') ? 'contact-message-error' : 'contact-message-hint'
-                "
-                class="mt-1.5"
               ></textarea>
-              @if (showsError('message')) {
-                <p
-                  id="contact-message-error"
-                  class="mt-1.5 flex items-center gap-1.5 text-sm text-danger"
-                >
-                  <app-icon name="alert" class="size-3.5 flex-none" />
-                  {{
-                    form.controls.message.hasError('required')
-                      ? t('contact.message.errorRequired')
-                      : t('contact.message.errorShort')
-                  }}
-                </p>
-              } @else {
-                <!-- Persistent helper text, not a placeholder that vanishes on focus. -->
-                <p id="contact-message-hint" class="mt-1.5 text-sm text-text-muted">
-                  {{ t('contact.message.hint') }}
-                </p>
-              }
-            </div>
+            </app-form-field>
 
             <!-- Network failure, with the address to fall back on. -->
             @if (status() === 'error') {
@@ -466,7 +350,7 @@
                 class="flex items-start gap-2.5 rounded-sm border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
               >
                 <app-icon name="alert" class="mt-0.5 size-4 flex-none text-danger" />
-                <span>{{ t('contact.errorSend', { email: details.email }) }}</span>
+                <span>{{ t('contact.errorSend', { email: contactEmail }) }}</span>
               </p>
             }
 

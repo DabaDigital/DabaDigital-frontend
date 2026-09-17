@@ -40,6 +40,7 @@ let nextSearchInputId = 0;
         appInput
         type="search"
         class="search-control"
+        [size]="size()"
         [id]="inputId()"
         [attr.name]="name()"
         [value]="value()"
@@ -77,6 +78,7 @@ export class SearchInputComponent implements ControlValueAccessor {
   readonly label = input.required<string>();
   readonly clearLabel = input.required<string>();
   readonly placeholder = input('');
+  readonly size = input<'md' | 'sm'>('md');
   readonly value = model('');
   readonly disabled = input(false, { transform: booleanAttribute });
 

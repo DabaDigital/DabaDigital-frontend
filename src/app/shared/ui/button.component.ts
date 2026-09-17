@@ -10,7 +10,7 @@ import {
   input,
 } from '@angular/core';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'danger-ghost';
 export type ButtonSize = 'sm' | 'md' | 'icon';
 
 /**
@@ -98,6 +98,26 @@ export type ButtonSize = 'sm' | 'md' | 'icon';
       :host([data-variant='ghost']:hover:not([aria-disabled='true'])) {
         background-color: var(--surface-muted);
         color: var(--text-strong);
+      }
+
+      :host([data-variant='danger']) {
+        background-color: var(--danger);
+        color: var(--primary-contrast);
+      }
+
+      :host([data-variant='danger']:hover:not([aria-disabled='true'])) {
+        background-color: color-mix(in srgb, var(--danger) 85%, var(--text-strong));
+      }
+
+      /* Quiet at rest, so a column of row actions does not shout; red on intent. */
+      :host([data-variant='danger-ghost']) {
+        background-color: transparent;
+        color: var(--text-body);
+      }
+
+      :host([data-variant='danger-ghost']:hover:not([aria-disabled='true'])) {
+        background-color: var(--danger-soft);
+        color: var(--danger);
       }
 
       :host([data-size='sm']) {

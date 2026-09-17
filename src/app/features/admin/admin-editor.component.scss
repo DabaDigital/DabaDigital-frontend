@@ -1,0 +1,49 @@
+:host {
+  display: contents;
+}
+.editor-form {
+  display: grid;
+  gap: 1.25rem;
+}
+.editor-error {
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 0.875rem;
+}
+.hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+.locale-group {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+.locale-group legend {
+  padding-inline: 0.5rem;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+// A two-line summary does not need the full-height message box.
+textarea.short-text {
+  min-block-size: 5rem;
+}
+@media (max-width: 480px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+}
