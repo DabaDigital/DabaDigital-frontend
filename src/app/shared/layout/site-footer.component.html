@@ -1,93 +1,50 @@
-<footer class="border-t border-border-subtle bg-surface-card">
-  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
-    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
-      <div class="max-w-sm">
-        <!-- Not a link, so the name is carried by adjacent screen-reader text. -->
-        <p class="flex items-center text-text-strong">
-          <app-logo class="h-7" />
+<footer class="border-t border-white/10 bg-[#030712] text-slate-400">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+      <!-- Left: Logo & Studio description -->
+      <div class="flex flex-col gap-2.5 max-w-sm">
+        <div class="flex items-center gap-3">
+          <app-logo class="h-7 text-white" />
           <span class="sr-only">DabaDigital</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Moroccan digital studio — websites, applications and custom integrations.
         </p>
-        <p class="mt-4 text-sm text-text-muted">{{ t('footer.tagline') }}</p>
-
-        <ul class="mt-6 flex gap-2">
-          @for (social of content.social(); track social.id) {
-            <li>
-              <a
-                [href]="social.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                [attr.aria-label]="social.name"
-                class="grid size-10 place-items-center rounded-sm border border-border-subtle text-text-muted hover:text-text-strong"
-                ><app-icon [name]="social.icon" class="size-[1.15rem]"
-              /></a>
-            </li>
-          }
-        </ul>
       </div>
 
-      <nav [attr.aria-label]="t('footer.navLabel')">
-        <h2 class="text-xs font-semibold tracking-widest text-text-muted uppercase">
-          {{ t('footer.sectionsLabel') }}
-        </h2>
-        <ul class="mt-4 space-y-1">
-          @for (section of sections(); track section.id) {
-            <li>
-              <a
-                routerLink="/"
-                [fragment]="section.id"
-                class="inline-flex min-h-9 items-center text-sm text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
-              >
-                {{ section.label }}
-              </a>
-            </li>
-          }
-        </ul>
+      <!-- Middle: Navigation links -->
+      <nav class="flex flex-wrap items-center gap-6 text-sm" [attr.aria-label]="t('footer.navLabel')">
+        @for (section of sections(); track section.id) {
+          <a
+            routerLink="/"
+            [fragment]="section.id"
+            class="text-sm font-medium text-slate-400 transition-colors hover:text-white"
+          >
+            {{ section.label }}
+          </a>
+        }
       </nav>
 
-      <div>
-        <h2 class="text-xs font-semibold tracking-widest text-text-muted uppercase">
-          {{ t('footer.contactLabel') }}
-        </h2>
-        <ul class="mt-4 space-y-1">
-          @for (channel of content.contact(); track channel.id) {
-            <li class="text-sm text-text-muted" dir="auto">
-              @if (channel.href) {
-                <a
-                  [href]="channel.href"
-                  class="inline-flex min-h-9 items-center break-all hover:text-text-strong"
-                  >{{ content.text(channel.value) }}</a
-                >
-              } @else {
-                <span class="inline-flex min-h-9 items-center">{{
-                  content.text(channel.value)
-                }}</span>
-              }
-            </li>
-          }
-        </ul>
+      <!-- Right: Location & Time in Morocco -->
+      <div class="flex flex-col gap-2 text-xs text-slate-400">
+        <div class="flex items-center gap-2">
+          <app-icon name="map-pin" class="size-3.5 text-sky-400" />
+          <span>Casablanca, Morocco</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <app-icon name="clock" class="size-3.5 text-sky-400" />
+          <span>{{ localTime() }}</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="border-t border-border-subtle">
-    <div
-      class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6"
-    >
-      <p class="text-xs text-text-muted">{{ t('footer.copyright', { year: year() }) }}</p>
-
-      <!--
-        A fragment link rather than a scroll handler: it works with JavaScript
-        disabled, it is a real tab stop, and `scroll-behavior: smooth` on <html>
-        gives it the same motion a script would.
-      -->
-      <a
-        routerLink="/"
-        fragment="banner"
-        class="inline-flex min-h-9 items-center gap-1.5 text-xs font-medium text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
-      >
-        <app-icon name="arrow-up" class="size-3.5" />
-        {{ t('footer.backToTop') }}
-      </a>
+    <!-- Bottom sub-bar -->
+    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-6 text-xs sm:flex-row text-slate-500">
+      <p>© {{ year() }} DabaDigital. All rights reserved.</p>
+      <p class="flex items-center gap-1.5">
+        Built with passion
+      </p>
     </div>
   </div>
 </footer>
+

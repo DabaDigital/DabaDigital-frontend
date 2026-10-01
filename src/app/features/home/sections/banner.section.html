@@ -1,97 +1,196 @@
 <!--
-  The glows and the grid are absolutely positioned and larger than the viewport,
-  so the section clips them — without `overflow-hidden` they would create
-  horizontal scroll on small screens.
--->
-<section
-  id="banner"
-  appSectionSpy
-  class="relative isolate overflow-hidden border-b border-border-subtle"
->
-  <div class="tech-grid" aria-hidden="true"></div>
-  <div class="ambient-glow -top-64 -start-48" aria-hidden="true"></div>
-  <div
-    class="ambient-glow -end-64 top-24 [--glow-color:var(--glow-accent)]"
-    aria-hidden="true"
-  ></div>
+  The opening: a night panorama behind, the copy on the inline-start side, the
+  hologram globe on the other, and the studio's figures in a glass bar below.
 
-  <div
-    class="relative z-10 mx-auto grid max-w-6xl gap-12 px-4 pt-16 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pt-24 lg:pb-28"
-  >
-    <div>
-      <p
-        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
-      >
-        <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+  `data-hero` marks what the entrance timeline animates; `data-magnetic`,
+  `data-depth` and `data-hero-globe` are hooks for the pointer and scroll
+  effects in `home.motion.ts`. None of them changes the static design.
+-->
+<section id="banner" appSectionSpy class="hero night">
+  <!-- The hook is on the image, not its box: the box carries the mask that dissolves the picture. -->
+  <div class="hero__backdrop" aria-hidden="true">
+    <img
+      src="/images/header-network.webp"
+      alt=""
+      width="1774"
+      height="887"
+      fetchpriority="high"
+      decoding="async"
+      data-hero-backdrop
+    />
+  </div>
+
+  <!-- Vertical spacing here comes from `.hero__*` in `home.scss`, which closes it up on short screens. -->
+  <div class="hero__main">
+    <div class="hero__copy">
+      <p class="hero__eyebrow" data-hero="eyebrow">
+        <span class="eyebrow__dot" aria-hidden="true"></span>
         <span>{{ t('banner.eyebrow') }}</span>
       </p>
 
       <!--
-        Three beats, and the middle one carries the brand colour. Capped at 60px
-        (`text-6xl`) so the line holds in French — "Concevoir. Lancer. Grandir."
-        is nearly twice the width of the English, and Arabic sets taller again.
+        Two lines: "Build." / "Launch. Grow." — each full stop in the accent
+        colour, the last word in the gradient. The spaces between the words are
+        real text nodes, so the accessible name reads "Build. Launch. Grow.".
       -->
-      <h1 class="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-        {{ t('banner.title1') }}
-        <span class="text-primary">{{ t('banner.title2') }}</span>
-        {{ t('banner.title3') }}
+      <h1 class="hero-title">
+        <span class="hero-title__line"
+          ><span class="hero-title__word"
+            >{{ stem(t('banner.title1'))
+            }}<span class="hero-title__stop">{{ stop(t('banner.title1')) }}</span></span
+          >{{ ' ' }}</span
+        >
+        <span class="hero-title__line"
+          ><span class="hero-title__word"
+            >{{ stem(t('banner.title2'))
+            }}<span class="hero-title__stop">{{ stop(t('banner.title2')) }}</span></span
+          >{{ ' '
+          }}<span class="hero-title__word text-gradient">{{ t('banner.title3') }}</span></span
+        >
       </h1>
 
-      <p class="mt-6 max-w-xl text-lg text-text-muted">{{ t('banner.lede') }}</p>
+      <p class="hero__lede" data-hero="fade">{{ t('banner.lede') }}</p>
 
-      <div class="mt-10 flex flex-wrap items-center gap-4">
-        <a appButton routerLink="/" fragment="contact" class="shadow-glow">
-          {{ t('banner.ctaPrimary') }}
-          <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
-        </a>
-        <a appButton="secondary" routerLink="/" fragment="projects">
-          {{ t('banner.ctaSecondary') }}
-        </a>
+      <!-- The pull lives on the wrapper, so the button keeps its own `:active` press. -->
+      <div class="hero__actions" data-hero="fade">
+        <span class="inline-flex" data-magnetic>
+          <a appButton="glow" routerLink="/" fragment="contact">
+            {{ t('banner.ctaPrimary') }}
+            <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
+          </a>
+        </span>
+        <span class="inline-flex" data-magnetic>
+          <a appButton="glass" routerLink="/" fragment="projects">
+            <app-icon name="play" class="size-3.5 rtl:-scale-x-100" />
+            {{ t('banner.ctaSecondary') }}
+          </a>
+        </span>
       </div>
 
-      <!-- The icon is decorative: the sentence beside it already says what it is. -->
-      <p class="mt-8 flex max-w-md items-start gap-2.5 text-sm text-text-muted">
-        <app-icon name="sparkles" class="mt-1 size-4 text-primary" />
-        <span>{{ t('banner.voiceHint') }}</span>
-      </p>
-
-      <!--
-        A description list, not a row of divs: each figure is a value described by
-        its label, and a screen reader reads the pair. The term has to precede the
-        description in the DOM, so `flex-col-reverse` puts the number on top
-        visually without inverting the markup. `tabular-nums` keeps the three
-        columns aligned when the digits differ in width.
-      -->
-      <dl
-        class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border-subtle pt-8"
-        [attr.aria-label]="t('banner.statsLabel')"
-      >
-        <div class="flex flex-col-reverse">
-          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat1Label') }}</dt>
-          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
-            {{ t('banner.stat1Value') }}
-          </dd>
-        </div>
-        <div class="flex flex-col-reverse">
-          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat2Label') }}</dt>
-          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
-            {{ t('banner.stat2Value') }}
-          </dd>
-        </div>
-        <div class="flex flex-col-reverse">
-          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat3Label') }}</dt>
-          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
-            {{ t('banner.stat3Value') }}
-          </dd>
-        </div>
-      </dl>
+      <!-- Existing brand marks stay crisp and accessible at every screen size. -->
+      <div class="hero__tools" data-hero="fade">
+        <p class="text-xs font-medium text-text-muted">{{ t('banner.trustedBy') }}</p>
+        <ul class="tools-bar">
+          @for (tool of tools; track tool.id) {
+            <li class="tools-bar__item">
+              <app-brand-icon [name]="tool.id" class="size-4.5" />
+              {{ tool.name }}
+            </li>
+          }
+        </ul>
+      </div>
     </div>
 
-    <!-- `aspect-[4/3]` reserves the box before the SVG paints, so nothing shifts. -->
-    <div
-      class="relative aspect-[4/3] overflow-hidden rounded-xl border border-border-glass bg-surface-glass text-primary shadow-lg"
-    >
-      <app-hero-visual class="h-full w-full" />
+    <!-- The artwork is full bleed on desktop and gets its own row on mobile. -->
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hero__globe" data-hero-globe>
+        <picture>
+          <source media="(max-width: 767px)" srcset="/images/header-network.webp" />
+          <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            alt=""
+            width="1774"
+            height="887"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+      </div>
+
+      <div class="hero-card hero-card--web" data-hero="card" data-depth="1.3">
+        <div class="hero-card__panel">
+          <span class="hero-card__icon"><app-icon name="code" class="size-4" /></span>
+          <span>
+            <span class="hero-card__title">{{ t('banner.chip.web.title') }}</span>
+            <span class="hero-card__text">{{ t('banner.chip.web.text') }}</span>
+          </span>
+        </div>
+      </div>
+      <div class="hero-card hero-card--shop" data-hero="card" data-depth="0.8">
+        <div class="hero-card__panel">
+          <span class="hero-card__icon"><app-icon name="bag" class="size-4" /></span>
+          <span>
+            <span class="hero-card__title">{{ t('banner.chip.ecommerce.title') }}</span>
+            <span class="hero-card__text">{{ t('banner.chip.ecommerce.text') }}</span>
+          </span>
+        </div>
+      </div>
+      <div class="hero-card hero-card--apps" data-hero="card" data-depth="1.6">
+        <div class="hero-card__panel">
+          <span class="hero-card__icon"><app-icon name="layers" class="size-4" /></span>
+          <span>
+            <span class="hero-card__title">{{ t('banner.chip.apps.title') }}</span>
+            <span class="hero-card__text">{{ t('banner.chip.apps.text') }}</span>
+          </span>
+        </div>
+      </div>
+      <div class="hero-card hero-card--growth" data-hero="card" data-depth="1.1">
+        <div class="hero-card__panel">
+          <span>
+            <span class="hero-card__text">{{ t('banner.chip.growth.title') }}</span>
+            <span class="hero-card__figure">{{ t('banner.chip.growth.value') }}</span>
+          </span>
+          <span class="hero-card__bars">
+            <span></span><span></span><span></span><span></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--
+    The figures. A description list, not a row of divs: each figure is a value
+    described by its label, and a screen reader reads the pair. The term
+    precedes the description in the DOM; `flex-col-reverse` puts the number on
+    top visually. `.count-value` is Angular's text — the count-up draws over it.
+  -->
+  <div class="hero__footer">
+    <div class="stats-bar" data-hero="stats">
+      <dl class="stats-bar__list" [attr.aria-label]="t('banner.statsLabel')">
+        <div class="stat">
+          <span class="stat__icon" aria-hidden="true"><app-icon name="cube" class="size-5" /></span>
+          <div class="flex flex-col-reverse">
+            <dt class="stat__label">{{ t('banner.stat1Label') }}</dt>
+            <dd class="stat__value" data-count>
+              <span class="count-value">{{ t('banner.stat1Value') }}</span>
+            </dd>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat__icon" aria-hidden="true"
+            ><app-icon name="users" class="size-5"
+          /></span>
+          <div class="flex flex-col-reverse">
+            <dt class="stat__label">{{ t('banner.stat2Label') }}</dt>
+            <dd class="stat__value" data-count>
+              <span class="count-value">{{ t('banner.stat2Value') }}</span>
+            </dd>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat__icon" aria-hidden="true"
+            ><app-icon name="languages" class="size-5"
+          /></span>
+          <div class="flex flex-col-reverse">
+            <dt class="stat__label">{{ t('banner.stat3Label') }}</dt>
+            <dd class="stat__value" data-count>
+              <span class="count-value">{{ t('banner.stat3Value') }}</span>
+            </dd>
+          </div>
+        </div>
+      </dl>
+
+      <div class="stats-bar__trust">
+        <img
+          class="avatars"
+          src="/images/header-client-portraits.webp"
+          alt=""
+          width="256"
+          height="96"
+          decoding="async"
+        />
+        <p>{{ t('banner.statsTrusted') }}</p>
+      </div>
     </div>
   </div>
 </section>

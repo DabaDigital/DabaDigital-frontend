@@ -9,23 +9,28 @@
 // Reaching for a palette primitive or a raw hex inside a component is a bug.
 //
 // ── Theme resolution ─────────────────────────────────────────────────────────
-// Three states, in the order the cascade resolves them:
+// Dark is the house style — the landing page is designed at night — so a
+// visitor who has never touched the toggle gets dark, whatever their OS says.
+// The cascade still resolves three states:
 //
-//   1. `:root`                                → light (the default)
+//   1. `:root`                                → light
 //   2. `@media (prefers-color-scheme: dark)`  → dark, unless the visitor pinned light
 //   3. `:root[data-theme='dark']`             → dark, whatever the OS says
 //
 // `data-theme` is written by `core/theme/theme.service.ts` and pre-applied by the
-// inline bootstrap in `index.html`, so the first paint is already correct.
+// inline bootstrap in `index.html` (which defaults it to `dark`), so the first
+// paint is already correct. `.night` (below) pins a subtree to the dark layer
+// regardless of the theme: the landing page is always night.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// The dark semantic layer, declared once and emitted into both selectors below.
-// Duplicating it by hand is how the two copies drift apart.
+// The dark semantic layer, declared once and emitted into every selector below.
+// Duplicating it by hand is how the copies drift apart.
 @mixin dark-semantics {
-  --surface-page: var(--palette-neutral-950);
-  --surface-card: var(--palette-neutral-900);
-  --surface-raised: var(--palette-neutral-800);
-  --surface-muted: var(--palette-neutral-800);
+  // Navy, not charcoal: the whole dark theme sits on the landing page's night.
+  --surface-page: var(--palette-night-950);
+  --surface-card: var(--palette-night-900);
+  --surface-raised: var(--palette-night-800);
+  --surface-muted: var(--palette-night-800);
   --surface-inverse: var(--palette-neutral-50);
 
   --text-strong: var(--palette-neutral-50);
@@ -33,18 +38,18 @@
   --text-muted: var(--palette-neutral-400);
   --text-inverse: var(--palette-neutral-950);
 
-  --border-subtle: var(--palette-neutral-800);
+  --border-subtle: var(--palette-night-700);
   --border-strong: var(--palette-neutral-700);
 
-  // Dark mode lightens the brand rather than inverting it: #59a2e8 on the page
-  // ground clears 7:1, where the light-mode #1a66bd would sit at 1.4:1.
+  // Dark mode lightens the brand rather than inverting it: sky-400 on the night
+  // ground clears 9:1, and carries dark text at 9:1 on a button.
   --primary: var(--palette-brand-400);
   --primary-hover: var(--palette-brand-300);
-  --primary-soft: var(--palette-brand-950);
-  --primary-contrast: var(--palette-neutral-950);
+  --primary-soft: var(--palette-night-700);
+  --primary-contrast: var(--palette-night-950);
 
-  --accent: var(--palette-accent-400);
-  --accent-soft: var(--palette-accent-700);
+  --accent: var(--palette-brand-200);
+  --accent-soft: var(--palette-brand-900);
   --accent-contrast: var(--palette-neutral-950);
 
   --success: var(--palette-success-300);
@@ -55,14 +60,36 @@
   --focus-ring: var(--palette-brand-300);
 
   --surface-glass: color-mix(in srgb, var(--palette-white) 4%, transparent);
-  --border-glass: color-mix(in srgb, var(--palette-white) 10%, transparent);
-  --glow-primary: color-mix(in srgb, var(--palette-brand-400) 20%, transparent);
-  --glow-accent: color-mix(in srgb, var(--palette-accent-400) 12%, transparent);
+  --border-glass: color-mix(in srgb, var(--palette-brand-100) 13%, transparent);
+  --glow-primary: color-mix(in srgb, var(--palette-brand-400) 22%, transparent);
+  --glow-accent: color-mix(in srgb, var(--palette-brand-200) 12%, transparent);
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   --shadow-md: 0 4px 16px rgb(0 0 0 / 45%);
   --shadow-lg: 0 12px 40px rgb(0 0 0 / 55%);
-  --shadow-glow: 0 8px 32px color-mix(in srgb, var(--palette-brand-400) 28%, transparent);
+  --shadow-glow: 0 0 28px color-mix(in srgb, var(--palette-brand-400) 45%, transparent);
+
+  --gradient-primary: linear-gradient(
+    100deg,
+    var(--palette-brand-300),
+    var(--palette-brand-400) 45%,
+    var(--palette-azure-500)
+  );
+
+  // The landing page at night: a deep blue ground, brand light, starlight.
+  --scene-ground: var(--palette-night-950);
+  --scene-glow: color-mix(in srgb, var(--palette-azure-500) 22%, transparent);
+  --scene-star: var(--palette-neutral-50);
+  --scene-particle: var(--palette-brand-300);
+  --scene-grain: 0.06;
+
+  --surface-glass-strong: color-mix(in srgb, var(--palette-night-900) 70%, transparent);
+  --surface-field: color-mix(in srgb, var(--palette-night-950) 70%, transparent);
+  --glass-highlight: color-mix(in srgb, var(--palette-white) 8%, transparent);
+  --border-glow: color-mix(in srgb, var(--palette-brand-400) 55%, transparent);
+  --text-gradient-start: var(--palette-brand-400);
+  --text-gradient-mid: var(--palette-azure-400);
+  --text-gradient-end: var(--palette-azure-500);
 }
 
 :root {
@@ -81,32 +108,30 @@
   --palette-neutral-900: #171d27;
   --palette-neutral-950: #0d1117;
 
-  // The brand ramp is built around #07528f — the blue of the DabaDigital
-  // wordmark in `public/dabadigital.png`, and the value already declared as
-  // `<meta name="theme-color">`. It replaces an indigo ramp that matched
-  // nothing the company actually ships.
-  --palette-brand-50: #eff6fe;
-  --palette-brand-100: #d9eafd;
-  --palette-brand-200: #bcdbfb;
-  --palette-brand-300: #8ec4f7;
-  --palette-brand-400: #59a2e8;
-  --palette-brand-500: #3181d8;
-  --palette-brand-600: #1a66bd;
-  --palette-brand-700: #07528f;
-  --palette-brand-800: #0a4273;
-  --palette-brand-900: #0d3760;
-  --palette-brand-950: #08243f;
+  // Sky — the glowing blue of the landing page design: buttons, icons, the
+  // accent periods in the headlines and every light in the night scenes.
+  --palette-brand-50: #f0f9ff;
+  --palette-brand-100: #e0f2fe;
+  --palette-brand-200: #bae6fd;
+  --palette-brand-300: #7dd3fc;
+  --palette-brand-400: #38bdf8;
+  --palette-brand-500: #0ea5e9;
+  --palette-brand-600: #0284c7;
+  --palette-brand-700: #0369a1;
+  --palette-brand-800: #075985;
+  --palette-brand-900: #0c4a6e;
+  --palette-brand-950: #082f49;
 
-  // Warm terracotta — the complement of the brand blue, and the one colour on
-  // the page that is allowed to be loud. Used for a second data hue and for
-  // "new" markers, never for a primary action.
-  --palette-accent-100: #fde6dd;
-  --palette-accent-200: #fbcbba;
-  --palette-accent-300: #f7a68b;
-  --palette-accent-400: #f27a5a;
-  --palette-accent-500: #e2593a;
-  --palette-accent-600: #c94326;
-  --palette-accent-700: #a7331e;
+  // Azure — the deeper blue that sky shades into: the far end of every gradient.
+  --palette-azure-400: #60a5fa;
+  --palette-azure-500: #3b82f6;
+
+  // Night — the ground of the dark theme and of the landing page. Bluer and
+  // deeper than neutral-950, so every light on it reads as brand light.
+  --palette-night-950: #040a18;
+  --palette-night-900: #0a1428;
+  --palette-night-800: #101d38;
+  --palette-night-700: #172a4d;
 
   --palette-success-500: #16a34a;
   --palette-success-300: #6ee7a8;
@@ -136,9 +161,13 @@
   --primary-soft: var(--palette-brand-50);
   --primary-contrast: var(--palette-white);
 
-  --accent: var(--palette-accent-600);
-  --accent-soft: var(--palette-accent-100);
-  --accent-contrast: var(--palette-white);
+  // The accent is the brand's light end, not a second hue — the site is blue
+  // only. Every `primary → accent` gradient therefore reads as the blue
+  // brightening, and the accent stays a lighter step than `--primary` in both
+  // themes. Decorative only: at 2.5:1 on the light ground it never carries text.
+  --accent: var(--palette-brand-400);
+  --accent-soft: var(--palette-brand-100);
+  --accent-contrast: var(--palette-neutral-950);
 
   --success: var(--palette-success-500);
   --success-soft: #e7f7ee;
@@ -157,7 +186,39 @@
   --surface-glass: color-mix(in srgb, var(--palette-white) 70%, transparent);
   --border-glass: color-mix(in srgb, var(--palette-neutral-950) 8%, transparent);
   --glow-primary: color-mix(in srgb, var(--palette-brand-500) 14%, transparent);
-  --glow-accent: color-mix(in srgb, var(--palette-accent-400) 10%, transparent);
+  --glow-accent: color-mix(in srgb, var(--palette-brand-400) 10%, transparent);
+
+  // A filled call to action: the brand brightening from sky to azure.
+  --gradient-primary: linear-gradient(
+    100deg,
+    var(--palette-brand-500),
+    var(--palette-brand-600) 50%,
+    var(--palette-azure-500)
+  );
+
+  // ── Scene — the landing page's backdrop ────────────────────────────────────
+  // Read twice over: by CSS for the sky, and by the WebGL star field for its
+  // colours (resolved through a computed style, so these must stay plain
+  // colours or `color-mix()` — never a gradient). The landing page renders
+  // inside `.night`, so in practice it always reads the dark values.
+  --scene-ground: var(--palette-neutral-50);
+  --scene-glow: color-mix(in srgb, var(--palette-brand-200) 55%, transparent);
+  --scene-star: var(--palette-brand-700);
+  --scene-particle: var(--palette-brand-600);
+  --scene-grain: 0.035;
+
+  // A card that must stay legible over the scene: far more opaque than
+  // `--surface-glass`, with a hairline highlight along its top edge.
+  --surface-glass-strong: color-mix(in srgb, var(--palette-white) 82%, transparent);
+  --surface-field: var(--palette-white);
+  --glass-highlight: color-mix(in srgb, var(--palette-white) 70%, transparent);
+  --border-glow: color-mix(in srgb, var(--palette-brand-500) 45%, transparent);
+
+  // The gradient headline words: sky deepening into azure. Large display type
+  // only — every stop clears 3:1 against the ground in both themes.
+  --text-gradient-start: var(--palette-brand-600);
+  --text-gradient-mid: var(--palette-brand-700);
+  --text-gradient-end: var(--palette-azure-500);
 
   // ── Radius ─────────────────────────────────────────────────────────────────
   --radius-xs: 0.25rem;
@@ -175,11 +236,13 @@
   --shadow-glow: 0 8px 32px color-mix(in srgb, var(--palette-brand-600) 24%, transparent);
 
   // ── Type ───────────────────────────────────────────────────────────────────
-  // One display face for headings, one neutral sans for UI. The Arabic faces are
-  // first in the stack for `ar` (see `[lang='ar']` below) because Arabic is the
-  // primary locale here, not a fallback bolted onto a Latin stack.
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  // One display face for headings, one neutral sans for UI, and a hand for the
+  // one handwritten flourish. The Arabic faces are first in the stack for `ar`
+  // (see `[lang='ar']` below) because Arabic is the primary locale here, not a
+  // fallback bolted onto a Latin stack.
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-script: 'Caveat', 'Segoe Script', cursive;
 
   // ── Motion — short and functional (150–250 ms) ─────────────────────────────
   --duration-fast: 150ms;
@@ -198,10 +261,12 @@
 
 // Arabic is the primary locale, so it gets a real Arabic type stack rather than
 // a Latin stack with a fallback appended. Cairo carries the display weights;
-// Noto Sans Arabic carries body copy at the same optical size as Inter.
+// Noto Sans Arabic carries body copy at the same optical size as Inter; Aref
+// Ruqaa is a Ruqʿah hand for the handwritten flourish.
 :root[lang='ar'] {
   --font-display: 'Cairo', 'Noto Sans Arabic', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Noto Sans Arabic', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+  --font-script: 'Aref Ruqaa', 'Cairo', serif;
 }
 
 // ── Semantic colour — dark ───────────────────────────────────────────────────
@@ -217,6 +282,13 @@
 
 :root[data-theme='dark'] {
   @include dark-semantics;
+}
+
+// A subtree that is always night, whatever the theme: the landing page is
+// designed as a night scene, and its imagery only works on a dark ground.
+.night {
+  @include dark-semantics;
+  color-scheme: dark;
 }
 
 // Keep native UI — scrollbars, date pickers, form control chrome — in step with

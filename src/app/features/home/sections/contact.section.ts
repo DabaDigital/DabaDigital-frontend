@@ -33,8 +33,9 @@ import {
   type FieldSuggestion,
 } from '../../../core/voice/field-merge';
 import { RealtimeVoiceService } from '../../../core/voice/realtime-voice.service';
-import { RevealDirective } from '../../../shared/directives/reveal.directive';
+import { injectMotion } from '../../../core/motion/motion.service';
 import { SectionSpyDirective } from '../../../shared/directives/section-spy';
+import { SplitWordsPipe } from '../../../shared/pipes/split-words.pipe';
 import { AiBadgeComponent } from '../../../shared/ui/ai-badge.component';
 import { ButtonComponent } from '../../../shared/ui/button.component';
 import {
@@ -47,6 +48,7 @@ import { IconComponent } from '../../../shared/ui/icon.component';
 import { SuggestionChipComponent } from '../../../shared/ui/suggestion-chip.component';
 // Shared with the admin inbox, which reads the same labels back.
 import { PROJECT_TYPES } from '../../../core/project-types';
+import { contactMotion } from '../home.motion';
 
 const BUDGET_RANGES: readonly { value: BudgetRange | ''; labelKey: MessageKey }[] = [
   { value: 's', labelKey: 'contact.budget.s' },
@@ -62,7 +64,7 @@ const FIELD_ORDER = ['fullName', 'email', 'projectType', 'message'] as const;
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 /**
- * Section 5 — the contact form, manual **and** voice.
+ * Section 6 — the contact form, manual **and** voice.
  *
  * Two parallel layers stay in sync in exactly one place, this component
  * (CLAUDE.md § Conventions): the typed `form` (the input surface — what's
@@ -90,8 +92,8 @@ type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
     FormFieldComponent,
     InputDirective,
     IconComponent,
-    RevealDirective,
     SectionSpyDirective,
+    SplitWordsPipe,
     SuggestionChipComponent,
   ],
   templateUrl: './contact.section.html',
@@ -186,6 +188,13 @@ export class ContactSection {
 
   constructor() {
     this.wireManualEditDetection();
+
+    // Presentation only: reveals the heading and the two cards, and registers
+    // scene chapter 5. It never touches the form, the fields or voice state.
+    injectMotion(
+      (kit, host) => contactMotion(kit, host.querySelector('section') ?? host),
+      () => this.i18n.locale(),
+    );
 
     // A completed turn -> merge -> sync both layers. This is the one place `fields` and `form`
     // are written from voice input, matching the "keep both in sync in one place" rule above.

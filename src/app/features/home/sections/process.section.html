@@ -1,0 +1,80 @@
+<section id="process" appSectionSpy class="relative overflow-x-clip py-20 lg:py-32">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <p class="eyebrow">
+        <span class="text-sky-400 font-bold" aria-hidden="true">✦</span>
+        <span class="tracking-widest uppercase">{{ t('process.eyebrow') }}</span>
+      </p>
+      <h2 class="section-title mt-6 text-white font-bold" data-words>
+        <span class="sr-only">{{ t('process.title') }}</span>
+        <span aria-hidden="true">
+          @for (word of t('process.title') | splitWords; track $index) {
+            <span class="word"><span class="word__inner">{{ word }}</span></span>{{ ' ' }}
+          }
+        </span>
+      </h2>
+      <p class="mt-4 text-base text-slate-400">{{ t('process.lede') }}</p>
+      <div class="mt-8" data-reveal>
+        <a
+          appButton
+          routerLink="/"
+          fragment="contact"
+          class="bg-sky-400! hover:bg-sky-300! text-slate-950! font-semibold px-6 py-2.5 rounded-full inline-flex items-center gap-2 shadow-[0_0_20px_rgba(56,189,248,0.35)] transition-all duration-300"
+        >
+          {{ t('process.cta') }}
+          <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
+        </a>
+      </div>
+    </div>
+
+    <!-- The 5 Steps over the Night Trail Visual -->
+    <div class="relative mt-16 rounded-3xl overflow-hidden border border-white/10 bg-slate-950 shadow-2xl p-6 sm:p-10 lg:p-12">
+      <!-- Connected infrastructure and data paths -->
+      <div
+        class="absolute inset-0 bg-cover bg-center opacity-65 mix-blend-screen pointer-events-none"
+        style="background-image: url('/images/tech-network-panorama.webp');"
+        aria-hidden="true"
+      ></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/30 pointer-events-none"></div>
+
+      <!-- Glowing Decorative Ribbon Track (CSS / GSAP) -->
+      <div class="process relative z-10" data-process>
+        <div class="process__rail" aria-hidden="true"></div>
+        <div class="process__fill" aria-hidden="true"></div>
+        <div class="process__comet" aria-hidden="true"></div>
+
+        <ol class="relative grid gap-10 lg:grid-cols-5 lg:gap-4">
+          @for (step of steps; track step.id; let i = $index) {
+            <li
+              class="process-step flex gap-5 lg:flex-col lg:items-center lg:text-center group"
+              data-step
+            >
+              <span
+                class="process-step__node relative z-10 flex size-13 flex-none items-center justify-center rounded-full bg-slate-900 border-2 border-sky-400 text-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.4)] group-hover:scale-110 transition-transform duration-300"
+              >
+                <app-icon [name]="step.icon" class="size-5" />
+              </span>
+              <div class="pt-1 lg:pt-3">
+                <p
+                  class="font-display text-xs font-bold tracking-widest text-sky-400 tabular-nums"
+                  aria-hidden="true"
+                >
+                  {{ index(i) }}
+                </p>
+                <h3 class="mt-1 text-base font-bold text-white">{{ t(step.titleKey) }}</h3>
+                <p class="mt-1.5 text-xs text-slate-300 leading-relaxed max-w-[200px] mx-auto">{{ t(step.textKey) }}</p>
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+
+      <!-- Script Signature on bottom right -->
+      <div class="relative z-10 flex justify-end mt-10 pe-4">
+        <span class="font-serif italic text-2xl text-sky-400/80 tracking-wide select-none drop-shadow-[0_0_10px_rgba(56,189,248,0.5)]">
+          Ideas to impact.
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

@@ -4,7 +4,7 @@
   script runs. The inline bootstrap at the end of <head> rewrites `lang`, `dir`
   and `data-theme` from the visitor's stored preferences.
 -->
-<html lang="ar" dir="rtl" data-theme="light">
+<html lang="ar" dir="rtl" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <title>DabaDigital — Build. Launch. Grow.</title>
@@ -21,18 +21,20 @@
     <link rel="icon" type="image/png" href="icon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <!-- Kept in step with `--surface-page` by `core/theme/theme.service.ts`. -->
-    <meta name="theme-color" content="#f7f8fa" />
+    <meta name="theme-color" content="#040a18" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!--
-      Four families in one request. Google Fonts splits its output by
+      All families in one request. Google Fonts splits its output by
       `unicode-range`, so a French visitor never downloads the Arabic binaries and
       an Arabic visitor never downloads the Latin display face — only the one CSS
       file is shared. `display=swap` keeps text visible while they load.
+      Caveat and Aref Ruqaa carry a single handwritten line each, so they load
+      one weight apiece.
     -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Noto+Sans+Arabic:wght@400;500;600&family=Cairo:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Noto+Sans+Arabic:wght@400;500;600&family=Cairo:wght@600;700&family=Caveat:wght@600&family=Aref+Ruqaa:wght@700&display=swap"
       rel="stylesheet"
     />
 
@@ -53,18 +55,19 @@
         var root = document.documentElement;
 
         try {
+          // Dark unless the visitor chose light — the house style, see tokens.scss.
           var theme = localStorage.getItem('dabadigital.theme');
           if (theme !== 'light' && theme !== 'dark') {
-            theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            theme = 'dark';
           }
           root.setAttribute('data-theme', theme);
 
           var chrome = document.querySelector('meta[name="theme-color"]');
           if (chrome) {
-            chrome.setAttribute('content', theme === 'dark' ? '#0d1117' : '#f7f8fa');
+            chrome.setAttribute('content', theme === 'dark' ? '#040a18' : '#f7f8fa');
           }
         } catch (e) {
-          /* Keep the `data-theme="light"` already on <html>. */
+          /* Keep the `data-theme="dark"` already on <html>. */
         }
 
         try {

@@ -32,23 +32,30 @@ export const EN: Catalog = {
   'lang.current': 'Current language: {name}',
 
   // ── 1 · Banner ────────────────────────────────────────────────────────────
-  'banner.eyebrow': 'Digital studio · Morocco',
+  'banner.eyebrow': "Digital products & technology",
   'banner.title1': 'Build.',
   'banner.title2': 'Launch.',
   'banner.title3': 'Grow.',
-  'banner.lede':
-    'We design and build web products for Moroccan businesses: brochure sites, e-commerce platforms and custom business applications.',
+  'banner.lede': "We design and build websites, e-commerce platforms and custom applications that move your business forward.",
   'banner.ctaPrimary': 'Start a project',
   'banner.ctaSecondary': 'See our work',
-  'banner.voiceHint':
-    'New: describe your project out loud and let the assistant fill in the form for you.',
   'banner.statsLabel': 'The studio in numbers',
   'banner.stat1Value': '40+',
-  'banner.stat1Label': 'projects delivered',
+  'banner.stat1Label': 'Projects delivered',
   'banner.stat2Value': '8',
-  'banner.stat2Label': 'years of experience',
+  'banner.stat2Label': 'Years of experience',
   'banner.stat3Value': '3',
-  'banner.stat3Label': 'languages supported',
+  'banner.stat3Label': 'Languages supported',
+  'banner.trustedBy': "Built with the tools that power modern businesses",
+  'banner.statsTrusted': "Technology for ambitious teams, everywhere",
+  'banner.chip.web.title': 'Websites',
+  'banner.chip.web.text': 'Fast. Modern. Scalable.',
+  'banner.chip.ecommerce.title': 'E-commerce',
+  'banner.chip.ecommerce.text': 'Sell without limits.',
+  'banner.chip.apps.title': 'Business apps',
+  'banner.chip.apps.text': 'Custom solutions.',
+  'banner.chip.growth.title': 'Real growth',
+  'banner.chip.growth.value': '+230%',
 
   // ── 2 · About ─────────────────────────────────────────────────────────────
   'about.eyebrow': 'About us',
@@ -68,9 +75,9 @@ export const EN: Catalog = {
     'We do not vanish at handover: maintenance, security updates, continuous improvement.',
 
   // ── 3 · Projects ──────────────────────────────────────────────────────────
-  'projects.eyebrow': 'Projects',
-  'projects.title': 'Work we have shipped',
-  'projects.lede': 'A selection of the products we designed, built, and still support today.',
+  'projects.eyebrow': "Tech demos",
+  'projects.title': "Ideas turned into digital products.",
+  'projects.lede': "Explore demo concepts for the websites, platforms and applications we can build for your business.",
   'projects.filterLabel': 'Filter by type',
   'projects.searchLabel': 'Search projects',
   'projects.searchPlaceholder': 'Search by name, description or type',
@@ -81,22 +88,39 @@ export const EN: Catalog = {
   'projects.filter.ecommerce': 'E-commerce',
   'projects.filter.ai': 'AI',
   'projects.filter.mobile': 'Mobile',
+  'projects.filter.business': 'Business apps',
+  'projects.tag.customFeatures': 'Custom features',
+  'projects.tag.booking': 'Booking',
+  'projects.tag.payments': 'Payments',
+  'projects.tag.platform': 'Platform',
+  'projects.tag.education': 'Education',
+  'projects.tag.marketplace': 'Marketplace',
+  'projects.tag.iosAndroid': 'iOS & Android',
   'projects.empty': 'No project in this category yet.',
   'projects.emptyAction': 'Show all projects',
-  'projects.viewCase': 'Read the case study',
+  'projects.viewCase': "Explore the demo",
   'projects.countLabel': '{count} project(s) shown',
+  'projects.railHint': 'Keep scrolling to browse the work',
+  'projects.item.knowledge-hub.summary':
+    "An AI-powered knowledge workspace with document search and a conversational assistant.",
+  'projects.item.booking-cloud.summary':
+    "A cloud scheduling platform with live availability, team calendars and online bookings.",
+  'projects.item.learning-platform.summary':
+    "An online learning platform with video lessons, interactive courses and progress tracking.",
+  'projects.item.connect-app.summary':
+    "A mobile productivity app that brings tasks, team conversations and project updates together.",
   'projects.item.neural-ledger.summary':
     'Real-time finance dashboard with automatic transaction categorisation and anomaly detection.',
   'projects.item.aura-commerce.summary':
     'Multilingual online store with local payment methods and a completely rebuilt checkout.',
-  'projects.item.atlas-cargo.summary':
-    'Road-freight tracking platform between Casablanca and Europe, with live route planning.',
-  'projects.item.zellige-studio.summary':
-    'Brochure site for an architecture studio, built around a high-resolution gallery that stays fast.',
-  'projects.item.souk-connect.summary':
-    'Mobile app connecting artisans with buyers, with built-in messaging and secure payment.',
-  'projects.item.riad-atlas.summary':
-    'Direct booking engine for a group of riads, cutting out the intermediaries’ commission.',
+  'projects.item.logistics-cloud.summary':
+    "A logistics platform with shipment tracking and live route planning.",
+  'projects.item.design-studio.summary':
+    "A portfolio website with a fast, high-resolution project gallery.",
+  'projects.item.market-connect.summary':
+    "A mobile marketplace with integrated messaging and secure payments.",
+  'projects.item.booking-engine.summary':
+    "A direct booking engine with availability management and secure checkout.",
 
   // ── 4 · Services ──────────────────────────────────────────────────────────
   'services.eyebrow': 'Services',
@@ -123,7 +147,24 @@ export const EN: Catalog = {
   'services.ctaText':
     'Tell us what you are after and we will come back with a proposal within two working days.',
 
-  // ── 5 · Contact ───────────────────────────────────────────────────────────
+  // ── 5 · Process ───────────────────────────────────────────────────────────
+  'process.eyebrow': 'Our process',
+  'process.title': 'From idea to real growth.',
+  'process.lede':
+    'A clear, collaborative process, designed to move fast and take the risk out of your project.',
+  'process.cta': 'Let’s work together',
+  'process.step1.title': 'Discover',
+  'process.step1.text': 'We learn your goals, your users and your constraints.',
+  'process.step2.title': 'Plan',
+  'process.step2.text': 'We define the scope, the roadmap and how success will be measured.',
+  'process.step3.title': 'Design',
+  'process.step3.text': 'We craft the experience and validate it with a prototype.',
+  'process.step4.title': 'Build',
+  'process.step4.text': 'We develop, test and get everything ready for launch.',
+  'process.step5.title': 'Launch & grow',
+  'process.step5.text': 'We ship, measure and keep improving — together.',
+
+  // ── 6 · Contact ───────────────────────────────────────────────────────────
   'contact.eyebrow': 'Contact',
   'contact.title': 'Got a project in mind? Tell us about it.',
   'contact.lede':
@@ -131,17 +172,17 @@ export const EN: Catalog = {
   'contact.infoTitle': 'Other ways to reach us',
   'contact.emailLabel': 'Email',
   'contact.phoneLabel': 'Phone',
-  'contact.locationLabel': 'Address',
-  'contact.locationValue': 'Casablanca, Morocco',
+  'contact.locationLabel': "Working with",
+  'contact.locationValue': "Teams worldwide",
   'contact.hoursLabel': 'Opening hours',
   'contact.hoursValue': 'Monday – Friday, 9am – 6pm',
 
   'contact.form.label': 'Contact form',
   'contact.name.label': 'Full name',
-  'contact.name.placeholder': 'e.g. Sara Alaoui',
+  'contact.name.placeholder': "e.g. Alex Morgan",
   'contact.name.error': 'Please enter your name.',
   'contact.email.label': 'Email',
-  'contact.email.placeholder': 'sara@company.ma',
+  'contact.email.placeholder': "alex@company.com",
   'contact.email.errorRequired': 'Please enter your email address.',
   'contact.email.errorFormat': 'That email is not valid. Check the @ and the domain name.',
   'contact.company.label': 'Company',
@@ -156,10 +197,10 @@ export const EN: Catalog = {
   'contact.type.other': 'Something else',
   'contact.budget.label': 'Estimated budget',
   'contact.budget.placeholder': 'Choose a range',
-  'contact.budget.s': 'Under 20,000 MAD',
-  'contact.budget.m': '20,000 – 50,000 MAD',
-  'contact.budget.l': '50,000 – 150,000 MAD',
-  'contact.budget.xl': 'Over 150,000 MAD',
+  'contact.budget.s': "Small project",
+  'contact.budget.m': "Medium project",
+  'contact.budget.l': "Large project",
+  'contact.budget.xl': "Enterprise project",
   'contact.budget.unknown': 'Not decided yet',
   'contact.message.label': 'Your project',
   'contact.message.placeholder':
@@ -174,7 +215,7 @@ export const EN: Catalog = {
   'contact.submitting': 'Sending…',
   'contact.errorSummary': 'The form could not be sent. Fix {count} field(s) below.',
   'contact.errorSend':
-    'We could not send your request. Try again, or email us directly at {email}.',
+    "We could not send your request. Please try again.",
   'contact.retry': 'Try again',
   'contact.successTitle': 'We have your request.',
   'contact.successText':
@@ -183,7 +224,7 @@ export const EN: Catalog = {
   'contact.privacy':
     'Your details are used only to answer your request. They are not shared with anyone.',
 
-  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  // ── 6 · Contact — voice assistant ────────────────────────────────────────
   'contact.voice.privacy':
     "Your voice is processed by an external AI service to fill in this form. Audio is never stored.",
   'contact.voice.start': 'Describe your project',
@@ -204,7 +245,7 @@ export const EN: Catalog = {
   'contact.voice.dismiss': 'Dismiss',
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  'footer.tagline': 'Moroccan digital studio — websites, applications and custom integrations.',
+  'footer.tagline': "Technology services — websites, applications, AI and custom integrations.",
   'footer.navLabel': 'Footer navigation',
   'footer.sectionsLabel': 'Sections',
   'footer.contactLabel': 'Contact',

@@ -1,6 +1,15 @@
 <!--
-  The five MVP sections. The order is the argument the page makes: what we do →
-  who we are → proof → what you can buy → how to reach us.
+  The scene sits behind everything (fixed, `z-index: -1`), so the sections keep
+  transparent backgrounds and read as one continuous night.
+-->
+<app-home-scene />
+<div class="scroll-progress" aria-hidden="true">
+  <span class="scroll-progress__bar" data-scroll-progress></span>
+</div>
+
+<!--
+  The six sections. The order is the argument the page makes: what we do →
+  who we are → proof → what you can buy → how we work → how to reach us.
 
   Each `<section>` carries the `id` its header link scrolls to and registers
   itself with `SectionSpyService`, which is what highlights that link.
@@ -9,4 +18,5 @@
 <app-about-section />
 <app-projects-section />
 <app-services-section />
+<app-process-section />
 <app-contact-section />

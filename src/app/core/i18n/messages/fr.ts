@@ -32,23 +32,30 @@ export const FR: Catalog = {
   'lang.current': 'Langue actuelle : {name}',
 
   // ── 1 · Banner ────────────────────────────────────────────────────────────
-  'banner.eyebrow': 'Studio digital · Maroc',
+  'banner.eyebrow': "Produits numériques & technologie",
   'banner.title1': 'Concevoir.',
   'banner.title2': 'Lancer.',
   'banner.title3': 'Grandir.',
-  'banner.lede':
-    'Nous concevons et développons des produits web pour les entreprises marocaines : sites vitrines, plateformes e-commerce et applications métier sur mesure.',
+  'banner.lede': "Nous concevons des sites web, des plateformes e-commerce et des applications sur mesure pour faire avancer votre entreprise.",
   'banner.ctaPrimary': 'Démarrer un projet',
   'banner.ctaSecondary': 'Voir nos réalisations',
-  'banner.voiceHint':
-    "Nouveau : décrivez votre projet à voix haute et laissez l'assistant remplir le formulaire pour vous.",
   'banner.statsLabel': 'Le studio en chiffres',
   'banner.stat1Value': '40+',
-  'banner.stat1Label': 'projets livrés',
+  'banner.stat1Label': 'Projets livrés',
   'banner.stat2Value': '8',
-  'banner.stat2Label': "ans d'expérience",
+  'banner.stat2Label': 'Ans d’expérience',
   'banner.stat3Value': '3',
-  'banner.stat3Label': 'langues prises en charge',
+  'banner.stat3Label': 'Langues prises en charge',
+  'banner.trustedBy': "Les outils qui propulsent les entreprises modernes",
+  'banner.statsTrusted': "La technologie au service des équipes ambitieuses, partout",
+  'banner.chip.web.title': 'Sites web',
+  'banner.chip.web.text': 'Rapides. Modernes. Évolutifs.',
+  'banner.chip.ecommerce.title': 'E-commerce',
+  'banner.chip.ecommerce.text': 'Vendez sans limites.',
+  'banner.chip.apps.title': 'Applications métier',
+  'banner.chip.apps.text': 'Des solutions sur mesure.',
+  'banner.chip.growth.title': 'Croissance réelle',
+  'banner.chip.growth.value': '+230 %',
 
   // ── 2 · About ─────────────────────────────────────────────────────────────
   'about.eyebrow': "L'agence",
@@ -70,10 +77,10 @@ export const FR: Catalog = {
     'Nous ne disparaissons pas à la livraison : maintenance, correctifs de sécurité, évolutions.',
 
   // ── 3 · Projects ──────────────────────────────────────────────────────────
-  'projects.eyebrow': 'Réalisations',
-  'projects.title': 'Des projets que nous avons lancés',
+  'projects.eyebrow': "Démos tech",
+  'projects.title': "Des idées aux produits numériques.",
   'projects.lede':
-    'Une sélection de produits que nous avons conçus, développés et que nous accompagnons encore.',
+    "Découvrez des concepts de sites, de plateformes et d’applications que nous pouvons créer pour votre entreprise.",
   'projects.filterLabel': 'Filtrer par type',
   'projects.searchLabel': 'Rechercher des projets',
   'projects.searchPlaceholder': 'Rechercher par nom, description ou type',
@@ -84,22 +91,39 @@ export const FR: Catalog = {
   'projects.filter.ecommerce': 'E-commerce',
   'projects.filter.ai': 'IA',
   'projects.filter.mobile': 'Mobile',
+  'projects.filter.business': 'Applications métier',
+  'projects.tag.customFeatures': 'Fonctionnalités sur mesure',
+  'projects.tag.booking': 'Réservation',
+  'projects.tag.payments': 'Paiements',
+  'projects.tag.platform': 'Plateforme',
+  'projects.tag.education': 'Éducation',
+  'projects.tag.marketplace': 'Place de marché',
+  'projects.tag.iosAndroid': 'iOS et Android',
   'projects.empty': 'Aucun projet dans cette catégorie pour le moment.',
   'projects.emptyAction': 'Voir tous les projets',
-  'projects.viewCase': "Lire l'étude de cas",
+  'projects.viewCase': "Explorer la démo",
   'projects.countLabel': '{count} projet(s) affiché(s)',
+  'projects.railHint': 'Continuez à défiler pour parcourir nos projets',
+  'projects.item.knowledge-hub.summary':
+    "Un espace de connaissances avec recherche documentaire et assistant conversationnel intelligent.",
+  'projects.item.booking-cloud.summary':
+    "Une plateforme de réservation avec disponibilités en direct et calendriers partagés.",
+  'projects.item.learning-platform.summary':
+    "Une plateforme de formation avec cours vidéo, leçons interactives et suivi de progression.",
+  'projects.item.connect-app.summary':
+    "Une application mobile réunissant tâches, conversations et suivi des projets.",
   'projects.item.neural-ledger.summary':
     'Tableau de bord financier en temps réel, avec catégorisation automatique des écritures et détection des anomalies.',
   'projects.item.aura-commerce.summary':
     "Boutique en ligne multilingue, paiement local et tunnel d'achat entièrement repensé.",
-  'projects.item.atlas-cargo.summary':
-    'Plateforme de suivi du fret routier entre Casablanca et l’Europe, avec planification des tournées en temps réel.',
-  'projects.item.zellige-studio.summary':
-    "Site vitrine d'un studio d'architecture, construit autour d'une galerie haute définition qui reste rapide.",
-  'projects.item.souk-connect.summary':
-    'Application mobile reliant artisans et acheteurs, avec messagerie intégrée et paiement sécurisé.',
-  'projects.item.riad-atlas.summary':
-    'Moteur de réservation en direct pour un groupe de riads, qui supprime la commission des intermédiaires.',
+  'projects.item.logistics-cloud.summary':
+    "Une plateforme logistique avec suivi des expéditions et planification des trajets en direct.",
+  'projects.item.design-studio.summary':
+    "Un site portfolio avec une galerie de projets haute définition et rapide.",
+  'projects.item.market-connect.summary':
+    "Une marketplace mobile avec messagerie intégrée et paiements sécurisés.",
+  'projects.item.booking-engine.summary':
+    "Un moteur de réservation directe avec gestion des disponibilités et paiement sécurisé.",
 
   // ── 4 · Services ──────────────────────────────────────────────────────────
   'services.eyebrow': 'Services',
@@ -127,7 +151,25 @@ export const FR: Catalog = {
   'services.ctaText':
     'Dites-nous ce qu’il vous faut : nous revenons vers vous avec une proposition sous deux jours ouvrés.',
 
-  // ── 5 · Contact ───────────────────────────────────────────────────────────
+  // ── 5 · Process ───────────────────────────────────────────────────────────
+  'process.eyebrow': 'Notre méthode',
+  'process.title': 'De l’idée à une vraie croissance.',
+  'process.lede':
+    'Un processus clair et collaboratif, pensé pour avancer vite et réduire les risques de votre projet.',
+  'process.cta': 'Travaillons ensemble',
+  'process.step1.title': 'Découverte',
+  'process.step1.text': 'Nous comprenons vos objectifs, vos utilisateurs et vos contraintes.',
+  'process.step2.title': 'Cadrage',
+  'process.step2.text':
+    'Nous définissons le périmètre, la feuille de route et les indicateurs de succès.',
+  'process.step3.title': 'Conception',
+  'process.step3.text': 'Nous concevons l’expérience et la validons avec un prototype.',
+  'process.step4.title': 'Développement',
+  'process.step4.text': 'Nous développons, testons et préparons la mise en ligne.',
+  'process.step5.title': 'Lancement et croissance',
+  'process.step5.text': 'Nous lançons, mesurons et continuons d’améliorer, ensemble.',
+
+  // ── 6 · Contact ───────────────────────────────────────────────────────────
   'contact.eyebrow': 'Contact',
   'contact.title': 'Une idée de projet ? Parlez-nous-en.',
   'contact.lede':
@@ -135,17 +177,17 @@ export const FR: Catalog = {
   'contact.infoTitle': 'Autres moyens de nous joindre',
   'contact.emailLabel': 'E-mail',
   'contact.phoneLabel': 'Téléphone',
-  'contact.locationLabel': 'Adresse',
-  'contact.locationValue': 'Casablanca, Maroc',
+  'contact.locationLabel': "À vos côtés",
+  'contact.locationValue': "Partout dans le monde",
   'contact.hoursLabel': 'Horaires',
   'contact.hoursValue': 'Lundi – vendredi, 9h – 18h',
 
   'contact.form.label': 'Formulaire de contact',
   'contact.name.label': 'Nom complet',
-  'contact.name.placeholder': 'Ex. : Sara Alaoui',
+  'contact.name.placeholder': "Ex. : Alex Morgan",
   'contact.name.error': 'Merci d’indiquer votre nom.',
   'contact.email.label': 'E-mail',
-  'contact.email.placeholder': 'sara@entreprise.ma',
+  'contact.email.placeholder': "alex@entreprise.com",
   'contact.email.errorRequired': 'Merci d’indiquer votre e-mail.',
   'contact.email.errorFormat': 'Cet e-mail est invalide. Vérifiez le @ et le nom de domaine.',
   'contact.company.label': 'Société',
@@ -160,10 +202,10 @@ export const FR: Catalog = {
   'contact.type.other': 'Autre chose',
   'contact.budget.label': 'Budget estimé',
   'contact.budget.placeholder': 'Choisissez une fourchette',
-  'contact.budget.s': 'Moins de 20 000 MAD',
-  'contact.budget.m': '20 000 – 50 000 MAD',
-  'contact.budget.l': '50 000 – 150 000 MAD',
-  'contact.budget.xl': 'Plus de 150 000 MAD',
+  'contact.budget.s': "Petit projet",
+  'contact.budget.m': "Projet intermédiaire",
+  'contact.budget.l': "Grand projet",
+  'contact.budget.xl': "Projet d’entreprise",
   'contact.budget.unknown': 'Pas encore défini',
   'contact.message.label': 'Votre projet',
   'contact.message.placeholder':
@@ -179,7 +221,7 @@ export const FR: Catalog = {
   'contact.errorSummary':
     'Le formulaire n’a pas pu être envoyé. Corrigez {count} champ(s) ci-dessous.',
   'contact.errorSend':
-    'Nous n’avons pas pu envoyer votre demande. Réessayez, ou écrivez-nous directement à {email}.',
+    "Votre demande n’a pas pu être envoyée. Veuillez réessayer.",
   'contact.retry': 'Réessayer',
   'contact.successTitle': 'Nous avons bien reçu votre demande.',
   'contact.successText':
@@ -188,7 +230,7 @@ export const FR: Catalog = {
   'contact.privacy':
     'Vos données servent uniquement à répondre à votre demande. Elles ne sont transmises à personne.',
 
-  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  // ── 6 · Contact — voice assistant ────────────────────────────────────────
   'contact.voice.privacy':
     "Votre voix est traitée par un service d'IA externe pour remplir ce formulaire. L'audio n'est jamais conservé.",
   'contact.voice.start': 'Décrivez votre projet',
@@ -209,7 +251,7 @@ export const FR: Catalog = {
   'contact.voice.dismiss': 'Ignorer',
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  'footer.tagline': 'Studio digital marocain — sites, applications et intégrations sur mesure.',
+  'footer.tagline': "Services technologiques — sites web, applications, IA et intégrations sur mesure.",
   'footer.navLabel': 'Navigation de pied de page',
   'footer.sectionsLabel': 'Sections',
   'footer.contactLabel': 'Contact',

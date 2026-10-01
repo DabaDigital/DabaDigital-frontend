@@ -150,6 +150,51 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <path d="M3.2 14.5h17.6" />
           <path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z" />
         }
+        <!-- ── Landing page ─────────────────────────────────────────────── -->
+        @case ('cube') {
+          <path d="m12 2.8 8 4.6v9.2l-8 4.6-8-4.6V7.4Z" />
+          <path d="m4 7.4 8 4.6 8-4.6" />
+          <path d="M12 12v9.2" />
+        }
+        @case ('bar-chart') {
+          <rect x="4" y="12" width="4" height="8" rx="1" />
+          <rect x="10" y="8" width="4" height="12" rx="1" />
+          <rect x="16" y="4" width="4" height="16" rx="1" />
+        }
+        @case ('users') {
+          <circle cx="9" cy="8" r="3.25" />
+          <path d="M3 19.5a6 6 0 0 1 12 0" />
+          <path d="M15.5 4.9a3.25 3.25 0 0 1 0 6.2" />
+          <path d="M17.5 13.9a6 6 0 0 1 3.5 5.6" />
+        }
+        @case ('pen') {
+          <path d="M12 2.5 6 10l2.5 8h7L18 10Z" />
+          <path d="M12 2.5V11" />
+          <circle cx="12" cy="12.5" r="1.5" />
+          <path d="M8.5 21h7" />
+        }
+        @case ('file') {
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+          <path d="M14 3v5h5" />
+          <path d="M9 13h6M9 17h4" />
+        }
+        <!-- Points inline-end, like arrow-right: RTL callers flip it. -->
+        @case ('play') {
+          <path d="M8 5.5v13l10.5-6.5Z" />
+        }
+        <!-- Symmetric on purpose: a launch reads the same in both directions, so no RTL flip. -->
+        @case ('rocket') {
+          <path d="M12 2.5c3 2.2 4.5 5.4 4.5 9.2V16h-9v-4.3c0-3.8 1.5-7 4.5-9.2Z" />
+          <circle cx="12" cy="9.5" r="1.75" />
+          <path d="M7.5 12.5 5 15v3.5l2.5-1.5M16.5 12.5 19 15v3.5L16.5 17" />
+          <path d="M10.5 19v2.5M13.5 19v2.5" />
+        }
+        <!-- The khatam: two squares turned 45° to each other — zellige's eight-pointed star. -->
+        @case ('khatam') {
+          <path
+            d="M21 12 18.36 14.64V18.36H14.64L12 21 9.36 18.36H5.64V14.64L3 12 5.64 9.36V5.64H9.36L12 3 14.64 5.64H18.36V9.36Z"
+          />
+        }
 
         <!-- ── Controls ──────────────────────────────────────────────────── -->
         @case ('check') {
@@ -189,6 +234,11 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
         @case ('arrow-right') {
           <path d="M5 12h14" />
           <path d="m13 6 6 6-6 6" />
+        }
+        <!-- The mirror of arrow-right: points inline-start, so RTL callers flip it too. -->
+        @case ('arrow-left') {
+          <path d="M19 12H5" />
+          <path d="m11 6-6 6 6 6" />
         }
         @case ('arrow-up-right') {
           <path d="M7 17 17 7" />
@@ -259,6 +309,12 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <circle cx="12" cy="12" r="4" />
           <path d="M17.4 6.6h.01" />
         }
+        @case ('dribbble') {
+          <circle cx="12" cy="12" r="9.25" />
+          <path d="M8.5 3.7c3.2 4 5.4 9.6 6.4 16.4" />
+          <path d="M3 11.3c5.8.4 11-.8 15.3-4" />
+          <path d="M5.8 18.4c2.9-4 7.6-5.9 14.9-4.8" />
+        }
       }
     </svg>
   `,
@@ -304,6 +360,15 @@ export type IconName =
   | 'sun'
   | 'moon'
   | 'globe'
+  | 'khatam'
+  | 'rocket'
+  | 'cube'
+  | 'bar-chart'
+  | 'users'
+  | 'pen'
+  | 'file'
+  | 'play'
+  | 'dribbble'
   // controls
   | 'check'
   | 'chevron-down'
@@ -315,6 +380,7 @@ export type IconName =
   | 'menu'
   | 'close'
   | 'arrow-right'
+  | 'arrow-left'
   | 'arrow-up-right'
   | 'arrow-up'
   | 'send'
