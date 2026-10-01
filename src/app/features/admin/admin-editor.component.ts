@@ -111,7 +111,7 @@ export class AdminEditorComponent {
   );
   protected readonly toneOptions = computed<DropdownOption[]>(() => [
     { value: 'primary', label: this.t('admin.blue') },
-    { value: 'accent', label: this.t('admin.terracotta') },
+    { value: 'accent', label: this.t('admin.lightBlue') },
   ]);
   protected readonly statusOptions = computed<DropdownOption[]>(() => [
     { value: 'draft', label: this.t('admin.draft') },

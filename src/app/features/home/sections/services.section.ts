@@ -1,17 +1,29 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { ContentStore } from '../../../core/content.store';
 import { I18nService } from '../../../core/i18n/i18n.service';
-import { RevealDirective } from '../../../shared/directives/reveal.directive';
+import { injectMotion } from '../../../core/motion/motion.service';
 import { SectionSpyDirective } from '../../../shared/directives/section-spy';
+import { SplitWordsPipe } from '../../../shared/pipes/split-words.pipe';
 import { ButtonComponent } from '../../../shared/ui/button.component';
 import { IconComponent } from '../../../shared/ui/icon.component';
-import { ContentStore } from '../../../core/content.store';
+import { indexLabel } from '../home.content';
+import { servicesMotion } from '../home.motion';
 
-/** Section 4 — the service catalogue. */
+/**
+ * Section 4 — the service catalogue.
+ *
+ * On wide screens the heading column is sticky while the six disciplines scroll
+ * past it, each lighting up as it crosses the middle of the viewport; the
+ * tesseract of scene chapter 3 turns in the box reserved under the heading.
+ * The section clips with `overflow-x: clip`, never `hidden` — a `hidden` box is
+ * a scroll container, and `position: sticky` would stick to it instead of to
+ * the viewport.
+ */
 @Component({
   selector: 'app-services-section',
-  imports: [RouterLink, ButtonComponent, IconComponent, RevealDirective, SectionSpyDirective],
+  imports: [RouterLink, ButtonComponent, IconComponent, SectionSpyDirective, SplitWordsPipe],
   templateUrl: './services.section.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -21,19 +33,15 @@ export class ServicesSection {
   protected readonly content = inject(ContentStore);
   protected readonly services = this.content.services;
 
-  /**
-   * `01`, `02`, … as an editorial index on each card.
-   *
-   * Formatted through `Intl` rather than by padding a string so the digits follow
-   * the locale's numbering system. For `ar-MA` that is Latin digits — Morocco
-   * writes Arabic with Western numerals — which is exactly the point: hard-coding
-   * `padStart` would happen to be right here and wrong the moment a locale that
-   * uses Arabic-Indic digits is added.
-   */
-  protected number(index: number): string {
-    return new Intl.NumberFormat(this.i18n.meta().tag, {
-      minimumIntegerDigits: 2,
-      useGrouping: false,
-    }).format(index + 1);
+  constructor() {
+    // The catalogue is editable content: a Supabase refresh can swap the rows.
+    injectMotion(
+      (kit, host) => servicesMotion(kit, host.querySelector('section') ?? host),
+      () => [this.i18n.locale(), this.services()],
+    );
+  }
+
+  protected index(position: number): string {
+    return indexLabel(position, this.i18n.meta().tag);
   }
 }

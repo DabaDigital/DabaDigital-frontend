@@ -42,15 +42,13 @@ export const AR = {
   'lang.current': 'اللغة الحالية: {name}',
 
   // ── 1 · Banner ────────────────────────────────────────────────────────────
-  'banner.eyebrow': 'استوديو رقمي · المغرب',
+  'banner.eyebrow': "منتجات رقمية وخدمات تقنية",
   'banner.title1': 'نُصمّم.',
   'banner.title2': 'نُطلق.',
   'banner.title3': 'نُنمّي.',
-  'banner.lede':
-    'نصمّم ونطوّر منتجات رقمية للشركات المغربية: مواقع تعريفية، ومنصّات تجارة إلكترونية، وتطبيقات أعمال مصمّمة على المقاس.',
+  'banner.lede': "نصمّم ونطوّر مواقع إلكترونية ومنصّات تجارة إلكترونية وتطبيقات مخصّصة تدفع أعمالك إلى الأمام.",
   'banner.ctaPrimary': 'ابدأ مشروعك',
   'banner.ctaSecondary': 'شاهد أعمالنا',
-  'banner.voiceHint': 'جديد: صِف مشروعك بصوتك، ودع المساعد يملأ النموذج نيابةً عنك.',
   'banner.statsLabel': 'أرقام عن الاستوديو',
   'banner.stat1Value': '+40',
   'banner.stat1Label': 'مشروع مُسلَّم',
@@ -58,6 +56,16 @@ export const AR = {
   'banner.stat2Label': 'سنوات خبرة',
   'banner.stat3Value': '3',
   'banner.stat3Label': 'لغات مدعومة',
+  'banner.trustedBy': "نبني بالأدوات التي تدعم الأعمال الحديثة",
+  'banner.statsTrusted': "تقنية للفرق الطموحة في كل مكان",
+  'banner.chip.web.title': 'مواقع إلكترونية',
+  'banner.chip.web.text': 'سريعة. حديثة. قابلة للتوسّع.',
+  'banner.chip.ecommerce.title': 'تجارة إلكترونية',
+  'banner.chip.ecommerce.text': 'بِع بلا حدود.',
+  'banner.chip.apps.title': 'تطبيقات الأعمال',
+  'banner.chip.apps.text': 'حلول على المقاس.',
+  'banner.chip.growth.title': 'نموّ حقيقي',
+  'banner.chip.growth.value': '+230%',
 
   // ── 2 · About ─────────────────────────────────────────────────────────────
   'about.eyebrow': 'من نحن',
@@ -76,9 +84,9 @@ export const AR = {
   'about.pillar4.text': 'لا نختفي بعد التسليم: صيانة، وتحديثات أمنية، وتطوير مستمر.',
 
   // ── 3 · Projects ──────────────────────────────────────────────────────────
-  'projects.eyebrow': 'أعمالنا',
-  'projects.title': 'مشاريع أطلقناها',
-  'projects.lede': 'مجموعة مختارة من المنتجات التي صمّمناها وطوّرناها وما زلنا نرافقها.',
+  'projects.eyebrow': "نماذج تقنية",
+  'projects.title': "أفكار تتحول إلى منتجات رقمية.",
+  'projects.lede': "استكشف نماذج توضيحية للمواقع والمنصّات والتطبيقات التي يمكننا بناؤها لأعمالك.",
   'projects.filterLabel': 'تصفية حسب النوع',
   'projects.searchLabel': 'البحث في المشاريع',
   'projects.searchPlaceholder': 'ابحث بالاسم أو الوصف أو النوع',
@@ -89,22 +97,39 @@ export const AR = {
   'projects.filter.ecommerce': 'تجارة إلكترونية',
   'projects.filter.ai': 'ذكاء اصطناعي',
   'projects.filter.mobile': 'تطبيقات الهاتف',
+  'projects.filter.business': 'تطبيقات الأعمال',
+  'projects.tag.customFeatures': 'ميزات مخصّصة',
+  'projects.tag.booking': 'حجز',
+  'projects.tag.payments': 'مدفوعات',
+  'projects.tag.platform': 'منصّة',
+  'projects.tag.education': 'تعليم',
+  'projects.tag.marketplace': 'سوق إلكتروني',
+  'projects.tag.iosAndroid': 'iOS وAndroid',
   'projects.empty': 'لا يوجد مشروع في هذا التصنيف بعد.',
   'projects.emptyAction': 'اعرض كل المشاريع',
-  'projects.viewCase': 'اقرأ دراسة الحالة',
+  'projects.viewCase': "استكشف النموذج",
   'projects.countLabel': '{count} مشروع معروض',
+  'projects.railHint': 'واصل التمرير لتصفّح أعمالنا',
+  'projects.item.knowledge-hub.summary':
+    "مساحة معرفية تدعم البحث في المستندات ومساعداً حوارياً بالذكاء الاصطناعي.",
+  'projects.item.booking-cloud.summary':
+    "منصّة سحابية للمواعيد والحجوزات مع تقويم مشترك وتوفّر لحظي.",
+  'projects.item.learning-platform.summary':
+    "منصّة تعليم إلكتروني تضم دروس فيديو ودورات تفاعلية ومتابعة التقدّم.",
+  'projects.item.connect-app.summary':
+    "تطبيق إنتاجية يجمع مهام الفريق والمحادثات وتحديثات المشاريع.",
   'projects.item.neural-ledger.summary':
     'لوحة تحكّم مالية لحظية، مع تصنيف تلقائي للقيود المحاسبية واكتشاف الحالات الشاذة.',
   'projects.item.aura-commerce.summary':
     'متجر إلكتروني متعدّد اللغات، بدفع محلي ومسار شراء أُعيد تصميمه بالكامل.',
-  'projects.item.atlas-cargo.summary':
-    'منصّة تتبّع للشحن البري بين الدار البيضاء وأوروبا، مع تخطيط للمسارات في الوقت الحقيقي.',
-  'projects.item.zellige-studio.summary':
-    'موقع تعريفي لاستوديو معماري، مبني حول معرض صور عالي الدقة وسريع التحميل.',
-  'projects.item.souk-connect.summary':
-    'تطبيق هاتف يربط الحرفيين بالمشترين، مع محادثة مدمجة ودفع آمن.',
-  'projects.item.riad-atlas.summary':
-    'نظام حجز مباشر لمجموعة رياضات، يُلغي عمولة المنصّات الوسيطة.',
+  'projects.item.logistics-cloud.summary':
+    "منصّة لوجستية لتتبّع الشحنات وتخطيط المسارات لحظياً.",
+  'projects.item.design-studio.summary':
+    "موقع لعرض الأعمال مع معرض مشاريع عالي الدقّة وسريع التحميل.",
+  'projects.item.market-connect.summary':
+    "سوق إلكتروني للهاتف مع مراسلة مدمجة ودفع آمن.",
+  'projects.item.booking-engine.summary':
+    "نظام حجز مباشر مع إدارة التوفّر ودفع آمن.",
 
   // ── 4 · Services ──────────────────────────────────────────────────────────
   'services.eyebrow': 'خدماتنا',
@@ -125,24 +150,40 @@ export const AR = {
   'services.ctaTitle': 'لم تجد ما تبحث عنه؟',
   'services.ctaText': 'أخبرنا بما تحتاجه، ونرجع إليك باقتراح خلال يومَي عمل.',
 
-  // ── 5 · Contact ───────────────────────────────────────────────────────────
+  // ── 5 · Process ───────────────────────────────────────────────────────────
+  'process.eyebrow': 'طريقة عملنا',
+  'process.title': 'من الفكرة إلى نموّ حقيقي.',
+  'process.lede': 'مسار واضح وتشاركي، مصمَّم للتقدّم بسرعة وتقليل مخاطر مشروعك.',
+  'process.cta': 'لنعمل معاً',
+  'process.step1.title': 'الاكتشاف',
+  'process.step1.text': 'نتعرّف على أهدافك ومستخدميك وقيودك.',
+  'process.step2.title': 'التخطيط',
+  'process.step2.text': 'نحدّد النطاق وخارطة الطريق ومؤشرات النجاح.',
+  'process.step3.title': 'التصميم',
+  'process.step3.text': 'نصمّم التجربة ونتحقّق منها عبر نموذج أوّلي.',
+  'process.step4.title': 'التطوير',
+  'process.step4.text': 'نطوّر ونختبر ونجهّز كل شيء للإطلاق.',
+  'process.step5.title': 'الإطلاق والنمو',
+  'process.step5.text': 'نُطلق المنتج ونتابعه ونواصل تحسينه معاً.',
+
+  // ── 6 · Contact ───────────────────────────────────────────────────────────
   'contact.eyebrow': 'اتصل بنا',
   'contact.title': 'لديك فكرة مشروع؟ حدّثنا عنها.',
   'contact.lede': 'املأ النموذج ونرجع إليك خلال يومَي عمل. لا رسائل تسويقية، ولا مكالمات مفاجئة.',
   'contact.infoTitle': 'طرق أخرى للتواصل',
   'contact.emailLabel': 'البريد الإلكتروني',
   'contact.phoneLabel': 'الهاتف',
-  'contact.locationLabel': 'العنوان',
-  'contact.locationValue': 'الدار البيضاء، المغرب',
+  'contact.locationLabel': "نعمل مع",
+  'contact.locationValue': "فرق في جميع أنحاء العالم",
   'contact.hoursLabel': 'أوقات العمل',
   'contact.hoursValue': 'الاثنين – الجمعة، 9:00 – 18:00',
 
   'contact.form.label': 'نموذج التواصل',
   'contact.name.label': 'الاسم الكامل',
-  'contact.name.placeholder': 'مثال: سارة العلوي',
+  'contact.name.placeholder': "الاسم الكامل",
   'contact.name.error': 'الرجاء إدخال اسمك.',
   'contact.email.label': 'البريد الإلكتروني',
-  'contact.email.placeholder': 'sara@entreprise.ma',
+  'contact.email.placeholder': "name@company.com",
   'contact.email.errorRequired': 'الرجاء إدخال بريدك الإلكتروني.',
   'contact.email.errorFormat': 'هذا البريد الإلكتروني غير صالح. تحقّق من وجود @ واسم النطاق.',
   'contact.company.label': 'الشركة',
@@ -157,10 +198,10 @@ export const AR = {
   'contact.type.other': 'شيء آخر',
   'contact.budget.label': 'الميزانية التقديرية',
   'contact.budget.placeholder': 'اختر نطاقاً',
-  'contact.budget.s': 'أقل من 20 000 درهم',
-  'contact.budget.m': 'من 20 000 إلى 50 000 درهم',
-  'contact.budget.l': 'من 50 000 إلى 150 000 درهم',
-  'contact.budget.xl': 'أكثر من 150 000 درهم',
+  'contact.budget.s': "مشروع صغير",
+  'contact.budget.m': "مشروع متوسط",
+  'contact.budget.l': "مشروع كبير",
+  'contact.budget.xl': "مشروع مؤسسي",
   'contact.budget.unknown': 'لم أحدّد بعد',
   'contact.message.label': 'مشروعك',
   'contact.message.placeholder': 'صِف ما تريد بناءه، ولمن، وبأي أفق زمني.',
@@ -172,14 +213,14 @@ export const AR = {
   'contact.submit': 'أرسل الطلب',
   'contact.submitting': 'جارٍ الإرسال…',
   'contact.errorSummary': 'تعذّر إرسال النموذج. صحّح {count} من الحقول أدناه.',
-  'contact.errorSend': 'تعذّر إرسال طلبك. أعد المحاولة، أو راسلنا مباشرةً على {email}.',
+  'contact.errorSend': "تعذّر إرسال طلبك. يرجى المحاولة مرة أخرى.",
   'contact.retry': 'أعد المحاولة',
   'contact.successTitle': 'وصلنا طلبك.',
   'contact.successText': 'شكراً لك يا {name}. سنرجع إليك على {email} خلال يومَي عمل.',
   'contact.successAgain': 'إرسال طلب آخر',
   'contact.privacy': 'نستعمل بياناتك للردّ على طلبك فقط. لا نشاركها مع أي جهة أخرى.',
 
-  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  // ── 6 · Contact — voice assistant ────────────────────────────────────────
   'contact.voice.privacy':
     'يُعالَج صوتك عبر خدمة ذكاء اصطناعي خارجية لملء هذا النموذج. لا يُحفظ التسجيل الصوتي أبداً.',
   'contact.voice.start': 'صِف مشروعك',
@@ -198,7 +239,7 @@ export const AR = {
   'contact.voice.dismiss': 'تجاهل',
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  'footer.tagline': 'استوديو رقمي مغربي — مواقع، وتطبيقات، وتكامل على المقاس.',
+  'footer.tagline': "خدمات تقنية — مواقع وتطبيقات وذكاء اصطناعي وتكاملات مخصّصة.",
   'footer.navLabel': 'تنقل التذييل',
   'footer.sectionsLabel': 'الأقسام',
   'footer.contactLabel': 'التواصل',

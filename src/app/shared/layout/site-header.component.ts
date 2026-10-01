@@ -35,7 +35,19 @@ const SECTION_IDS: readonly { id: string; key: MessageKey }[] = [
     LanguageMenuComponent,
   ],
   templateUrl: './site-header.component.html',
+  styleUrl: './site-header.component.scss',
+  host: { '(keydown.escape)': 'closeMenu()' },
   styles: `
+    /*
+     * A sticky element sticks within its parent. As a plain block this host is
+     * exactly as tall as the header, so the header had no room to stick and
+     * scrolled away with the page. Without a box of its own, the host hands the
+     * header to the page-tall shell as its parent.
+     */
+    :host {
+      display: contents;
+    }
+
     /*
      * The header gains its border and shadow only once the page has scrolled, so
      * it sits flush against the banner at rest. Driven by a scroll-progress

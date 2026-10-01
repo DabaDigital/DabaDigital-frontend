@@ -17,8 +17,14 @@ export type WorkTone = 'primary' | 'accent';
 @Component({
   selector: 'app-work-thumb',
   template: `
+    <!--
+      \`slice\`: the card frames are wider than 4:3, and letterboxing would leave
+      bare bands at the sides. The artwork keeps a 25-unit margin top and
+      bottom, so cropping to 16:10 never cuts into the window it draws.
+    -->
     <svg
       viewBox="0 0 400 300"
+      preserveAspectRatio="xMidYMid slice"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       class="h-full w-full"

@@ -39,4 +39,17 @@ export class SiteFooterComponent {
       new Date().getFullYear(),
     ),
   );
+
+  protected readonly localTime = computed(() => {
+    const d = new Date();
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Africa/Casablanca',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+      .format(d)
+      .replace(':', 'h');
+  });
 }
+

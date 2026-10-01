@@ -103,7 +103,7 @@ export const ADMIN_EN = {
   'admin.filterLabel': 'Filter by status',
   'admin.tone': 'Cover accent',
   'admin.blue': 'Blue',
-  'admin.terracotta': 'Terracotta',
+  'admin.lightBlue': 'Light blue',
   'admin.optional': 'Optional',
   'admin.required': 'Please complete the required fields and use valid URLs.',
   'admin.englishRequired':
@@ -251,7 +251,7 @@ export const ADMIN_FR = {
   'admin.filterLabel': 'Filtrer par statut',
   'admin.tone': 'Couleur de couverture',
   'admin.blue': 'Bleu',
-  'admin.terracotta': 'Terracotta',
+  'admin.lightBlue': 'Bleu clair',
   'admin.optional': 'Facultatif',
   'admin.required': 'Complétez les champs obligatoires et utilisez des URL valides.',
   'admin.englishRequired':
@@ -399,7 +399,7 @@ export const ADMIN_AR = {
   'admin.filterLabel': 'التصفية حسب الحالة',
   'admin.tone': 'لون الغلاف',
   'admin.blue': 'أزرق',
-  'admin.terracotta': 'طيني',
+  'admin.lightBlue': 'أزرق فاتح',
   'admin.optional': 'اختياري',
   'admin.required': 'أكمل الحقول المطلوبة واستخدم روابط صحيحة.',
   'admin.englishRequired':

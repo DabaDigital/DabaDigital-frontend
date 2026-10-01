@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { PROJECTS, PROJECT_FILTERS, SERVICES } from '../features/home/home.content';
+import { PORTFOLIO_SOURCE, PROJECTS, PROJECT_FILTERS, SERVICES } from '../features/home/home.content';
 import { ContentApi } from './api/content.api';
 import { SupabaseService } from './api/supabase.service';
 import { COMPANY } from './company';
@@ -22,7 +22,7 @@ export function seedContent(): SiteContent {
       categories: [...p.categories],
       year: p.year,
       tone: p.tone,
-      image_url: '',
+      image_url: p.image_url ?? '',
       website_url: '',
       status: 'published',
       position,
@@ -108,8 +108,12 @@ export class ContentStore {
   readonly content = signal<SiteContent>(seedContent());
   /** False until the first Supabase read settles, so a page can tell "loading" from "not found". */
   readonly loaded = signal(!this.supabase.configured());
+  // Demo concepts are local content, not claims about client work. The CMS
+  // remains intact and can become the public source by changing PORTFOLIO_SOURCE.
   readonly projects = computed(() =>
-    this.content().projects.filter((p) => p.status === 'published'),
+    (PORTFOLIO_SOURCE === 'demo' ? seedContent().projects : this.content().projects).filter(
+      (p) => p.status === 'published',
+    ),
   );
   readonly services = computed(() =>
     this.content().services.filter((s) => s.status === 'published'),
