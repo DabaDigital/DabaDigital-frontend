@@ -10,14 +10,7 @@ import {
   input,
 } from '@angular/core';
 
-export type ButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'ghost'
-  | 'danger'
-  | 'danger-ghost'
-  | 'glow'
-  | 'glass';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'danger-ghost';
 export type ButtonSize = 'sm' | 'md' | 'icon';
 
 /**
@@ -60,7 +53,7 @@ export type ButtonSize = 'sm' | 'md' | 'icon';
         padding-block: 0.5rem;
         padding-inline: 1.5rem;
         border: 1px solid transparent;
-        border-radius: var(--radius-md);
+        border-radius: var(--radius-sm);
         font-family: var(--font-sans);
         font-size: 1rem;
         font-weight: 600;
@@ -114,34 +107,6 @@ export type ButtonSize = 'sm' | 'md' | 'icon';
 
       :host([data-variant='danger']:hover:not([aria-disabled='true'])) {
         background-color: color-mix(in srgb, var(--danger) 85%, var(--text-strong));
-      }
-
-      /* The landing page's call to action: the brand gradient, lit from within. */
-      :host([data-variant='glow']) {
-        background-image: var(--gradient-primary);
-        background-color: var(--primary);
-        color: var(--primary-contrast);
-        box-shadow: var(--shadow-glow);
-      }
-
-      :host([data-variant='glow']:hover:not([aria-disabled='true'])) {
-        filter: brightness(1.08);
-        box-shadow:
-          var(--shadow-glow),
-          0 0 0 1px var(--border-glow);
-      }
-
-      /* A pill of glass over the night scene — the quieter second action. */
-      :host([data-variant='glass']) {
-        border-color: var(--border-glass);
-        border-radius: var(--radius-pill);
-        background-color: var(--surface-glass-strong);
-        color: var(--text-strong);
-        backdrop-filter: blur(0.5rem);
-      }
-
-      :host([data-variant='glass']:hover:not([aria-disabled='true'])) {
-        border-color: var(--border-glow);
       }
 
       /* Quiet at rest, so a column of row actions does not shout; red on intent. */

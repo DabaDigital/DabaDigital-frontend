@@ -3,8 +3,10 @@
   animation in the component styles. The border box is present either way, so the
   transition costs no layout shift.
 -->
-<header class="site-header sticky top-0 z-50 border-b border-transparent backdrop-blur-md">
-  <div class="site-header__inner">
+<header
+  class="site-header sticky top-0 z-50 border-b border-transparent bg-surface-page/80 backdrop-blur-md"
+>
+  <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:gap-3 sm:px-6">
     <!--
       The mark is a picture of the company name, so it stays `aria-hidden` inside
       the component and the link carries the name — otherwise the home link would
@@ -13,13 +15,16 @@
     <a
       routerLink="/"
       (click)="closeMenu()"
-      class="site-header__brand flex items-center rounded-sm text-text-strong"
+      class="flex items-center rounded-sm text-text-strong"
       [attr.aria-label]="t('nav.homeLabel')"
     >
       <app-logo class="h-7 sm:h-8" />
     </a>
 
-    <nav class="site-header__nav" [attr.aria-label]="t('nav.primaryLabel')">
+    <nav
+      class="ms-auto hidden items-center gap-1 lg:flex"
+      [attr.aria-label]="t('nav.primaryLabel')"
+    >
       @for (link of links(); track link.id) {
         <!--
           `aria-current="location"`, not `"page"`: these are positions within the
@@ -36,13 +41,12 @@
       }
     </nav>
 
-    <div class="site-header__controls">
+    <div class="ms-auto flex items-center gap-2 lg:ms-2">
       <app-theme-toggle />
       <app-language-menu />
 
-      <a routerLink="/" fragment="contact" class="site-header__cta">
-        <span>{{ t('nav.cta') }}</span>
-        <app-icon name="arrow-right" class="size-3.5 rtl:rotate-180" />
+      <a appButton size="sm" routerLink="/" fragment="contact" class="hidden lg:inline-flex">
+        {{ t('nav.cta') }}
       </a>
 
       <!-- 40px square: the touch-target floor, and it matches the two controls beside it. -->
@@ -54,7 +58,7 @@
         [attr.aria-expanded]="menuOpen()"
         [attr.aria-label]="menuOpen() ? t('nav.closeMenu') : t('nav.openMenu')"
         aria-controls="mobile-nav"
-        class="site-header__menu-toggle"
+        class="lg:hidden"
       >
         <app-icon [name]="menuOpen() ? 'close' : 'menu'" class="size-[1.15rem]" />
       </button>
@@ -64,7 +68,7 @@
   @if (menuOpen()) {
     <nav
       id="mobile-nav"
-      class="site-header__mobile border-t border-border-subtle bg-surface-page px-4 pb-4"
+      class="border-t border-border-subtle bg-surface-page px-4 pb-4 lg:hidden"
       [attr.aria-label]="t('nav.mobileLabel')"
     >
       <ul class="flex flex-col gap-1 py-2">
@@ -82,14 +86,8 @@
           </li>
         }
       </ul>
-      <a
-        routerLink="/"
-        fragment="contact"
-        (click)="closeMenu()"
-        class="flex items-center justify-center gap-2 rounded-full bg-sky-400 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)]"
-      >
-        <span>{{ t('nav.cta') }}</span>
-        <app-icon name="arrow-right" class="size-3.5 rtl:rotate-180" />
+      <a appButton routerLink="/" fragment="contact" (click)="closeMenu()" class="w-full">
+        {{ t('nav.cta') }}
       </a>
     </nav>
   }

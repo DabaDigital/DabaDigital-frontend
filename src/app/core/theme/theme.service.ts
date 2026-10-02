@@ -16,17 +16,17 @@ const DARK_QUERY = '(prefers-color-scheme: dark)';
  */
 const THEME_COLOR: Readonly<Record<ResolvedTheme, string>> = {
   light: '#f7f8fa',
-  dark: '#040a18',
+  dark: '#0d1117',
 };
 
 /**
- * Light / dark, dark by default.
+ * Light / dark, with the OS as the starting point.
  *
- * Dark is the house style — the landing page is designed as a night scene — so
- * a first-time visitor gets dark whatever their OS says, and the first click
- * on the toggle pins an explicit choice that outlives the session. `'system'`
- * remains a valid choice for anything that sets it explicitly, and then the
- * site follows `prefers-color-scheme`, including when the OS flips at sunset.
+ * Three states, not two. Until the visitor touches the toggle the site follows
+ * `prefers-color-scheme` and keeps following it when the OS flips at sunset;
+ * the first click pins an explicit choice that outlives the session. Dropping
+ * `'system'` would mean guessing wrong for every first-time visitor whose OS is
+ * already set the way they want it.
  *
  * The service owns `data-theme` on `<html>`; the tokens do the rest. No component
  * ever branches on the theme.
@@ -105,10 +105,10 @@ export class ThemeService {
   private readStoredChoice(): ThemeChoice {
     try {
       const stored = this.document.defaultView?.localStorage.getItem(THEME_STORAGE_KEY);
-      return stored === 'light' || stored === 'dark' ? stored : 'dark';
+      return stored === 'light' || stored === 'dark' ? stored : 'system';
     } catch {
-      // Storage is blocked: the house default for this page view.
-      return 'dark';
+      // Storage is blocked; follow the OS for this page view.
+      return 'system';
     }
   }
 

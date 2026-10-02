@@ -1,74 +1,73 @@
-<section id="services" appSectionSpy class="relative overflow-x-clip py-20 lg:py-32">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6">
-    <div class="grid items-start gap-12 lg:grid-cols-[0.8fr_1.4fr_0.8fr] lg:gap-8">
-      <!-- Left Column: Heading & CTA -->
-      <div class="lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
-        <p class="eyebrow">
-          <span class="text-sky-400 font-bold" aria-hidden="true">✦</span>
-          <span class="tracking-widest uppercase">{{ t('services.eyebrow') }}</span>
-        </p>
-        <h2 class="section-title mt-6 text-white font-bold" data-words>
-          <span class="sr-only">{{ t('services.title') }}</span>
-          <span aria-hidden="true">
-            @for (word of t('services.title') | splitWords; track $index) {
-              <span class="word"><span class="word__inner">{{ word }}</span></span>{{ ' ' }}
-            }
+<section
+  id="services"
+  appSectionSpy
+  class="relative overflow-hidden border-b border-border-subtle bg-surface-card"
+>
+  <div class="ambient-glow inset-x-0 -bottom-96 mx-auto" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+    <div appReveal class="max-w-2xl">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+      >
+        <span class="size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+        <span>{{ t('services.eyebrow') }}</span>
+      </p>
+      <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('services.title') }}</h2>
+      <p class="mt-4 text-lg text-text-muted">{{ t('services.lede') }}</p>
+    </div>
+
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (service of services(); track service.id; let i = $index) {
+        <li
+          appReveal
+          [revealDelay]="i * 50"
+          class="group relative flex flex-col rounded-lg border border-border-glass bg-surface-glass p-6 shadow-sm transition-[transform,border-color,box-shadow] duration-(--duration-base) ease-standard hover:-translate-y-1 hover:border-border-strong hover:shadow-md"
+        >
+          <!--
+            The index is ornament, not content — it repeats nothing a screen
+            reader needs and would read as "zero one" before every card title.
+          -->
+          <span
+            class="absolute end-6 top-6 font-display text-sm font-semibold text-text-muted/60 tabular-nums"
+            aria-hidden="true"
+          >
+            {{ number(i) }}
           </span>
-        </h2>
-        <p class="mt-4 text-base text-slate-400 leading-relaxed">{{ t('services.lede') }}</p>
 
-        <div class="mt-8">
-          <a
-            appButton
-            routerLink="/"
-            fragment="contact"
-            class="bg-sky-400! hover:bg-sky-300! text-slate-950! font-semibold px-6 py-2.5 rounded-full inline-flex items-center gap-2 shadow-[0_0_20px_rgba(56,189,248,0.35)] transition-all duration-300"
+          <span
+            class="flex size-12 items-center justify-center rounded-md bg-primary-soft text-primary transition-colors duration-(--duration-base) ease-standard group-hover:bg-primary group-hover:text-primary-contrast"
           >
-            {{ t('nav.cta') }}
-            <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
-          </a>
-        </div>
+            <app-icon [name]="service.icon" class="size-5" />
+          </span>
+
+          <h3 class="mt-5 text-lg font-semibold">{{ content.text(service.title) }}</h3>
+          <p class="mt-2 text-sm text-text-muted">{{ content.text(service.description) }}</p>
+        </li>
+      }
+    </ul>
+
+    <!-- Closing CTA for anyone whose need is not on the list above. -->
+    <div
+      appReveal
+      class="relative isolate mt-12 overflow-hidden rounded-xl border border-border-glass bg-surface-glass p-8 shadow-md sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-10"
+    >
+      <div class="ambient-glow -top-80 -end-32" aria-hidden="true"></div>
+
+      <div class="relative z-10 max-w-xl">
+        <h3 class="text-xl font-semibold sm:text-2xl">{{ t('services.ctaTitle') }}</h3>
+        <p class="mt-2 text-text-muted">{{ t('services.ctaText') }}</p>
       </div>
 
-      <!-- Center Column: 2x3 Grid of Service Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        @for (service of services(); track service.id; let i = $index) {
-          <div
-            class="service-row glass-card flex flex-col justify-between p-5 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md hover:border-sky-400/40 hover:shadow-[0_0_25px_rgba(14,165,233,0.15)] transition-all duration-300"
-            data-service
-            data-spotlight
-          >
-            <div>
-              <div class="flex items-center justify-between">
-                <span
-                  class="flex size-10 items-center justify-center rounded-xl bg-sky-500/15 border border-sky-400/25 text-sky-400"
-                >
-                  <app-icon [name]="service.icon" class="size-5" />
-                </span>
-                <span class="font-display text-xs font-semibold text-slate-500 tabular-nums" aria-hidden="true">
-                  {{ index(i) }}
-                </span>
-              </div>
-              <h3 class="mt-4 text-base font-bold text-white">{{ content.text(service.title) }}</h3>
-              <p class="mt-2 text-xs text-slate-400 leading-relaxed">
-                {{ content.text(service.description) }}
-              </p>
-            </div>
-          </div>
-        }
-      </div>
-
-      <!-- Right Column: 3D Holographic Blue Cubes Visual -->
-      <div class="hidden lg:flex flex-col items-center justify-center lg:sticky lg:top-[calc(var(--header-height)+2rem)]">
-        <div class="relative w-full max-w-[280px] rounded-3xl p-3 border border-sky-400/20 bg-slate-900/40 backdrop-blur-xl shadow-2xl shadow-sky-500/15">
-          <div class="absolute -inset-4 rounded-3xl bg-sky-500/15 blur-2xl pointer-events-none"></div>
-          <img
-            src="/images/services-cubes.webp"
-            alt="3D Holographic Tech Cubes"
-            class="w-full h-auto object-cover rounded-2xl transform hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-      </div>
+      <a
+        appButton
+        routerLink="/"
+        fragment="contact"
+        class="relative z-10 mt-6 shrink-0 shadow-glow sm:mt-0"
+      >
+        {{ t('nav.cta') }}
+        <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
+      </a>
     </div>
   </div>
 </section>
