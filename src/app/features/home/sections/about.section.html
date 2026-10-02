@@ -1,112 +1,49 @@
-<section id="about" appSectionSpy class="relative overflow-x-clip py-20 lg:py-32">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6">
-    <div class="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr_1.1fr] lg:gap-8">
-      <!-- Left Column: Story & Philosophy -->
-      <div>
-        <p class="eyebrow">
-          <span class="text-sky-400 font-bold" aria-hidden="true">✦</span>
-          <span class="tracking-widest uppercase">About Us</span>
+<section
+  id="about"
+  appSectionSpy
+  class="relative overflow-hidden border-b border-border-subtle bg-surface-card"
+>
+  <div class="ambient-glow -bottom-96 -start-64" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+    <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div appReveal>
+        <p
+          class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
+        >
+          <span class="size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+          <span>{{ t('about.eyebrow') }}</span>
         </p>
 
-        <h2 class="section-title mt-6 text-white font-bold leading-tight">
-          A small team,<br />high standards.
-        </h2>
+        <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('about.title') }}</h2>
 
-        <p class="mt-6 text-base text-slate-300 leading-relaxed font-medium">
-          We build fast, accessible digital experiences that pair current technology with a calm, legible design. No templates, no complexity for its own sake.
-        </p>
+        <!-- ~65 characters at this size — the readable measure for body copy. -->
+        <p class="mt-6 max-w-prose text-lg text-text-muted">{{ t('about.lede') }}</p>
+        <p class="mt-4 max-w-prose text-text-muted">{{ t('about.body') }}</p>
+      </div>
 
-        <p class="mt-4 text-sm text-slate-400 leading-relaxed">
-          Every project starts with one question: what has to work here? From there we move to a prototype, test with real users, then to a product we ship and keep supporting after launch.
-        </p>
-
-        <div class="mt-8">
-          <a
-            appButton
-            routerLink="/"
-            fragment="contact"
-            class="bg-sky-400! hover:bg-sky-300! text-slate-950! font-semibold px-6 py-2.5 rounded-full inline-flex items-center gap-2 shadow-[0_0_20px_rgba(56,189,248,0.35)] transition-all duration-300"
+      <!--
+        Four pillars, staggered by 60 ms so they arrive as a sequence rather than
+        as one block. `track` is the stable id, not the index — the list never
+        reorders, but an index key would break the day it does.
+      -->
+      <ul class="grid gap-4 sm:grid-cols-2">
+        @for (pillar of pillars; track pillar.id; let i = $index) {
+          <li
+            appReveal
+            [revealDelay]="i * 60"
+            class="rounded-lg border border-border-glass bg-surface-glass p-6 shadow-sm transition-[transform,border-color] duration-(--duration-base) ease-standard hover:-translate-y-1 hover:border-border-strong"
           >
-            Our story
-            <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
-          </a>
-        </div>
-      </div>
-
-      <!-- Product engineering workspace -->
-      <div class="relative flex items-center justify-center py-4" data-scene-anchor="1">
-        <div class="relative w-full max-w-[420px]">
-          <!-- Ambient Glow behind laptop -->
-          <div class="absolute inset-0 rounded-3xl bg-sky-500/15 blur-3xl pointer-events-none"></div>
-
-          <!-- 3D Laptop with Glowing Gateway -->
-          <img
-            src="/images/about-tech.webp"
-            alt="Software dashboard and connected applications on a laptop"
-            loading="lazy"
-            class="relative z-10 w-full h-auto object-contain drop-shadow-[0_0_50px_rgba(56,189,248,0.25)] transform hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-      </div>
-
-      <!-- Right Column: 2x2 Grid of 4 Pillar Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <!-- Card 01 -->
-        <div class="glass-card p-5 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md hover:border-sky-400/30 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <span class="flex size-10 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
-              <app-icon name="pen" class="size-5" />
+            <span
+              class="flex size-11 items-center justify-center rounded-md bg-primary-soft text-primary"
+            >
+              <app-icon [name]="pillar.icon" class="size-5" />
             </span>
-            <span class="font-display text-xs font-semibold text-slate-500">01</span>
-          </div>
-          <h3 class="mt-4 text-base font-semibold text-white">Design first</h3>
-          <p class="mt-1.5 text-xs text-slate-400 leading-relaxed">
-            We start from use, not from code. Prototypes, user test, then build.
-          </p>
-        </div>
-
-        <!-- Card 02 -->
-        <div class="glass-card p-5 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md hover:border-sky-400/30 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <span class="flex size-10 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
-              <app-icon name="sparkles" class="size-5" />
-            </span>
-            <span class="font-display text-xs font-semibold text-slate-500">02</span>
-          </div>
-          <h3 class="mt-4 text-base font-semibold text-white">Measurable performance</h3>
-          <p class="mt-1.5 text-xs text-slate-400 leading-relaxed">
-            A performance budget per page, and Core Web Vitals tracked after launch.
-          </p>
-        </div>
-
-        <!-- Card 03 -->
-        <div class="glass-card p-5 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md hover:border-sky-400/30 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <span class="flex size-10 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
-              <app-icon name="languages" class="size-5" />
-            </span>
-            <span class="font-display text-xs font-semibold text-slate-500">03</span>
-          </div>
-          <h3 class="mt-4 text-base font-semibold text-white">Multilingual from day one</h3>
-          <p class="mt-1.5 text-xs text-slate-400 leading-relaxed">
-            Arabic, French and English, with real right-to-left support.
-          </p>
-        </div>
-
-        <!-- Card 04 -->
-        <div class="glass-card p-5 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md hover:border-sky-400/30 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <span class="flex size-10 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
-              <app-icon name="check-circle" class="size-5" />
-            </span>
-            <span class="font-display text-xs font-semibold text-slate-500">04</span>
-          </div>
-          <h3 class="mt-4 text-base font-semibold text-white">A partnership that lasts</h3>
-          <p class="mt-1.5 text-xs text-slate-400 leading-relaxed">
-            We do not vanish at handover. We stay for maintenance, iteration and real growth.
-          </p>
-        </div>
-      </div>
+            <h3 class="mt-5 text-base font-semibold">{{ t(pillar.titleKey) }}</h3>
+            <p class="mt-2 text-sm text-text-muted">{{ t(pillar.textKey) }}</p>
+          </li>
+        }
+      </ul>
     </div>
   </div>
 </section>
