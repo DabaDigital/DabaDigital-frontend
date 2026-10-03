@@ -116,6 +116,31 @@
     opacity: 0.5;
   }
 
+  // An icon is shown whole, small and square, the way a card will show it.
+  [data-variant='icon'] .upload-zone {
+    min-block-size: 6.5rem;
+  }
+
+  [data-variant='icon'] .upload-thumb {
+    inline-size: 4rem;
+    aspect-ratio: 1;
+    padding: 0.75rem;
+  }
+
+  [data-variant='icon'] .upload-image {
+    object-fit: contain;
+  }
+
+  // Faces sit in the upper part of a portrait; keep them in frame whatever the crop.
+  [data-variant='portrait'] .upload-thumb {
+    inline-size: 6rem;
+    aspect-ratio: 4 / 5;
+  }
+
+  [data-variant='portrait'] .upload-image {
+    object-position: 50% 25%;
+  }
+
   .upload-spinner {
     position: absolute;
     inset: 0;

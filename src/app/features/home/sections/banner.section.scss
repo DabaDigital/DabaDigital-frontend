@@ -1,0 +1,337 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  // Full-bleed and under the transparent header: the section pulls itself up by
+  // the header's height and pads its content back down by the same amount.
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    margin-block-start: calc(var(--header-height) * -1);
+    padding-block-start: var(--header-height);
+    overflow: clip;
+    background:
+      radial-gradient(
+        circle at 64% 18%,
+        color-mix(in srgb, var(--accent) 8%, transparent),
+        transparent 36%
+      ),
+      var(--surface-page);
+  }
+
+  :host-context([dir='rtl']) .hero {
+    background:
+      radial-gradient(
+        circle at 36% 18%,
+        color-mix(in srgb, var(--accent) 8%, transparent),
+        transparent 36%
+      ),
+      var(--surface-page);
+  }
+
+  .hero__body {
+    position: relative;
+    z-index: 2;
+    padding-block: 2.5rem 0;
+  }
+
+  .hero__copy {
+    max-inline-size: 38rem;
+  }
+
+  // ── Headline ─────────────────────────────────────────────────────────────
+
+  .hero-title {
+    margin-block-start: 1.75rem;
+    color: var(--text-strong);
+    font-size: clamp(3.5rem, 15vw, 5.75rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.94;
+  }
+
+  // Each line clips vertically, so a word can rise into view from below its
+  // own baseline. Never horizontally: a wide glyph keeps its side bearing.
+  .hero-title__line {
+    display: block;
+    overflow-x: visible;
+    overflow-y: clip;
+    padding-block: 0.04em 0.12em;
+    margin-block: -0.04em -0.12em;
+  }
+
+  .hero-title__text {
+    display: inline-block;
+  }
+
+  // "Launch." in cold silver: lit from above, falling to steel.
+  .hero-title__text--silver {
+    background-image: linear-gradient(
+      180deg,
+      var(--primary) 10%,
+      var(--accent) 55%,
+      var(--text-muted) 100%
+    );
+    background-clip: text;
+    color: transparent;
+  }
+
+  @media (forced-colors: active) {
+    .hero-title__text--silver {
+      background: none;
+      color: CanvasText;
+    }
+  }
+
+  .hero-caret {
+    display: inline-block;
+    inline-size: 0.05em;
+    block-size: 0.74em;
+    margin-inline-start: 0.1em;
+    background-color: currentColor;
+    vertical-align: -0.02em;
+    animation: hero-caret 1100ms steps(1) infinite;
+  }
+
+  :host-context([lang='ar']) .hero-title {
+    font-size: clamp(3rem, 12vw, 4.75rem);
+    letter-spacing: 0;
+    line-height: 1.22;
+  }
+
+  // ── Copy and actions ─────────────────────────────────────────────────────
+
+  .hero__lede {
+    max-inline-size: 30rem;
+    margin-block-start: 1.75rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    margin-block-start: 2.25rem;
+  }
+
+  .hero__cta {
+    gap: 0.875rem;
+    min-block-size: 3.25rem;
+    padding-inline: 0.5rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .hero__secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.875rem;
+    min-block-size: 3.25rem;
+    border-radius: var(--radius-pill);
+    color: var(--text-strong);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .hero__secondary-orb {
+    display: grid;
+    place-items: center;
+    inline-size: 3.25rem;
+    block-size: 3.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    transition:
+      border-color var(--duration-base) var(--ease-standard),
+      background-color var(--duration-base) var(--ease-standard),
+      translate var(--duration-slow) var(--ease-out);
+  }
+
+  .hero__secondary:hover .hero__secondary-orb {
+    border-color: color-mix(in srgb, var(--text-strong) 45%, transparent);
+    background-color: var(--surface-glass);
+    translate: 0 0.125rem;
+  }
+
+  // ── The visual: wide screens only ────────────────────────────────────────
+  // Stacked, it would be a square of its own between the calls to action and
+  // the scroll cue — a screen of ornament before the first project. The phone
+  // and tablet layout goes without it (the 3D scene never runs there anyway).
+
+  .hero__visual {
+    display: none;
+  }
+
+  // ── Scroll cue ───────────────────────────────────────────────────────────
+
+  .hero__foot {
+    position: relative;
+    z-index: 2;
+    padding-block: 2rem 2.5rem;
+  }
+
+  .hero__scroll {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  :host-context([lang='ar']) .hero__scroll {
+    letter-spacing: 0;
+    font-size: 0.75rem;
+  }
+
+  .hero__scroll-line {
+    position: relative;
+    inline-size: 1px;
+    block-size: 2.75rem;
+    overflow: hidden;
+    background-color: var(--border-strong);
+  }
+
+  .hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    left: -2px;
+    inline-size: 5px;
+    block-size: 5px;
+    border-radius: var(--radius-pill);
+    background-color: var(--text-strong);
+    animation: hero-scroll 2600ms var(--ease-standard) infinite;
+  }
+
+  // ── Chapter rail (wide screens only) ─────────────────────────────────────
+
+  .hero__rail {
+    display: none;
+  }
+
+  // ── Wide screens: the scene fills the section behind the copy ─────────────
+  @media (min-width: 1024px) {
+    .hero {
+      min-block-size: max(44rem, 100svh);
+    }
+
+    .hero__body {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      padding-block: 3rem 1rem;
+    }
+
+    .hero-title {
+      font-size: clamp(5rem, 7.2vw, 8.75rem);
+    }
+
+    :host-context([lang='ar']) .hero-title {
+      font-size: clamp(4.25rem, 5.6vw, 7rem);
+    }
+
+    .hero__lede {
+      font-size: 1.0625rem;
+    }
+
+    .hero__visual {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: block;
+    }
+
+    // Night falls over the copy side, so the headline never sits on lit rock.
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(to top, var(--surface-page) 0%, transparent 22%),
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--surface-page) 82%, transparent) 0%,
+          color-mix(in srgb, var(--surface-page) 45%, transparent) 30%,
+          transparent 52%
+        );
+      pointer-events: none;
+    }
+
+    :host-context([dir='rtl']) .hero::after {
+      background:
+        linear-gradient(to top, var(--surface-page) 0%, transparent 22%),
+        linear-gradient(
+          270deg,
+          color-mix(in srgb, var(--surface-page) 82%, transparent) 0%,
+          color-mix(in srgb, var(--surface-page) 45%, transparent) 30%,
+          transparent 52%
+        );
+    }
+
+    .hero__rail {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-end: calc(var(--gutter) * 0.6);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.08em;
+      translate: 0 -50%;
+    }
+
+    .hero__rail-track {
+      position: relative;
+      inline-size: 1px;
+      block-size: 4.5rem;
+      background-color: var(--border-strong);
+    }
+
+    .hero__rail-dot {
+      position: absolute;
+      inset-block-start: 0;
+      left: -0.1875rem;
+      inline-size: 0.4375rem;
+      block-size: 0.4375rem;
+      border-radius: var(--radius-pill);
+      background-color: var(--text-strong);
+      box-shadow: 0 0 0.75rem color-mix(in srgb, var(--primary) 60%, transparent);
+    }
+  }
+
+  @keyframes hero-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-scroll {
+    0% {
+      translate: 0 -0.5rem;
+      opacity: 0;
+    }
+
+    30% {
+      opacity: 1;
+    }
+
+    100% {
+      translate: 0 2.75rem;
+      opacity: 0;
+    }
+  }
+}

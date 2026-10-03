@@ -1,97 +1,74 @@
 <!--
-  The glows and the grid are absolutely positioned and larger than the viewport,
-  so the section clips them — without `overflow-hidden` they would create
-  horizontal scroll on small screens.
+  The opening. The night scene fills the section behind the copy on a wide
+  screen; the stacked phone and tablet layout leaves it out. `data-hero` marks
+  what the entrance timeline animates — none of it changes the static design.
 -->
-<section
-  id="banner"
-  appSectionSpy
-  class="relative isolate overflow-hidden border-b border-border-subtle"
->
-  <div class="tech-grid" aria-hidden="true"></div>
-  <div class="ambient-glow -top-64 -start-48" aria-hidden="true"></div>
-  <div
-    class="ambient-glow -end-64 top-24 [--glow-color:var(--glow-accent)]"
-    aria-hidden="true"
-  ></div>
+<section id="banner" appSectionSpy class="hero">
+  <div class="grain" aria-hidden="true"></div>
 
-  <div
-    class="relative z-10 mx-auto grid max-w-6xl gap-12 px-4 pt-16 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pt-24 lg:pb-28"
-  >
-    <div>
-      <p
-        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
-      >
-        <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
-        <span>{{ t('banner.eyebrow') }}</span>
+  <div class="hero__body container-wide">
+    <div class="hero__copy">
+      <p class="section-label" data-hero="eyebrow">
+        <span class="section-label__slashes" aria-hidden="true">//</span>
+        {{ t('banner.eyebrow') }}
       </p>
 
       <!--
-        Three beats, and the middle one carries the brand colour. Capped at 60px
-        (`text-6xl`) so the line holds in French — "Concevoir. Lancer. Grandir."
-        is nearly twice the width of the English, and Arabic sets taller again.
+        Three beats on three lines. The spaces between them are real text nodes,
+        so the heading reads "Build. Launch. Grow." as one sentence; the caret
+        after the last beat is ornament.
       -->
-      <h1 class="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-        {{ t('banner.title1') }}
-        <span class="text-primary">{{ t('banner.title2') }}</span>
-        {{ t('banner.title3') }}
+      <h1 class="hero-title">
+        <span class="hero-title__line"
+          ><span class="hero-title__text" data-hero-line>{{ t('banner.title1') }}</span></span
+        >{{ ' '
+        }}<span class="hero-title__line"
+          ><span class="hero-title__text hero-title__text--silver" data-hero-line>{{
+            t('banner.title2')
+          }}</span></span
+        >{{ ' '
+        }}<span class="hero-title__line"
+          ><span class="hero-title__text" data-hero-line
+            >{{ t('banner.title3') }}<span class="hero-caret" aria-hidden="true"></span></span
+        ></span>
       </h1>
 
-      <p class="mt-6 max-w-xl text-lg text-text-muted">{{ t('banner.lede') }}</p>
+      <p class="hero__lede" data-hero="fade">{{ t('banner.lede') }}</p>
 
-      <div class="mt-10 flex flex-wrap items-center gap-4">
-        <a appButton routerLink="/" fragment="contact" class="shadow-glow">
+      <div class="hero__actions" data-hero="fade">
+        <a appButton="inverse" routerLink="/" fragment="contact" class="hero__cta">
+          <span class="cta-orb" aria-hidden="true">
+            <app-icon name="arrow-right" class="cta-arrow" />
+          </span>
           {{ t('banner.ctaPrimary') }}
-          <app-icon name="arrow-right" class="size-4 rtl:rotate-180" />
         </a>
-        <a appButton="secondary" routerLink="/" fragment="projects">
+
+        <a routerLink="/" fragment="projects" class="hero__secondary group">
+          <span class="hero__secondary-orb" aria-hidden="true">
+            <app-icon name="arrow-down" class="size-4" />
+          </span>
           {{ t('banner.ctaSecondary') }}
         </a>
       </div>
-
-      <!-- The icon is decorative: the sentence beside it already says what it is. -->
-      <p class="mt-8 flex max-w-md items-start gap-2.5 text-sm text-text-muted">
-        <app-icon name="sparkles" class="mt-1 size-4 text-primary" />
-        <span>{{ t('banner.voiceHint') }}</span>
-      </p>
-
-      <!--
-        A description list, not a row of divs: each figure is a value described by
-        its label, and a screen reader reads the pair. The term has to precede the
-        description in the DOM, so `flex-col-reverse` puts the number on top
-        visually without inverting the markup. `tabular-nums` keeps the three
-        columns aligned when the digits differ in width.
-      -->
-      <dl
-        class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border-subtle pt-8"
-        [attr.aria-label]="t('banner.statsLabel')"
-      >
-        <div class="flex flex-col-reverse">
-          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat1Label') }}</dt>
-          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
-            {{ t('banner.stat1Value') }}
-          </dd>
-        </div>
-        <div class="flex flex-col-reverse">
-          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat2Label') }}</dt>
-          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
-            {{ t('banner.stat2Value') }}
-          </dd>
-        </div>
-        <div class="flex flex-col-reverse">
-          <dt class="mt-1 text-xs text-text-muted sm:text-sm">{{ t('banner.stat3Label') }}</dt>
-          <dd class="font-display text-3xl font-bold text-text-strong tabular-nums">
-            {{ t('banner.stat3Value') }}
-          </dd>
-        </div>
-      </dl>
     </div>
+  </div>
 
-    <!-- `aspect-[4/3]` reserves the box before the SVG paints, so nothing shifts. -->
-    <div
-      class="relative aspect-[4/3] overflow-hidden rounded-xl border border-border-glass bg-surface-glass text-primary shadow-lg"
-    >
-      <app-hero-visual class="h-full w-full" />
-    </div>
+  <app-night-visual class="hero__visual" variant="hero" data-hero="visual" />
+
+  <div class="hero__foot container-wide" data-hero="fade">
+    <p class="hero__scroll" aria-hidden="true">
+      <span class="hero__scroll-line"></span>
+      {{ t('banner.scroll') }}
+    </p>
+  </div>
+
+  <!--
+    How far down the page the visitor is, as a chapter count: the six content
+    sections, the closing call to action being an interlude. Ornament.
+  -->
+  <div class="hero__rail" aria-hidden="true" data-hero="fade">
+    <span>01</span>
+    <span class="hero__rail-track"><span class="hero__rail-dot" data-rail-dot></span></span>
+    <span>06</span>
   </div>
 </section>

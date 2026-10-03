@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './core/api/admin-auth.service';
+import { HomePage } from './features/home/home.page';
 
 const SITE = 'DabaDigital';
 
@@ -20,13 +21,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/admin.page').then((m) => m.AdminPage),
         data: { section: 'overview' },
       },
-      ...(['projects', 'categories', 'services', 'social', 'contact', 'messages'] as const).map(
-        (section) => ({
-          path: section,
-          loadComponent: () => import('./features/admin/admin.page').then((m) => m.AdminPage),
-          data: { section },
-        }),
-      ),
+      ...(
+        ['projects', 'categories', 'services', 'team', 'social', 'contact', 'messages'] as const
+      ).map((section) => ({
+        path: section,
+        loadComponent: () => import('./features/admin/admin.page').then((m) => m.AdminPage),
+        data: { section },
+      })),
     ],
     title: 'DabaDigital — Admin',
   },
@@ -35,8 +36,13 @@ export const routes: Routes = [
     // language, so `HomePage` sets it itself — see the effect in that component.
     // `DefaultTitleStrategy` leaves the document title alone for a route without
     // one, which is exactly the hand-off this needs.
+    //
+    // The one eager route: nearly every visit starts here. Lazy, it cost two
+    // round trips after the app booted — its chunk, then that chunk's GSAP —
+    // before the banner, the page's largest paint, could render. Eager, those
+    // files are preloaded with `main` and download alongside it.
     path: '',
-    loadComponent: () => import('./features/home/home.page').then((m) => m.HomePage),
+    component: HomePage,
   },
   {
     path: 'about',

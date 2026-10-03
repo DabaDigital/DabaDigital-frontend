@@ -16,7 +16,7 @@ const DARK_QUERY = '(prefers-color-scheme: dark)';
  */
 const THEME_COLOR: Readonly<Record<ResolvedTheme, string>> = {
   light: '#f7f8fa',
-  dark: '#0d1117',
+  dark: '#020406',
 };
 
 /**
@@ -54,13 +54,20 @@ export class ThemeService {
 
   readonly isDark = computed(() => this.resolved() === 'dark');
 
+  /**
+   * Set by the shell while a public page is showing. Those pages are always
+   * night (see .night in tokens.scss), so the browser chrome follows the night
+   * rather than the stored theme.
+   */
+  readonly nightLocked = signal(false);
+
   constructor() {
     this.watchSystemPreference();
 
     effect(() => {
       const theme = this.resolved();
       this.document.documentElement.setAttribute('data-theme', theme);
-      this.applyBrowserChromeColor(theme);
+      this.applyBrowserChromeColor(this.nightLocked() ? 'dark' : theme);
     });
   }
 

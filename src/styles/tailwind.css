@@ -10,6 +10,7 @@
 
 @theme inline {
   --color-surface-page: var(--surface-page);
+  --color-surface-sunken: var(--surface-sunken);
   --color-surface-card: var(--surface-card);
   --color-surface-raised: var(--surface-raised);
   --color-surface-muted: var(--surface-muted);
@@ -19,6 +20,7 @@
   --color-text-strong: var(--text-strong);
   --color-text-body: var(--text-body);
   --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
   --color-text-inverse: var(--text-inverse);
 
   --color-border-subtle: var(--border-subtle);

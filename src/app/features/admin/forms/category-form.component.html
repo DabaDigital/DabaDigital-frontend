@@ -1,0 +1,31 @@
+<form [id]="formId" class="editor-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-field
+    [label]="t('admin.slug')"
+    required
+    [hint]="t('admin.slugHint')"
+    [error]="errorFor(form.controls.slug)"
+  >
+    <input appInput formControlName="slug" dir="ltr" maxlength="160" placeholder="web-apps" />
+  </app-form-field>
+  <p class="hint">{{ t('admin.englishRequired') }}</p>
+  @for (locale of locales; track locale.id) {
+    <fieldset class="locale-group" [attr.dir]="locale.dir" [attr.lang]="locale.id">
+      <legend>{{ locale.label }}</legend>
+      <app-form-field
+        [label]="t('admin.title')"
+        [required]="locale.id === 'en'"
+        [error]="errorFor(form.controls.title.controls[locale.id])"
+      >
+        <input
+          appInput
+          [formControl]="form.controls.title.controls[locale.id]"
+          maxlength="160"
+          (blur)="suggestSlug()"
+        />
+      </app-form-field>
+    </fieldset>
+  }
+  <app-form-field [label]="t('admin.position')" [error]="errorFor(form.controls.position)">
+    <app-number-input formControlName="position" [min]="0" [max]="9999" />
+  </app-form-field>
+</form>

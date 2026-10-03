@@ -92,6 +92,16 @@ export async function mockSupabase(page: Page, options: { admin?: boolean; empty
         position: 0,
       },
     ],
+    dd_team_members: ['Keltoum Malouki', 'Jawad Boulmal'].map((name, position) => ({
+      id: id(60 + position),
+      name,
+      role: text('Full Stack Developer'),
+      description: text('Builds useful digital products.'),
+      url: `https://${name.toLowerCase().replace(' ', '')}.com`,
+      photo_url: '',
+      status: 'published',
+      position,
+    })),
     dd_messages: [],
     'storage.objects': [],
   };

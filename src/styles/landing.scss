@@ -1,0 +1,199 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Public site — the patterns the home sections share.
+//
+// Utilities cover one-off layout in the templates. What lives here is what the
+// sections repeat — the wide container, the section rhythm, the `// LABEL`
+// eyebrow, the display type, the pill buttons and the round arrow — plus the
+// few effects a utility cannot express.
+//
+// `@layer components`, like everything global: a utility on the same element
+// still wins, so a template can always adjust a shared pattern in place.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@layer components {
+  // ── Layout ───────────────────────────────────────────────────────────────
+
+  // The editorial measure: 1440px wide at most, gutters that grow with the
+  // screen. Every section aligns to it, so the left edges line up page-long.
+  .container-wide {
+    inline-size: 100%;
+    max-inline-size: var(--container-wide);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  // A major section: the shared vertical rhythm, and a hairline where it meets
+  // the section above — so each band reads as connected to the next, not
+  // floating in its own void.
+  .section {
+    position: relative;
+    padding-block: var(--section-space);
+  }
+
+  .section-rule {
+    border-block-start: 1px solid var(--border-subtle);
+  }
+
+  // ── Type ─────────────────────────────────────────────────────────────────
+
+  // `// TECHNICAL AGENCY` — a code comment as an eyebrow. The slashes are an
+  // `aria-hidden` span in the markup, so a screen reader says the label only.
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .section-label__slashes {
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+
+  // Large, tight display type: the page's second voice after the banner.
+  .section-title {
+    color: var(--text-strong);
+    font-size: clamp(2.5rem, 1.25rem + 2.9vw, 4.25rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+  }
+
+  .section-lede {
+    max-inline-size: 32rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  @media (min-width: 1024px) {
+    .section-lede {
+      font-size: 1.0625rem;
+    }
+  }
+
+  // Tracking breaks the joins of a cursive script, and Arabic sits taller on
+  // the line: every display style relaxes for it.
+  :root[lang='ar'] .section-label,
+  :root[lang='ar'] .section-label__slashes,
+  :root[lang='ar'] .section-title {
+    letter-spacing: 0;
+  }
+
+  :root[lang='ar'] .section-title {
+    line-height: 1.35;
+  }
+
+  // ── Buttons ──────────────────────────────────────────────────────────────
+
+  // The arrow inside a call to action steps forward on hover — inline-end, so
+  // it steps the other way in Arabic.
+  .cta-arrow {
+    display: inline-block;
+    flex: none;
+    inline-size: 1rem;
+    block-size: 1rem;
+    transition: translate var(--duration-base) var(--ease-out);
+  }
+
+  :root[dir='rtl'] .cta-arrow {
+    scale: -1 1;
+  }
+
+  .app-button:hover .cta-arrow,
+  .group:hover .cta-arrow {
+    translate: 0.1875rem 0;
+  }
+
+  :root[dir='rtl'] .app-button:hover .cta-arrow,
+  :root[dir='rtl'] .group:hover .cta-arrow {
+    translate: -0.1875rem 0;
+  }
+
+  // The dark disc that carries the arrow at the start of the bright pill.
+  .cta-orb {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--primary-contrast);
+    color: var(--primary);
+  }
+
+  // A small round arrow, as on the project and service cards. Decorative: the
+  // card's own link carries the name. Brightens with its card (`.group`).
+  .arrow-orb {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    color: var(--text-strong);
+    transition:
+      border-color var(--duration-base) var(--ease-standard),
+      background-color var(--duration-base) var(--ease-standard);
+  }
+
+  .group:hover .arrow-orb,
+  .group:focus-within .arrow-orb {
+    border-color: color-mix(in srgb, var(--text-strong) 45%, transparent);
+    background-color: var(--surface-glass);
+  }
+
+  // ── Cards ────────────────────────────────────────────────────────────────
+
+  // The one card surface: elevated, a hairline, 16px corners. Lifts a little
+  // and brightens its edge on hover — nothing more.
+  .surface-card {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-card);
+    transition:
+      translate var(--duration-slow) var(--ease-out),
+      border-color var(--duration-slow) var(--ease-standard),
+      background-color var(--duration-slow) var(--ease-standard);
+  }
+
+  .surface-card:hover {
+    border-color: var(--border-strong);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .surface-card:hover {
+      translate: 0 -0.25rem;
+    }
+  }
+
+  // ── Atmosphere ───────────────────────────────────────────────────────────
+
+  // Film grain over a night ground — the difference between a flat fill and a
+  // photographed dark. Decorative; always `aria-hidden`.
+  .grain {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+  }
+}
+
+@layer base {
+  // The full-screen menu is modal: the page behind it stops scrolling while it
+  // is open, so a swipe on the menu never moves the page underneath.
+  :root:has(.site-menu[open]) {
+    overflow: hidden;
+  }
+}

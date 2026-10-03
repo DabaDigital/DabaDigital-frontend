@@ -7,10 +7,15 @@ import type { MessageKey } from '../../core/i18n/messages/ar';
 import { IconComponent } from '../ui/icon.component';
 import { LogoComponent } from '../ui/logo.component';
 
+/**
+ * In page order, like the header's nav. Home is left out: the footer has its
+ * own back-to-top link.
+ */
 const FOOTER_SECTIONS: readonly { id: string; key: MessageKey }[] = [
-  { id: 'about', key: 'nav.about' },
   { id: 'projects', key: 'nav.projects' },
   { id: 'services', key: 'nav.services' },
+  { id: 'about', key: 'nav.about' },
+  { id: 'team', key: 'nav.team' },
   { id: 'contact', key: 'nav.contact' },
 ];
 

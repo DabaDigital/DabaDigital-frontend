@@ -15,8 +15,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
  * on its own must be given a `label`, which turns it into an `img` role with an
  * accessible name — but prefer adjacent text.
  *
- * `arrow-right` and `arrow-up-right` point inline-end and must be flipped for
- * RTL by the caller: `class="rtl:rotate-180"` / `class="rtl:-scale-x-100"`.
+ * `arrow-right`, `arrow-up-right` and `external-link` point inline-end and must
+ * be flipped for RTL by the caller: `class="rtl:rotate-180"` /
+ * `class="rtl:-scale-x-100"`.
  */
 @Component({
   selector: 'app-icon',
@@ -96,6 +97,17 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
         @case ('mobile') {
           <rect x="6" y="2" width="12" height="20" rx="2.5" />
           <path d="M11 18.5h2" />
+        }
+        @case ('browser') {
+          <rect x="2.5" y="4" width="19" height="16" rx="2.5" />
+          <path d="M2.5 8.5h19" />
+          <path d="M6 6.25h.01M8.5 6.25h.01" />
+          <path d="M7 13h6M7 16h4" />
+        }
+        @case ('cube') {
+          <path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7Z" />
+          <path d="m3.5 7 8.5 4.5L20.5 7" />
+          <path d="M12 11.5v10" />
         }
         @case ('palette') {
           <path
@@ -194,9 +206,18 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <path d="M7 17 17 7" />
           <path d="M8.5 7H17v8.5" />
         }
+        @case ('external-link') {
+          <path d="M14.5 3.5h6v6" />
+          <path d="M10 14 20.5 3.5" />
+          <path d="M18.5 13.5v5a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2h5" />
+        }
         @case ('arrow-up') {
           <path d="M12 19.5V5" />
           <path d="m5.5 11.5 6.5-6.5 6.5 6.5" />
+        }
+        @case ('arrow-down') {
+          <path d="M12 4.5V19" />
+          <path d="m5.5 12.5 6.5 6.5 6.5-6.5" />
         }
         @case ('send') {
           <path d="M21.5 2.5 11 13" />
@@ -294,6 +315,8 @@ export type IconName =
   | 'bag'
   | 'sparkles'
   | 'mobile'
+  | 'browser'
+  | 'cube'
   | 'palette'
   | 'cloud'
   // about pillars
@@ -316,7 +339,9 @@ export type IconName =
   | 'close'
   | 'arrow-right'
   | 'arrow-up-right'
+  | 'external-link'
   | 'arrow-up'
+  | 'arrow-down'
   | 'send'
   // contact & status
   | 'mail'

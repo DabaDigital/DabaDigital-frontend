@@ -1,0 +1,21 @@
+<form [id]="formId" class="editor-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-field [label]="t('admin.name')" required [error]="errorFor(form.controls.name)">
+    <input appInput formControlName="name" maxlength="160" placeholder="LinkedIn" />
+  </app-form-field>
+  <app-form-field [label]="t('admin.url')" required [error]="errorFor(form.controls.url)">
+    <input appInput formControlName="url" type="url" dir="ltr" placeholder="https://…" />
+  </app-form-field>
+  <app-icon-field
+    [control]="form.controls.icon_url"
+    [fallback]="glyph()"
+    (uploadingChange)="setUploading($event)"
+  />
+  <div class="two-columns">
+    <app-form-field [label]="t('admin.position')" [error]="errorFor(form.controls.position)">
+      <app-number-input formControlName="position" [min]="0" [max]="9999" />
+    </app-form-field>
+    <app-form-field [label]="t('admin.status')">
+      <app-dropdown-list formControlName="status" [options]="statusOptions()" />
+    </app-form-field>
+  </div>
+</form>

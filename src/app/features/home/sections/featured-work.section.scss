@@ -1,0 +1,62 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  .work {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .work__title {
+    max-inline-size: 12ch;
+    margin-block-start: 1.5rem;
+  }
+
+  // The small arrow the reference sets after the heading: it points at the
+  // cards, so it mirrors with the reading direction.
+  .work__title-arrow {
+    display: inline-block;
+    inline-size: 0.42em;
+    block-size: 0.42em;
+    margin-inline-start: 0.12em;
+    color: var(--text-muted);
+    vertical-align: 0.05em;
+  }
+
+  :host-context([dir='rtl']) .work__title-arrow {
+    scale: -1 1;
+  }
+
+  .work__lede {
+    margin-block-start: 1.5rem;
+  }
+
+  .work__all {
+    margin-block-start: 2.25rem;
+  }
+
+  .work__cards {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 768px) {
+    .work__cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  // Desktop: the introduction holds 35% of the width, the cards the rest,
+  // and the cards rise to meet the heading rather than hanging below it.
+  @media (min-width: 1024px) {
+    .work {
+      grid-template-columns: minmax(0, 0.54fr) minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(2.5rem, 4vw, 4.5rem);
+    }
+  }
+}

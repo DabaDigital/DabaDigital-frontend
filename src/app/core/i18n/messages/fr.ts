@@ -2,22 +2,32 @@ import { ADMIN_FR } from './admin';
 import type { Catalog } from './ar';
 import { CONTROLS_FR } from './controls';
 
-/** French. Typed as `Catalog`, so a missing or invented key fails the build. */
+/**
+ * French. Typed as `Catalog`, so a missing or invented key fails the build.
+ *
+ * French puts a non-breaking space (U+00A0) before ?, ! and : — the strings below carry it as a
+ * literal character. Without it a display heading can wrap and leave the punctuation alone on its
+ * own line.
+ */
 export const FR: Catalog = {
   ...ADMIN_FR,
   ...CONTROLS_FR,
   // ── Document ──────────────────────────────────────────────────────────────
-  'meta.title': 'DabaDigital — Concevoir. Lancer. Grandir.',
+  'meta.title': 'Daba Digital — Agence digitale technique',
+  'meta.description':
+    'Daba Digital conçoit des sites et des produits digitaux performants, des applications mobiles et des expériences digitales intelligentes.',
 
   // ── Header / navigation ───────────────────────────────────────────────────
+  'nav.home': 'Accueil',
   'nav.about': 'À propos',
-  'nav.projects': 'Réalisations',
+  'nav.team': 'Équipe',
+  'nav.projects': 'Portfolio',
   'nav.services': 'Services',
   'nav.contact': 'Contact',
   'nav.cta': 'Démarrer un projet',
   'nav.primaryLabel': 'Navigation principale',
   'nav.mobileLabel': 'Navigation mobile',
-  'nav.homeLabel': 'DabaDigital — accueil',
+  'nav.homeLabel': 'Daba Digital — accueil',
   'nav.openMenu': 'Ouvrir le menu',
   'nav.closeMenu': 'Fermer le menu',
   'nav.skipToContent': 'Aller au contenu principal',
@@ -29,107 +39,92 @@ export const FR: Catalog = {
   // ── Language menu ─────────────────────────────────────────────────────────
   'lang.label': 'Langue',
   'lang.choose': 'Choisir la langue',
-  'lang.current': 'Langue actuelle : {name}',
+  'lang.current': 'Langue actuelle : {name}',
 
   // ── 1 · Banner ────────────────────────────────────────────────────────────
-  'banner.eyebrow': 'Studio digital · Maroc',
+  'banner.eyebrow': 'Agence technique',
   'banner.title1': 'Concevoir.',
   'banner.title2': 'Lancer.',
   'banner.title3': 'Grandir.',
   'banner.lede':
-    'Nous concevons et développons des produits web pour les entreprises marocaines : sites vitrines, plateformes e-commerce et applications métier sur mesure.',
+    'Nous créons des expériences digitales, des systèmes intelligents et des produits performants pour les marques ambitieuses.',
   'banner.ctaPrimary': 'Démarrer un projet',
   'banner.ctaSecondary': 'Voir nos réalisations',
-  'banner.voiceHint':
-    "Nouveau : décrivez votre projet à voix haute et laissez l'assistant remplir le formulaire pour vous.",
-  'banner.statsLabel': 'Le studio en chiffres',
-  'banner.stat1Value': '40+',
-  'banner.stat1Label': 'projets livrés',
-  'banner.stat2Value': '8',
-  'banner.stat2Label': "ans d'expérience",
-  'banner.stat3Value': '3',
-  'banner.stat3Label': 'langues prises en charge',
+  'banner.scroll': 'Défiler pour explorer',
 
-  // ── 2 · About ─────────────────────────────────────────────────────────────
-  'about.eyebrow': "L'agence",
-  'about.title': 'Une équipe réduite, des standards élevés.',
-  'about.lede':
-    'Nous construisons des expériences numériques rapides et accessibles, qui associent une technologie récente à une conception sobre et lisible. Pas de gabarit, pas de complexité gratuite.',
-  'about.body':
-    "Chaque projet commence par une seule question : qu'est-ce qui doit fonctionner ici ? De cette question nous passons à une maquette testée avec vous, puis à un produit livré et accompagné après le lancement.",
-  'about.pillar1.title': "Le design d'abord",
-  'about.pillar1.text':
-    "On part de l'usage, pas du code : maquette, test utilisateur, puis développement.",
-  'about.pillar2.title': 'Performance mesurable',
-  'about.pillar2.text':
-    'Un budget de performance par page et un suivi des Core Web Vitals après la mise en ligne.',
-  'about.pillar3.title': 'Multilingue dès le premier jour',
-  'about.pillar3.text': 'Arabe, français et anglais, avec un vrai support droite-à-gauche.',
-  'about.pillar4.title': 'Un partenariat qui dure',
-  'about.pillar4.text':
-    'Nous ne disparaissons pas à la livraison : maintenance, correctifs de sécurité, évolutions.',
-
-  // ── 3 · Projects ──────────────────────────────────────────────────────────
-  'projects.eyebrow': 'Réalisations',
-  'projects.title': 'Des projets que nous avons lancés',
+  // ── 2 · Featured work ─────────────────────────────────────────────────────
+  'projects.eyebrow': 'Projets à la une',
+  'projects.title': 'Des idées devenues de vrais produits.',
   'projects.lede':
-    'Une sélection de produits que nous avons conçus, développés et que nous accompagnons encore.',
+    'Nous transformons des idées ambitieuses en expériences digitales fortes. Découvrez quelques-uns de nos derniers projets, et ce que nous pouvons construire ensemble.',
+  'projects.viewAll': 'Voir tous les projets',
   'projects.filterLabel': 'Filtrer par type',
-  'projects.searchLabel': 'Rechercher des projets',
+  'projects.searchLabel': 'Rechercher un projet',
   'projects.searchPlaceholder': 'Rechercher par nom, description ou type',
   'projects.clearSearch': 'Effacer la recherche',
-  'projects.searchEmpty': 'Aucun projet ne correspond à votre recherche et au type sélectionné.',
-  'projects.filter.all': 'Tout',
-  'projects.filter.web': 'Web',
-  'projects.filter.ecommerce': 'E-commerce',
-  'projects.filter.ai': 'IA',
+  'projects.searchEmpty': 'Aucun projet ne correspond à votre recherche et au type choisi.',
+  'projects.filter.all': 'Tous',
+  'projects.filter.webapp': 'Application web',
+  'projects.filter.branding': 'Branding',
   'projects.filter.mobile': 'Mobile',
-  'projects.empty': 'Aucun projet dans cette catégorie pour le moment.',
-  'projects.emptyAction': 'Voir tous les projets',
-  'projects.viewCase': "Lire l'étude de cas",
+  'projects.filter.ai': 'IA',
+  'projects.empty': 'Aucun projet dans cette catégorie pour l’instant.',
+  'projects.emptyAction': 'Afficher tous les projets',
   'projects.countLabel': '{count} projet(s) affiché(s)',
-  'projects.item.neural-ledger.summary':
-    'Tableau de bord financier en temps réel, avec catégorisation automatique des écritures et détection des anomalies.',
-  'projects.item.aura-commerce.summary':
-    "Boutique en ligne multilingue, paiement local et tunnel d'achat entièrement repensé.",
-  'projects.item.atlas-cargo.summary':
-    'Plateforme de suivi du fret routier entre Casablanca et l’Europe, avec planification des tournées en temps réel.',
-  'projects.item.zellige-studio.summary':
-    "Site vitrine d'un studio d'architecture, construit autour d'une galerie haute définition qui reste rapide.",
-  'projects.item.souk-connect.summary':
-    'Application mobile reliant artisans et acheteurs, avec messagerie intégrée et paiement sécurisé.',
-  'projects.item.riad-atlas.summary':
-    'Moteur de réservation en direct pour un groupe de riads, qui supprime la commission des intermédiaires.',
+  'projects.item.nextgen.summary': 'Plateforme propulsée par l’IA',
+  'projects.item.le-maitre-du-sandwich.summary': 'Identité de marque & packaging',
+  'projects.item.casablanca-night.summary': 'Expérience interactive',
 
-  // ── 4 · Services ──────────────────────────────────────────────────────────
-  'services.eyebrow': 'Services',
-  'services.title': 'Ce que nous faisons',
-  'services.lede':
-    'Six expertises, une même exigence : un produit rapide, accessible et tenu dans le temps.',
-  'services.web.title': 'Sites et applications web',
-  'services.web.text':
-    'Des interfaces rapides et responsives en Angular et Next.js, pensées pour le mobile d’abord.',
-  'services.ecommerce.title': 'E-commerce',
-  'services.ecommerce.text':
-    "Boutiques en ligne, moyens de paiement locaux et parcours d'achat optimisé pour la conversion.",
-  'services.ai.title': "Intégration d'IA",
-  'services.ai.text':
-    'Assistants conversationnels, extraction de données et automatisations réellement utiles au métier.',
+  // ── 3 · Services ──────────────────────────────────────────────────────────
+  'services.eyebrow': 'Nos services',
+  'services.title': 'Pensés pour la suite.',
+  'services.exploreAll': 'Découvrir tous nos services',
+  'services.web.title': 'Développement web',
+  'services.web.text': 'Des applications web modernes, évolutives et performantes.',
   'services.mobile.title': 'Applications mobiles',
-  'services.mobile.text':
-    'Des applications iOS et Android depuis une seule base de code, avec des performances natives.',
+  'services.mobile.text': 'Des expériences mobiles natives et multiplateformes.',
   'services.design.title': 'Design UI/UX',
-  'services.design.text': "Systèmes de design, maquettes cliquables et audits d'accessibilité.",
-  'services.cloud.title': 'Hébergement et maintenance',
-  'services.cloud.text':
-    "Déploiement, supervision et sauvegardes — et c'est nous qui sommes d'astreinte.",
-  'services.ctaTitle': 'Vous ne trouvez pas votre besoin ?',
-  'services.ctaText':
-    'Dites-nous ce qu’il vous faut : nous revenons vers vous avec une proposition sous deux jours ouvrés.',
+  'services.design.text': 'Des interfaces agréables, et plus efficaces encore.',
+  'services.ai.title': 'Solutions IA',
+  'services.ai.text': 'Des systèmes intelligents qui travaillent pour vous.',
 
-  // ── 5 · Contact ───────────────────────────────────────────────────────────
+  // ── 4 · About ─────────────────────────────────────────────────────────────
+  'about.eyebrow': 'À propos de Daba Digital',
+  'about.title': 'Plus qu’une agence technique.',
+  'about.lede':
+    'Nous sommes une équipe de bâtisseurs, de designers et de résolveurs de problèmes. Nous associons technologie, créativité et stratégie pour transformer les idées en produits digitaux évolutifs.',
+  'about.caption': 'Une équipe qui construit la suite',
+  'about.imageAlt': 'Le logo Daba Digital',
+  'about.statsLabel': 'Daba Digital en chiffres',
+  'about.stat1Value': '10+',
+  'about.stat1Label': 'Projets livrés',
+  'about.stat2Value': '5+',
+  'about.stat2Label': 'Clients satisfaits',
+  'about.stat3Value': '3+',
+  'about.stat3Label': 'Années d’expérience',
+
+  // ── 5 · Team ──────────────────────────────────────────────────────────────
+  // Épicène on purpose: the role names the function ("Développement"), not the
+  // person, so no title has to guess at "Développeur" or "Développeuse".
+  'team.eyebrow': 'Notre équipe',
+  'team.title': 'Rencontrez l’équipe derrière Daba Digital.',
+  'team.lede':
+    'Une équipe de deux, une même vision. Nous construisons des produits digitaux qui résolvent de vrais problèmes et créent une vraie valeur.',
+  'team.portfolio': 'Voir le portfolio',
+  'team.newTab': '(s’ouvre dans un nouvel onglet)',
+  'team.role.fullStack': 'Développement full stack',
+  'team.member.keltoum-malouki.bio':
+    'La passion de créer des produits digitaux utiles et de transformer les idées en solutions concrètes.',
+  'team.member.jawad-boulmal.bio':
+    'Priorité au code propre, à une expérience utilisateur soignée et aux solutions évolutives.',
+
+  // ── 6 · Closing call to action ────────────────────────────────────────────
+  'cta.eyebrow': 'Construisons ensemble',
+  'cta.title': 'Prêt à lancer votre prochain projet ?',
+
+  // ── 7 · Contact ───────────────────────────────────────────────────────────
   'contact.eyebrow': 'Contact',
-  'contact.title': 'Une idée de projet ? Parlez-nous-en.',
+  'contact.title': 'Une idée de projet ? Parlez-nous-en.',
   'contact.lede':
     'Remplissez le formulaire et nous revenons vers vous sous deux jours ouvrés. Pas de newsletter, pas d’appel surprise.',
   'contact.infoTitle': 'Autres moyens de nous joindre',
@@ -142,7 +137,7 @@ export const FR: Catalog = {
 
   'contact.form.label': 'Formulaire de contact',
   'contact.name.label': 'Nom complet',
-  'contact.name.placeholder': 'Ex. : Sara Alaoui',
+  'contact.name.placeholder': 'Ex. : Sara Alaoui',
   'contact.name.error': 'Merci d’indiquer votre nom.',
   'contact.email.label': 'E-mail',
   'contact.email.placeholder': 'sara@entreprise.ma',
@@ -188,7 +183,10 @@ export const FR: Catalog = {
   'contact.privacy':
     'Vos données servent uniquement à répondre à votre demande. Elles ne sont transmises à personne.',
 
-  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  // ── 7 · Contact — voice assistant ────────────────────────────────────────
+  'contact.voice.title': 'Vous préférez en parler ?',
+  'contact.voice.text':
+    'Décrivez votre projet à voix haute, en arabe, en français ou en anglais. L’assistant remplit le formulaire ; vous vérifiez, puis vous envoyez.',
   'contact.voice.privacy':
     "Votre voix est traitée par un service d'IA externe pour remplir ce formulaire. L'audio n'est jamais conservé.",
   'contact.voice.start': 'Décrivez votre projet',
@@ -209,10 +207,10 @@ export const FR: Catalog = {
   'contact.voice.dismiss': 'Ignorer',
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  'footer.tagline': 'Studio digital marocain — sites, applications et intégrations sur mesure.',
+  'footer.tagline': 'Agence technique qui construit des produits digitaux modernes.',
   'footer.navLabel': 'Navigation de pied de page',
   'footer.sectionsLabel': 'Sections',
   'footer.contactLabel': 'Contact',
-  'footer.copyright': '© {year} DabaDigital. Tous droits réservés.',
+  'footer.copyright': '© {year} Daba Digital. Tous droits réservés.',
   'footer.backToTop': 'Revenir en haut',
 };

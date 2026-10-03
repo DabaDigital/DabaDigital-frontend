@@ -30,6 +30,28 @@ class ImageUploadHost {
   };
 }
 
+@Component({
+  selector: 'app-icon-upload-test-host',
+  imports: [ReactiveFormsModule, ImageUploadComponent],
+  template: `
+    <app-image-upload
+      variant="icon"
+      label="Icon"
+      hint="SVG or PNG, square"
+      typeError="Choose an icon file."
+      [formControl]="icon"
+      [upload]="upload"
+    >
+      <p appUploadEmpty class="fallback">The built-in glyph shows until one is uploaded.</p>
+    </app-image-upload>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class IconUploadHost {
+  readonly icon = new FormControl('');
+  readonly upload: ImageUploader = async (file) => `https://cdn.example/icons/${file.name}`;
+}
+
 const png = (bytes = 8): File =>
   new File([new Uint8Array(bytes)], 'cover.png', { type: 'image/png' });
 
@@ -60,7 +82,9 @@ describe('ImageUploadComponent', () => {
   }
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [ImageUploadHost] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [ImageUploadHost, IconUploadHost],
+    }).compileComponents();
     TestBed.inject(I18nService).setLocale('en');
     fixture = TestBed.createComponent(ImageUploadHost);
     form = fixture.componentInstance;
@@ -142,6 +166,32 @@ describe('ImageUploadComponent', () => {
     expect(form.image.value).toBe('');
     expect(host.querySelector('img')).toBeNull();
     expect(button('Drag an image here').disabled).toBe(false);
+  });
+
+  it('takes an icon: SVG allowed, its own hint and message, and an empty-state note', async () => {
+    const iconFixture = TestBed.createComponent(IconUploadHost);
+    iconFixture.detectChanges();
+    const root = iconFixture.nativeElement as HTMLElement;
+    const input = root.querySelector<HTMLInputElement>('input[type="file"]');
+    if (!input) throw new Error('Missing file input');
+    const pick = (file: File): void => {
+      Object.defineProperty(input, 'files', { value: [file], configurable: true });
+      input.dispatchEvent(new Event('change'));
+      iconFixture.detectChanges();
+    };
+
+    expect(root.querySelector('[data-variant="icon"]')).not.toBeNull();
+    expect(input.accept).toContain('image/svg+xml');
+    expect(root.textContent).toContain('SVG or PNG, square');
+    expect(root.querySelector('.fallback')).not.toBeNull();
+    pick(new File(['hello'], 'notes.txt', { type: 'text/plain' }));
+    expect(root.querySelector('[role="alert"]')?.textContent).toContain('Choose an icon file.');
+
+    pick(new File(['<svg/>'], 'cloud.svg', { type: 'image/svg+xml' }));
+    await new Promise((resolve) => setTimeout(resolve));
+    iconFixture.detectChanges();
+    expect(iconFixture.componentInstance.icon.value).toBe('https://cdn.example/icons/cloud.svg');
+    expect(root.querySelector('.fallback')).toBeNull();
   });
 
   it('uploads a dropped file and ignores drops while disabled', () => {

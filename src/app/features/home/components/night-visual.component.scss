@@ -1,0 +1,276 @@
+@layer components {
+  :host {
+    // Where the object and the arc are centred, as a share of the box.
+    --nv-x: 64%;
+    --nv-y: 47%;
+    position: relative;
+    display: block;
+    pointer-events: none;
+  }
+
+  :host-context([dir='rtl']) {
+    --nv-x: 36%;
+  }
+
+  .nv-static,
+  .nv-canvas {
+    position: absolute;
+    inset: 0;
+  }
+
+  .nv-static {
+    transition: opacity 1200ms var(--ease-out);
+  }
+
+  .nv-canvas {
+    inline-size: 100%;
+    block-size: 100%;
+    opacity: 0;
+    transition: opacity 1400ms var(--ease-out);
+  }
+
+  // The 3D scene has drawn: it takes over, the drawing steps back.
+  :host(.is-live) .nv-canvas {
+    opacity: 1;
+  }
+
+  :host(.is-live) .nv-static {
+    opacity: 0;
+  }
+
+  // ── Light ────────────────────────────────────────────────────────────────
+
+  .nv-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--nv-x) var(--nv-y),
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 32%
+    );
+  }
+
+  // The great arc: a hairline of cold light with a soft halo, open toward the
+  // copy. A circle, masked to the arc it shows.
+  .nv-arc {
+    position: absolute;
+    left: var(--nv-x);
+    top: calc(var(--nv-y) - 2%);
+    inline-size: clamp(30rem, 52vw, 56rem);
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--primary) 62%, transparent);
+    border-radius: 50%;
+    box-shadow:
+      0 0 1.5rem color-mix(in srgb, var(--primary) 28%, transparent),
+      0 0 5rem color-mix(in srgb, var(--accent) 14%, transparent),
+      inset 0 0 2.5rem color-mix(in srgb, var(--primary) 16%, transparent);
+    translate: -50% -50%;
+    mask-image: conic-gradient(
+      from -70deg,
+      transparent 0deg,
+      black 45deg,
+      black 195deg,
+      transparent 245deg
+    );
+  }
+
+  :host-context([dir='rtl']) .nv-arc {
+    scale: -1 1;
+  }
+
+  // ── Rock ─────────────────────────────────────────────────────────────────
+
+  .nv-terrain {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 42%;
+  }
+
+  // ── The object ───────────────────────────────────────────────────────────
+
+  .nv-object {
+    position: absolute;
+    left: var(--nv-x);
+    top: var(--nv-y);
+    inline-size: clamp(19rem, 29vw, 31rem);
+    aspect-ratio: 400 / 440;
+    translate: -50% -50%;
+  }
+
+  .nv-crystal {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+    animation: nv-float 7.5s ease-in-out infinite alternate;
+  }
+
+  .nv-facets polygon {
+    fill-opacity: 0.9;
+    stroke: color-mix(in srgb, var(--primary) 30%, transparent);
+    stroke-width: 0.8;
+    stroke-linejoin: round;
+  }
+
+  // Facet tones, darkest away from the light (upper right) to brightest facing it.
+  .t0 {
+    fill: color-mix(in srgb, var(--surface-page) 92%, var(--accent));
+  }
+
+  .t1 {
+    fill: color-mix(in srgb, var(--surface-card) 84%, var(--accent));
+  }
+
+  .t2 {
+    fill: color-mix(in srgb, var(--surface-raised) 72%, var(--accent));
+  }
+
+  .t3 {
+    fill: color-mix(in srgb, var(--surface-raised) 58%, var(--accent));
+  }
+
+  .t4 {
+    fill: color-mix(in srgb, var(--accent) 40%, var(--surface-card));
+  }
+
+  .t5 {
+    fill: color-mix(in srgb, var(--primary) 52%, var(--surface-card));
+  }
+
+  .nv-inner path {
+    stroke: color-mix(in srgb, var(--primary) 14%, transparent);
+    stroke-width: 0.8;
+  }
+
+  .stop-sheen {
+    stop-color: color-mix(in srgb, var(--primary) 26%, transparent);
+  }
+
+  .stop-clear {
+    stop-color: transparent;
+  }
+
+  .nv-sheen {
+    mix-blend-mode: screen;
+  }
+
+  .nv-highlight path {
+    fill: none;
+    stroke: color-mix(in srgb, var(--primary) 55%, transparent);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nv-highlight .strong {
+    stroke: var(--primary);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 0.25rem color-mix(in srgb, var(--primary) 70%, transparent));
+  }
+
+  .nv-glints path {
+    stroke: var(--primary-hover);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 0.3rem var(--primary));
+  }
+
+  // The orbit: a hairline, and one glint travelling round it.
+  .nv-ring__line {
+    fill: none;
+    stroke: color-mix(in srgb, var(--primary) 70%, transparent);
+    stroke-width: 1.2;
+    filter: drop-shadow(0 0 0.2rem color-mix(in srgb, var(--primary) 55%, transparent));
+  }
+
+  .nv-ring__glint {
+    fill: none;
+    stroke: var(--primary-hover);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-dasharray: 4 96;
+    stroke-dashoffset: 100;
+    filter: drop-shadow(0 0 0.35rem var(--primary));
+    animation: nv-orbit 11s linear infinite;
+  }
+
+  .nv-ring__glint--far {
+    opacity: 0.45;
+    animation-delay: -5.5s;
+  }
+
+  // ── Horizon: the arc rises behind the rock like the rim of a planet ──────
+  :host(.night-visual--horizon) {
+    --nv-x: 50%;
+  }
+
+  :host(.night-visual--horizon) .nv-glow {
+    background: radial-gradient(
+      ellipse 60% 45% at 50% 70%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 70%
+    );
+  }
+
+  :host(.night-visual--horizon) .nv-arc {
+    top: 24%;
+    inline-size: max(58rem, 108%);
+    translate: -50% 0;
+    mask-image: conic-gradient(
+      from -88deg,
+      transparent 0deg,
+      black 34deg,
+      black 142deg,
+      transparent 176deg
+    );
+  }
+
+  :host(.night-visual--horizon) .nv-terrain {
+    block-size: 58%;
+  }
+
+  // Narrower than a laptop, the headline spans the screen and wraps to two or
+  // three lines, so an arc drawn round it would cut through it. The picture
+  // stacks under the copy instead: the rock at the foot, framed wide enough for
+  // its slopes to rise at both edges, and the arc rising out of it — its top a
+  // quarter of its width above the foot, so its ends dip behind the ridges at
+  // the edges. Both scale with the width, up to half the screen's height (a
+  // phone on its side: the rock is framed wider there, peaks and all), and the
+  // section keeps that much room clear under its button (see `cta.section.ts`).
+  //
+  // `top` places it, not `translate`: GSAP folds `translate` into the inline
+  // transform it animates (`finalCtaMotion`), keeping -50% but baking any other
+  // offset into pixels that go stale when the window resizes or turns.
+  @media (max-width: 1023px) {
+    :host(.night-visual--horizon) .nv-arc {
+      top: calc(100% - min(41vw, 50vh));
+      inline-size: 160%;
+    }
+
+    // The width is pinned, so a capped height crops the drawing instead of
+    // narrowing the box to keep its ratio.
+    :host(.night-visual--horizon) .nv-terrain {
+      inline-size: 100%;
+      block-size: auto;
+      max-block-size: 50vh;
+      aspect-ratio: 1.9;
+    }
+  }
+
+  @keyframes nv-float {
+    from {
+      translate: 0 0.375rem;
+    }
+
+    to {
+      translate: 0 -0.375rem;
+    }
+  }
+
+  @keyframes nv-orbit {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}

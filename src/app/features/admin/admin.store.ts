@@ -3,7 +3,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { ContentApi } from '../../core/api/content.api';
 import type { ClientMessage, SiteContent } from '../../core/models/content.model';
 
-const EMPTY: SiteContent = { projects: [], categories: [], services: [], social: [], contact: [] };
+const EMPTY: SiteContent = {
+  projects: [],
+  categories: [],
+  services: [],
+  social: [],
+  contact: [],
+  team: [],
+};
 
 /**
  * The dashboard's working copy of the content and the inbox.

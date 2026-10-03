@@ -1,26 +1,35 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { I18nService } from '../../../core/i18n/i18n.service';
+import { injectMotion } from '../../../core/motion/motion';
 import { SectionSpyDirective } from '../../../shared/directives/section-spy';
 import { ButtonComponent } from '../../../shared/ui/button.component';
 import { IconComponent } from '../../../shared/ui/icon.component';
-import { HeroVisualComponent } from '../components/hero-visual.component';
+import { NightVisualComponent } from '../components/night-visual.component';
+import { bannerMotion } from '../home.motion';
 
 /**
- * Section 1 — the banner.
+ * Section 1 — the banner: three beats of type, one object in the dark.
  *
- * Deliberately the one section with no `appReveal` on its content: it is above
- * the fold, so a fade-in would delay the Largest Contentful Paint element behind
- * a JS-driven class change for no benefit. Everything here is painted at once.
+ * Everything paints with the first frame. The entrance timeline (see
+ * `bannerMotion`) sets its starting states before that frame and plays from
+ * there; under reduced motion it never runs, and the page is simply there.
  */
 @Component({
   selector: 'app-banner-section',
-  imports: [RouterLink, ButtonComponent, IconComponent, HeroVisualComponent, SectionSpyDirective],
+  imports: [RouterLink, ButtonComponent, IconComponent, NightVisualComponent, SectionSpyDirective],
   templateUrl: './banner.section.html',
+  styleUrl: './banner.section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BannerSection {
   private readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
+
+  private readonly visual = viewChild.required(NightVisualComponent);
+
+  constructor() {
+    injectMotion((kit) => bannerMotion(kit, this.visual()));
+  }
 }

@@ -1,0 +1,26 @@
+<section id="team" appSectionSpy class="team section section-rule">
+  <div class="team__glow ambient-glow" aria-hidden="true"></div>
+
+  <div class="container-wide">
+    <p class="section-label" data-reveal>
+      <span class="section-label__slashes" aria-hidden="true">//</span>
+      {{ t('team.eyebrow') }}
+    </p>
+    <h2 class="section-title team__title" data-reveal>{{ t('team.title') }}</h2>
+    <p class="section-lede team__lede" data-reveal>{{ t('team.lede') }}</p>
+
+    <ul class="team__grid">
+      @for (member of content.team(); track member.id) {
+        <li data-card>
+          <app-team-card
+            [name]="member.name"
+            [role]="content.text(member.role)"
+            [bio]="content.text(member.description)"
+            [url]="member.url"
+            [photo]="member.photo_url"
+          />
+        </li>
+      }
+    </ul>
+  </div>
+</section>

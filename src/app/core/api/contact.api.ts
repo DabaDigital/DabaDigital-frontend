@@ -94,7 +94,9 @@ export class ContactApi {
 
   private async saveToInbox(request: ContactRequest): Promise<string> {
     const reference = crypto.randomUUID();
-    const { error } = await this.supabase.client.from('dd_messages').insert({
+    // The client loads here, on the first send, rather than with the page.
+    const client = await this.supabase.connect();
+    const { error } = await client.from('dd_messages').insert({
       id: reference,
       full_name: request.fullName.trim(),
       email: request.email.trim(),

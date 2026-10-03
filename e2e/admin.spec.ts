@@ -147,7 +147,7 @@ test('the project editor picks a year, steps the order and uploads a cover', asy
 test('all content editors save and contact settings update the website', async ({ page }) => {
   await mockSupabase(page);
   await signIn(page);
-  for (const section of ['categories', 'services', 'social', 'contact']) {
+  for (const section of ['categories', 'services', 'team', 'social', 'contact']) {
     await page.goto(`/admin/${section}`);
     await page.locator('.row-actions button').first().click();
     const dialog = page.getByRole('dialog', { name: 'Edit item' });
@@ -155,8 +155,10 @@ test('all content editors save and contact settings update the website', async (
       await dialog.getByLabel('Link URL').fill('https://linkedin.com/company/new-studio');
     else {
       const group = dialog.getByRole('group', { name: 'English', exact: true });
+      const field =
+        section === 'contact' ? 'Display value' : section === 'team' ? 'Role' : 'Title';
       await group
-        .getByLabel(section === 'contact' ? 'Display value' : 'Title')
+        .getByLabel(field)
         .fill(section === 'contact' ? 'team@dabadigital.ma' : 'Updated ' + section);
       if (section === 'contact')
         await dialog.getByLabel('Link URL').fill('mailto:team@dabadigital.ma');
@@ -170,6 +172,88 @@ test('all content editors save and contact settings update the website', async (
     page.locator('#contact').getByRole('link', { name: 'team@dabadigital.ma' }),
   ).toBeVisible();
   await expect(page.locator('#services')).toContainText('Updated services');
+});
+
+test('a refused save names its fields, and service icons are uploaded, not picked', async ({
+  page,
+}) => {
+  const tables = await mockSupabase(page);
+  await signIn(page);
+  await page.goto('/admin/services');
+  await page.getByRole('button', { name: 'Add service', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'New item' });
+  await expect(dialog.getByRole('combobox', { name: 'Icon' })).toHaveCount(0);
+  const english = dialog.getByRole('group', { name: 'English', exact: true });
+  await english.getByLabel('Title').fill('Cloud hosting');
+  await dialog.getByRole('button', { name: 'Save changes' }).click();
+
+  // The dialog stays open, scrolls to the field and says why — and how many are left.
+  const description = english.getByLabel('Full description');
+  await expect(description).toBeFocused();
+  await expect(description).toHaveAttribute('aria-invalid', 'true');
+  await expect(dialog.getByText('This field is required.')).toBeVisible();
+  await expect(dialog.getByRole('alert')).toContainText('Check the highlighted fields (1)');
+  await description.fill('Managed hosting for your website.');
+  await expect(dialog.getByRole('alert')).toHaveCount(0);
+
+  await dialog.locator('input[type="file"]').setInputFiles({
+    name: 'cloud.svg',
+    mimeType: 'image/svg+xml',
+    buffer: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"/>'),
+  });
+  await expect(dialog.getByRole('img', { name: 'Preview: Icon' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'Save changes' }).click();
+  await expect(dialog).not.toBeVisible();
+
+  const saved = tables['dd_services'].find(
+    (service) => (service['title'] as { en: string }).en === 'Cloud hosting',
+  );
+  expect(String(saved?.['icon_url'])).toMatch(
+    /\/storage\/v1\/object\/public\/dd-media\/icons\/[\w-]+\.svg$/,
+  );
+  await expect(page.getByRole('row', { name: /Cloud hosting/ }).locator('img')).toBeVisible();
+});
+
+test('team members are managed with a role, a description, a portfolio and a photo', async ({
+  page,
+}) => {
+  const tables = await mockSupabase(page);
+  await signIn(page);
+  await page.locator('.sidebar').getByRole('link', { name: 'Team', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Team', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Keltoum Malouki', exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Add team member', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'New item' });
+  await dialog.getByRole('textbox', { name: 'Name', exact: true }).fill('Sara Alaoui');
+  const english = dialog.getByRole('group', { name: 'English', exact: true });
+  await english.getByLabel('Role').fill('Product designer');
+  await english.getByLabel('Description').fill('Turns briefs into interfaces people enjoy.');
+  const portfolio = dialog.getByLabel('Portfolio URL');
+  await portfolio.fill('https://mailto:sara@example.com');
+  await dialog.getByRole('button', { name: 'Save changes' }).click();
+  await expect(portfolio).toHaveAttribute('aria-invalid', 'true');
+  await expect(dialog.getByText('This is an email address, not a web page.')).toBeVisible();
+
+  await portfolio.fill('https://sara.example');
+  await dialog.locator('input[type="file"]').setInputFiles({
+    name: 'sara.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from(PNG, 'base64'),
+  });
+  await expect(dialog.getByRole('img', { name: 'Preview: Photo' })).toBeVisible();
+  await dialog.getByRole('combobox', { name: 'Status', exact: true }).click();
+  await page.getByRole('option', { name: 'Published', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Save changes' }).click();
+  await expect(dialog).not.toBeVisible();
+
+  const saved = tables['dd_team_members'].find((member) => member['name'] === 'Sara Alaoui');
+  expect(saved).toMatchObject({
+    role: { en: 'Product designer', fr: '', ar: '' },
+    url: 'https://sara.example',
+    status: 'published',
+  });
+  expect(String(saved?.['photo_url'])).toMatch(/\/dd-media\/team\/[\w-]+\.png$/);
 });
 
 test('website contact submissions arrive in the inbox and can be triaged', async ({ page }) => {

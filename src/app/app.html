@@ -1,6 +1,10 @@
 <a class="skip-link" href="#main-content">{{ i18n.t('nav.skipToContent') }}</a>
 
-<div class="flex min-h-dvh flex-col">
+<!--
+  The public site is designed at night: `.night` pins everything outside the
+  admin to the dark tokens, whatever the theme preference (see tokens.scss).
+-->
+<div class="flex min-h-dvh flex-col" [class.night]="!isAdmin()">
   @if (!isAdmin()) {
     <app-site-header />
   }
@@ -9,7 +13,8 @@
     <router-outlet />
   </main>
 
-  @if (!isAdmin()) {
+  <!-- Not before the first page has rendered — see `routed` in app.ts. -->
+  @if (!isAdmin() && routed()) {
     <app-site-footer />
   }
 </div>

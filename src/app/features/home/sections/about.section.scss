@@ -1,0 +1,160 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  // One column on a phone or tablet, in reading order: the statement, the
+  // picture, the figures.
+  .about {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  // ── The picture ──────────────────────────────────────────────────────────
+
+  .about__frame {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-card);
+  }
+
+  .about__image {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  // The caption sits in the picture's dark corner, under a scrim of its own.
+  .about__caption {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.25rem;
+    padding: 3rem 1.5rem 1.5rem;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--surface-page) 85%, transparent),
+      transparent
+    );
+    color: var(--text-body);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    line-height: 1.9;
+    text-transform: uppercase;
+  }
+
+  .about__caption span:first-child {
+    max-inline-size: 11rem;
+  }
+
+  .about__caption-rule {
+    flex: none;
+    inline-size: 4.5rem;
+    block-size: 1px;
+    margin-block-end: 0.65rem;
+    background-color: var(--border-strong);
+  }
+
+  :host-context([lang='ar']) .about__caption {
+    font-size: 0.75rem;
+    letter-spacing: 0;
+  }
+
+  // ── The copy ─────────────────────────────────────────────────────────────
+
+  .about__title {
+    max-inline-size: 14ch;
+    margin-block-start: 1.5rem;
+  }
+
+  .about__lede {
+    margin-block-start: 1.5rem;
+  }
+
+  .about__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+  }
+
+  .about__stat {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    padding-inline: 1.25rem;
+  }
+
+  .about__stat:first-child {
+    padding-inline-start: 0;
+  }
+
+  .about__stat + .about__stat {
+    border-inline-start: 1px solid var(--border-subtle);
+  }
+
+  .about__stat-value {
+    margin: 0;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .about__stat-label {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 768px) {
+    .about__frame {
+      aspect-ratio: 16 / 10;
+    }
+  }
+
+  // Wide: the picture spans the start column; the statement and the figures
+  // stack in the other, held level with the picture's middle by the two
+  // flexible rows around them.
+  @media (min-width: 1024px) {
+    .about {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+      grid-template-rows: 1fr auto auto 1fr;
+      grid-template-areas:
+        'frame .'
+        'frame intro'
+        'frame stats'
+        'frame .';
+      gap: 0 clamp(3rem, 5vw, 6rem);
+    }
+
+    .about__intro {
+      grid-area: intro;
+    }
+
+    .about__frame {
+      grid-area: frame;
+      align-self: center;
+      aspect-ratio: 16 / 9.5;
+    }
+
+    .about__stats {
+      grid-area: stats;
+      margin-block-start: 2.75rem;
+    }
+
+    .about__stat {
+      padding-inline: 1.75rem;
+    }
+  }
+}

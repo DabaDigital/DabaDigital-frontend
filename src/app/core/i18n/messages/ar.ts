@@ -9,18 +9,22 @@ import { CONTROLS_AR } from './controls';
  *
  * `{name}`-style placeholders are substituted by `I18nService.t(key, params)`.
  *
- * NOTE — the figures in `about.stat*` and the six entries under `projects.item.*`
- * are placeholder content carried over from the scaffold. Replace them with real
- * numbers and real client work before this goes live.
+ * NOTE — the figures in `about.stat*` and the three entries under
+ * `projects.item.*` come from the design brief. Confirm them against the real
+ * studio before this goes live.
  */
 export const AR = {
   ...ADMIN_AR,
   ...CONTROLS_AR,
   // ── Document ──────────────────────────────────────────────────────────────
-  'meta.title': 'دبا ديجيتال — نُصمّم. نُطلق. نُنمّي.',
+  'meta.title': 'دبا ديجيتال — وكالة رقمية تقنية',
+  'meta.description':
+    'تبني دبا ديجيتال مواقع ومنتجات رقمية عالية الأداء، وتطبيقات للهاتف، وتجارب رقمية ذكية.',
 
   // ── Header / navigation ───────────────────────────────────────────────────
+  'nav.home': 'الرئيسية',
   'nav.about': 'من نحن',
+  'nav.team': 'فريقنا',
   'nav.projects': 'أعمالنا',
   'nav.services': 'خدماتنا',
   'nav.contact': 'اتصل بنا',
@@ -42,90 +46,86 @@ export const AR = {
   'lang.current': 'اللغة الحالية: {name}',
 
   // ── 1 · Banner ────────────────────────────────────────────────────────────
-  'banner.eyebrow': 'استوديو رقمي · المغرب',
+  'banner.eyebrow': 'وكالة تقنية',
   'banner.title1': 'نُصمّم.',
   'banner.title2': 'نُطلق.',
   'banner.title3': 'نُنمّي.',
-  'banner.lede':
-    'نصمّم ونطوّر منتجات رقمية للشركات المغربية: مواقع تعريفية، ومنصّات تجارة إلكترونية، وتطبيقات أعمال مصمّمة على المقاس.',
+  'banner.lede': 'نصنع تجارب رقمية، وأنظمة ذكية، ومنتجات عالية الأداء للعلامات الطموحة.',
   'banner.ctaPrimary': 'ابدأ مشروعك',
   'banner.ctaSecondary': 'شاهد أعمالنا',
-  'banner.voiceHint': 'جديد: صِف مشروعك بصوتك، ودع المساعد يملأ النموذج نيابةً عنك.',
-  'banner.statsLabel': 'أرقام عن الاستوديو',
-  'banner.stat1Value': '+40',
-  'banner.stat1Label': 'مشروع مُسلَّم',
-  'banner.stat2Value': '8',
-  'banner.stat2Label': 'سنوات خبرة',
-  'banner.stat3Value': '3',
-  'banner.stat3Label': 'لغات مدعومة',
+  'banner.scroll': 'مرّر للاستكشاف',
 
-  // ── 2 · About ─────────────────────────────────────────────────────────────
-  'about.eyebrow': 'من نحن',
-  'about.title': 'فريق صغير، ومعايير عالية.',
-  'about.lede':
-    'نبني تجارب رقمية سريعة ويسهل الوصول إليها، تجمع بين تقنية حديثة وتصميم واضح ومقروء. بلا قوالب جاهزة، وبلا تعقيد بلا سبب.',
-  'about.body':
-    'كل مشروع يبدأ بسؤال واحد: ما الذي يجب أن ينجح هنا؟ ننطلق من هذا السؤال إلى نموذج أوّلي نختبره معكم، ثم إلى منتج نُسلّمه ونرافقه بعد الإطلاق.',
-  'about.pillar1.title': 'التصميم أولاً',
-  'about.pillar1.text': 'نبدأ من الاستعمال لا من الشيفرة: نموذج أوّلي، ثم اختبار، ثم تطوير.',
-  'about.pillar2.title': 'أداء قابل للقياس',
-  'about.pillar2.text': 'ميزانية أداء لكل صفحة، ومتابعة مؤشرات الويب الأساسية بعد الإطلاق.',
-  'about.pillar3.title': 'متعدّد اللغات منذ اليوم الأول',
-  'about.pillar3.text': 'العربية والفرنسية والإنجليزية، مع دعم حقيقي للكتابة من اليمين إلى اليسار.',
-  'about.pillar4.title': 'شراكة تدوم',
-  'about.pillar4.text': 'لا نختفي بعد التسليم: صيانة، وتحديثات أمنية، وتطوير مستمر.',
-
-  // ── 3 · Projects ──────────────────────────────────────────────────────────
-  'projects.eyebrow': 'أعمالنا',
-  'projects.title': 'مشاريع أطلقناها',
-  'projects.lede': 'مجموعة مختارة من المنتجات التي صمّمناها وطوّرناها وما زلنا نرافقها.',
+  // ── 2 · Featured work ─────────────────────────────────────────────────────
+  'projects.eyebrow': 'أعمال مختارة',
+  'projects.title': 'أفكار تتحوّل إلى منتجات حقيقية.',
+  'projects.lede':
+    'نحوّل الأفكار الطموحة إلى تجارب رقمية قوية. اكتشف بعضاً من أحدث مشاريعنا، وما يمكننا بناؤه معاً.',
+  'projects.viewAll': 'عرض كل المشاريع',
   'projects.filterLabel': 'تصفية حسب النوع',
   'projects.searchLabel': 'البحث في المشاريع',
   'projects.searchPlaceholder': 'ابحث بالاسم أو الوصف أو النوع',
   'projects.clearSearch': 'مسح البحث',
   'projects.searchEmpty': 'لا توجد مشاريع تطابق بحثك والنوع المحدد.',
   'projects.filter.all': 'الكل',
-  'projects.filter.web': 'ويب',
-  'projects.filter.ecommerce': 'تجارة إلكترونية',
-  'projects.filter.ai': 'ذكاء اصطناعي',
+  'projects.filter.webapp': 'تطبيق ويب',
+  'projects.filter.branding': 'هوية بصرية',
   'projects.filter.mobile': 'تطبيقات الهاتف',
+  'projects.filter.ai': 'ذكاء اصطناعي',
   'projects.empty': 'لا يوجد مشروع في هذا التصنيف بعد.',
   'projects.emptyAction': 'اعرض كل المشاريع',
-  'projects.viewCase': 'اقرأ دراسة الحالة',
   'projects.countLabel': '{count} مشروع معروض',
-  'projects.item.neural-ledger.summary':
-    'لوحة تحكّم مالية لحظية، مع تصنيف تلقائي للقيود المحاسبية واكتشاف الحالات الشاذة.',
-  'projects.item.aura-commerce.summary':
-    'متجر إلكتروني متعدّد اللغات، بدفع محلي ومسار شراء أُعيد تصميمه بالكامل.',
-  'projects.item.atlas-cargo.summary':
-    'منصّة تتبّع للشحن البري بين الدار البيضاء وأوروبا، مع تخطيط للمسارات في الوقت الحقيقي.',
-  'projects.item.zellige-studio.summary':
-    'موقع تعريفي لاستوديو معماري، مبني حول معرض صور عالي الدقة وسريع التحميل.',
-  'projects.item.souk-connect.summary':
-    'تطبيق هاتف يربط الحرفيين بالمشترين، مع محادثة مدمجة ودفع آمن.',
-  'projects.item.riad-atlas.summary':
-    'نظام حجز مباشر لمجموعة رياضات، يُلغي عمولة المنصّات الوسيطة.',
+  'projects.item.nextgen.summary': 'منصّة مدعومة بالذكاء الاصطناعي',
+  'projects.item.le-maitre-du-sandwich.summary': 'هوية بصرية وتغليف',
+  'projects.item.casablanca-night.summary': 'تجربة تفاعلية',
 
-  // ── 4 · Services ──────────────────────────────────────────────────────────
+  // ── 3 · Services ──────────────────────────────────────────────────────────
   'services.eyebrow': 'خدماتنا',
-  'services.title': 'ما الذي نقوم به',
-  'services.lede': 'ستّ خدمات، ومعيار واحد: منتج سريع، ويسهل الوصول إليه، ويصمد مع الوقت.',
-  'services.web.title': 'مواقع وتطبيقات ويب',
-  'services.web.text': 'واجهات سريعة ومتجاوبة مبنية بـ Angular وNext.js، مع تصميم يبدأ من الهاتف.',
-  'services.ecommerce.title': 'التجارة الإلكترونية',
-  'services.ecommerce.text': 'متاجر إلكترونية، ووسائل دفع محلية، ومسار شراء مُحسَّن للتحويل.',
-  'services.ai.title': 'دمج الذكاء الاصطناعي',
-  'services.ai.text': 'مساعدون محادثون، واستخراج للبيانات، وأتمتة تخدم العمل فعلاً.',
+  'services.title': 'مصمَّمة لما هو قادم.',
+  'services.exploreAll': 'استكشف كل خدماتنا',
+  'services.web.title': 'تطوير الويب',
+  'services.web.text': 'تطبيقات ويب حديثة، قابلة للتوسّع، وعالية الأداء.',
   'services.mobile.title': 'تطبيقات الهاتف',
-  'services.mobile.text': 'تطبيقات لنظامَي iOS وAndroid من قاعدة شيفرة واحدة، بأداء أصيل.',
-  'services.design.title': 'تصميم الواجهة والتجربة',
-  'services.design.text': 'أنظمة تصميم، ونماذج أوّلية قابلة للنقر، ومراجعات لإمكانية الوصول.',
-  'services.cloud.title': 'الاستضافة والصيانة',
-  'services.cloud.text': 'نشر، ومراقبة، ونسخ احتياطي — ونحن من يتولّى المناوبة عند العطل.',
-  'services.ctaTitle': 'لم تجد ما تبحث عنه؟',
-  'services.ctaText': 'أخبرنا بما تحتاجه، ونرجع إليك باقتراح خلال يومَي عمل.',
+  'services.mobile.text': 'تجارب هاتف أصلية ومتعدّدة المنصّات.',
+  'services.design.title': 'تصميم الواجهات والتجربة',
+  'services.design.text': 'واجهات مريحة في الاستخدام، وأداؤها أفضل.',
+  'services.ai.title': 'حلول الذكاء الاصطناعي',
+  'services.ai.text': 'أنظمة ذكية تعمل لصالحك.',
 
-  // ── 5 · Contact ───────────────────────────────────────────────────────────
+  // ── 4 · About ─────────────────────────────────────────────────────────────
+  'about.eyebrow': 'عن دبا ديجيتال',
+  'about.title': 'أكثر من مجرد وكالة تقنية.',
+  'about.lede':
+    'نحن فريق من البنّائين والمصمّمين وصنّاع الحلول. نجمع بين التقنية والإبداع والاستراتيجية لنحوّل الأفكار إلى منتجات رقمية قابلة للتوسّع.',
+  'about.caption': 'فريق يبني ما هو قادم',
+  'about.imageAlt': 'شعار دبا ديجيتال',
+  'about.statsLabel': 'دبا ديجيتال بالأرقام',
+  'about.stat1Value': '+10',
+  'about.stat1Label': 'مشاريع مُنجَزة',
+  'about.stat2Value': '+5',
+  'about.stat2Label': 'عملاء سعداء',
+  'about.stat3Value': '+3',
+  'about.stat3Label': 'سنوات من الخبرة',
+
+  // ── 5 · Team ──────────────────────────────────────────────────────────────
+  // Job titles are gendered in Arabic and French, so the role and the bios name
+  // the work rather than the person ("تطوير", not "مطوّر/مطوّرة").
+  'team.eyebrow': 'فريقنا',
+  'team.title': 'تعرّف على الفريق الذي يقف وراء دبا ديجيتال.',
+  'team.lede':
+    'فريق من اثنين، ورؤية واحدة. نبني منتجات رقمية تحلّ مشكلات حقيقية وتصنع قيمة حقيقية.',
+  'team.portfolio': 'تصفّح معرض الأعمال',
+  'team.newTab': '(يُفتح في علامة تبويب جديدة)',
+  'team.role.fullStack': 'تطوير فول ستاك',
+  'team.member.keltoum-malouki.bio':
+    'شغف ببناء منتجات رقمية مفيدة، وتحويل الأفكار إلى حلول واقعية.',
+  'team.member.jawad-boulmal.bio':
+    'تركيز على الشيفرة النظيفة، وتجارب المستخدم المتميّزة، والحلول القابلة للتوسّع.',
+
+  // ── 6 · Closing call to action ────────────────────────────────────────────
+  'cta.eyebrow': 'لنبنِ معاً',
+  'cta.title': 'هل أنت مستعدّ لبدء مشروعك القادم؟',
+
+  // ── 7 · Contact ───────────────────────────────────────────────────────────
   'contact.eyebrow': 'اتصل بنا',
   'contact.title': 'لديك فكرة مشروع؟ حدّثنا عنها.',
   'contact.lede': 'املأ النموذج ونرجع إليك خلال يومَي عمل. لا رسائل تسويقية، ولا مكالمات مفاجئة.',
@@ -179,7 +179,10 @@ export const AR = {
   'contact.successAgain': 'إرسال طلب آخر',
   'contact.privacy': 'نستعمل بياناتك للردّ على طلبك فقط. لا نشاركها مع أي جهة أخرى.',
 
-  // ── 5 · Contact — voice assistant ────────────────────────────────────────
+  // ── 7 · Contact — voice assistant ────────────────────────────────────────
+  'contact.voice.title': 'تفضّل الحديث بدل الكتابة؟',
+  'contact.voice.text':
+    'صِف مشروعك بصوتك، بالعربية أو الفرنسية أو الإنجليزية. يملأ المساعد النموذج، ثم تراجعه أنت وترسله.',
   'contact.voice.privacy':
     'يُعالَج صوتك عبر خدمة ذكاء اصطناعي خارجية لملء هذا النموذج. لا يُحفظ التسجيل الصوتي أبداً.',
   'contact.voice.start': 'صِف مشروعك',
@@ -198,7 +201,7 @@ export const AR = {
   'contact.voice.dismiss': 'تجاهل',
 
   // ── Footer ────────────────────────────────────────────────────────────────
-  'footer.tagline': 'استوديو رقمي مغربي — مواقع، وتطبيقات، وتكامل على المقاس.',
+  'footer.tagline': 'وكالة تقنية تبني منتجات رقمية حديثة.',
   'footer.navLabel': 'تنقل التذييل',
   'footer.sectionsLabel': 'الأقسام',
   'footer.contactLabel': 'التواصل',

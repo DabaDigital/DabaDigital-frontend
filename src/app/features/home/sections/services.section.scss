@@ -1,0 +1,45 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  // Off the landing page the section sits under a page header, without the
+  // landing rhythm; it still needs room below the cards.
+  .services:not(.section) {
+    padding-block-end: var(--section-space);
+  }
+
+  .services__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    margin-block-end: clamp(2rem, 4vw, 3rem);
+  }
+
+  .services__title {
+    margin-block-start: 1.5rem;
+  }
+
+  .services__grid {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .services__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+}

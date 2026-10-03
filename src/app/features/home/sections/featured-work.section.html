@@ -1,0 +1,27 @@
+<section id="projects" appSectionSpy class="section section-rule">
+  <div class="work container-wide">
+    <div class="work__intro">
+      <p class="section-label" data-reveal>
+        <span class="section-label__slashes" aria-hidden="true">//</span>
+        {{ t('projects.eyebrow') }}
+      </p>
+      <h2 class="section-title work__title" data-reveal>
+        {{ t('projects.title') }}
+        <app-icon name="arrow-right" class="work__title-arrow" />
+      </h2>
+      <p class="section-lede work__lede" data-reveal>{{ t('projects.lede') }}</p>
+      <div data-reveal>
+        <a appButton="outline" size="sm" routerLink="/portfolio" class="work__all">
+          {{ t('projects.viewAll') }}
+          <app-icon name="arrow-right" class="cta-arrow" />
+        </a>
+      </div>
+    </div>
+
+    <ul class="work__cards">
+      @for (project of featured(); track project.slug) {
+        <li data-card><app-project-card [project]="project" /></li>
+      }
+    </ul>
+  </div>
+</section>

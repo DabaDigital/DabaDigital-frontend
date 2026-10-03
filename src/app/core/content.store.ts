@@ -1,5 +1,6 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { PROJECTS, PROJECT_FILTERS, SERVICES } from '../features/home/home.content';
+import { DOCUMENT } from '@angular/common';
+import { Injectable, afterNextRender, computed, inject, signal } from '@angular/core';
+import { PROJECTS, PROJECT_FILTERS, SERVICES, TEAM } from '../features/home/home.content';
 import { ContentApi } from './api/content.api';
 import { SupabaseService } from './api/supabase.service';
 import { COMPANY } from './company';
@@ -38,6 +39,7 @@ export function seedContent(): SiteContent {
       title: localized(s.titleKey),
       description: localized(s.textKey),
       icon: s.icon,
+      icon_url: '',
       status: 'published',
       position,
     })),
@@ -47,6 +49,7 @@ export function seedContent(): SiteContent {
         name: 'LinkedIn',
         url: COMPANY.linkedin,
         icon: 'linkedin',
+        icon_url: '',
         status: 'published',
         position: 0,
       },
@@ -55,6 +58,7 @@ export function seedContent(): SiteContent {
         name: 'Instagram',
         url: COMPANY.instagram,
         icon: 'instagram',
+        icon_url: '',
         status: 'published',
         position: 1,
       },
@@ -66,6 +70,7 @@ export function seedContent(): SiteContent {
         value: { en: COMPANY.email, fr: COMPANY.email, ar: COMPANY.email },
         href: `mailto:${COMPANY.email}`,
         icon: 'mail',
+        icon_url: '',
         status: 'published',
         position: 0,
       },
@@ -75,6 +80,7 @@ export function seedContent(): SiteContent {
         value: { en: COMPANY.phone, fr: COMPANY.phone, ar: COMPANY.phone },
         href: `tel:${COMPANY.phoneHref}`,
         icon: 'phone',
+        icon_url: '',
         status: 'published',
         position: 1,
       },
@@ -84,6 +90,7 @@ export function seedContent(): SiteContent {
         value: localized('contact.locationValue'),
         href: '',
         icon: 'map-pin',
+        icon_url: '',
         status: 'published',
         position: 2,
       },
@@ -93,10 +100,21 @@ export function seedContent(): SiteContent {
         value: localized('contact.hoursValue'),
         href: '',
         icon: 'clock',
+        icon_url: '',
         status: 'published',
         position: 3,
       },
     ],
+    team: TEAM.map((member, position) => ({
+      id: member.id,
+      name: member.name,
+      role: localized(member.roleKey),
+      description: localized(member.bioKey),
+      url: member.portfolioUrl,
+      photo_url: member.photo ?? '',
+      status: 'published',
+      position,
+    })),
   };
 }
 
@@ -116,16 +134,27 @@ export class ContentStore {
   );
   readonly social = computed(() => this.content().social.filter((s) => s.status === 'published'));
   readonly contact = computed(() => this.content().contact.filter((s) => s.status === 'published'));
+  readonly team = computed(() => this.content().team.filter((m) => m.status === 'published'));
 
   readonly text = (value: LocalizedText): string =>
     value[this.i18n.locale()] || value.en || value.fr || value.ar;
 
   constructor() {
-    if (this.supabase.configured()) {
-      void this.refresh()
-        .catch(() => undefined)
-        .finally(() => this.loaded.set(true));
-    }
+    if (!this.supabase.configured()) return;
+    // Once the first frame is on screen, not while it is being drawn. The seed content fills
+    // that frame anyway; requests in flight during it compete with the files it does need,
+    // and the live content leads straight to the heaviest files on the page, the project
+    // covers. A hidden tab paints no frame, so it does not wait for one.
+    const document = inject(DOCUMENT);
+    afterNextRender(() => {
+      const load = (): void =>
+        void this.refresh()
+          .catch(() => undefined)
+          .finally(() => this.loaded.set(true));
+      const view = document.defaultView;
+      if (!view || document.visibilityState === 'hidden') setTimeout(load);
+      else view.requestAnimationFrame(() => setTimeout(load));
+    });
   }
 
   async refresh(): Promise<void> {
