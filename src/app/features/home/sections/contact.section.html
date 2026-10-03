@@ -1,87 +1,66 @@
-<section id="contact" appSectionSpy class="relative overflow-hidden">
-  <div class="ambient-glow -top-72 -start-56" aria-hidden="true"></div>
-  <div
-    class="ambient-glow -end-64 bottom-0 [--glow-color:var(--glow-accent)]"
-    aria-hidden="true"
-  ></div>
-
-  <div class="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
-    <div appReveal class="max-w-2xl">
-      <p
-        class="inline-flex items-center gap-2 rounded-full border border-border-glass bg-surface-glass px-3 py-1.5 text-xs font-semibold tracking-widest text-text-body uppercase"
-      >
-        <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
-        <span>{{ t('contact.eyebrow') }}</span>
+<section id="contact" appSectionSpy class="section section-rule">
+  <div class="contact container-wide">
+    <div class="contact__head">
+      <p class="section-label" data-reveal>
+        <span class="section-label__slashes" aria-hidden="true">//</span>
+        {{ t('contact.eyebrow') }}
       </p>
-      <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{{ t('contact.title') }}</h2>
-      <p class="mt-4 text-lg text-text-muted">{{ t('contact.lede') }}</p>
+      <h2 class="section-title contact__title" data-reveal>{{ t('contact.title') }}</h2>
+      <p class="section-lede contact__lede" data-reveal>{{ t('contact.lede') }}</p>
     </div>
 
-    <div class="mt-12 grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12">
+    <div class="contact__grid">
       <!-- ── Direct channels ────────────────────────────────────────────────
-        Listed beside the form, not under it: someone who would rather email
-        should not have to scroll past a form to find out they can.
+        Beside the form, not under it: someone who would rather email should
+        not have to scroll past a form to find out they can.
       -->
-      <aside
-        appReveal
-        class="h-fit rounded-xl border border-border-glass bg-surface-glass p-6 shadow-sm sm:p-8"
-      >
-        <h3 class="text-lg font-semibold">{{ t('contact.infoTitle') }}</h3>
+      <aside class="contact__aside contact__panel" data-reveal>
+        <h3 class="contact__aside-title">{{ t('contact.infoTitle') }}</h3>
 
-        <dl class="mt-6 space-y-5">
+        <!--
+          A `<div>` may group a term with its description only as their direct
+          parent, so the decorative icon rides inside the term and the stylesheet
+          sets it beside the pair.
+        -->
+        <dl class="contact__channels">
           @for (channel of content.contact(); track channel.id) {
-            <div class="flex items-start gap-3">
-              <span
-                class="mt-0.5 flex size-9 flex-none items-center justify-center rounded-md bg-primary-soft text-primary"
-                ><app-icon [name]="channel.icon" class="size-4"
-              /></span>
-              <div class="min-w-0">
-                <dt class="text-xs font-semibold tracking-wide text-text-muted uppercase">
-                  {{ content.text(channel.label) }}
-                </dt>
-                <dd class="mt-0.5 font-medium text-text-strong" dir="auto">
-                  @if (channel.href) {
-                    <a
-                      [href]="channel.href"
-                      class="break-words underline decoration-border-strong underline-offset-4"
-                      >{{ content.text(channel.value) }}</a
-                    >
-                  } @else {
-                    {{ content.text(channel.value) }}
-                  }
-                </dd>
-              </div>
+            <div class="contact__channel">
+              <dt class="contact__channel-label">
+                <span class="contact__channel-icon" aria-hidden="true">
+                  <app-icon [name]="channel.icon" class="size-4" />
+                </span>
+                {{ content.text(channel.label) }}
+              </dt>
+              <dd class="contact__channel-value" dir="auto">
+                @if (channel.href) {
+                  <a [href]="channel.href">{{ content.text(channel.value) }}</a>
+                } @else {
+                  {{ content.text(channel.value) }}
+                }
+              </dd>
             </div>
           }
         </dl>
 
-        <p class="mt-8 border-t border-border-subtle pt-5 text-xs text-text-muted">
-          {{ t('contact.privacy') }}
-        </p>
+        <p class="contact__privacy">{{ t('contact.privacy') }}</p>
       </aside>
 
       <!-- ── The form ───────────────────────────────────────────────────── -->
-      <div
-        appReveal
-        [revealDelay]="80"
-        class="rounded-xl border border-border-glass bg-surface-card p-6 shadow-md sm:p-8"
-      >
+      <div class="contact__card contact__panel" data-reveal>
         @if (status() === 'success' && sent(); as confirmation) {
           <!--
             `role="status"` rather than `role="alert"`: the success replaces the
             form in place, so it is announced politely without interrupting.
           -->
-          <div role="status" class="py-8 text-center">
-            <span
-              class="mx-auto flex size-14 items-center justify-center rounded-full bg-success-soft text-success"
-            >
+          <div role="status" class="contact__success">
+            <span class="contact__success-icon">
               <app-icon name="check-circle" class="size-7" />
             </span>
-            <h3 class="mt-5 text-xl font-semibold">{{ t('contact.successTitle') }}</h3>
-            <p class="mx-auto mt-2 max-w-sm text-text-muted">
+            <h3 class="contact__success-title">{{ t('contact.successTitle') }}</h3>
+            <p class="contact__success-text">
               {{ t('contact.successText', { name: confirmation.name, email: confirmation.email }) }}
             </p>
-            <button appButton="secondary" type="button" (click)="reset()" class="mt-6">
+            <button appButton="outline" type="button" (click)="reset()" class="mt-6">
               {{ t('contact.successAgain') }}
             </button>
           </div>
@@ -102,14 +81,27 @@
               doesn't render and the manual form below is the whole page.
             -->
             @if (voiceEnabled && voiceSupported) {
-              <div class="rounded-lg border border-border-glass bg-surface-glass p-4">
+              <div class="voice-panel" [class.is-live]="isRecording()">
+                <div class="voice-panel__row">
+                  <span class="voice-panel__icon" aria-hidden="true">
+                    <app-icon name="sparkles" class="size-4.5" />
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <p class="voice-panel__title">{{ t('contact.voice.title') }}</p>
+                    <p class="voice-panel__text">{{ t('contact.voice.text') }}</p>
+                  </div>
+                </div>
+
                 @if (!privacyAcknowledged()) {
-                  <p class="text-xs text-text-muted">{{ t('contact.voice.privacy') }}</p>
+                  <p class="voice-panel__privacy">{{ t('contact.voice.privacy') }}</p>
                 }
-                <div class="mt-3 flex flex-wrap items-center gap-3">
+
+                <div class="voice-panel__controls">
                   <button
-                    appButton="secondary"
+                    appButton="outline"
+                    size="sm"
                     type="button"
+                    class="voice-panel__button"
                     [attr.aria-pressed]="isRecording()"
                     [attr.aria-label]="
                       isRecording() ? t('contact.voice.stop') : t('contact.voice.start')
@@ -121,42 +113,32 @@
                   </button>
                   @switch (recorderState()) {
                     @case ('recording') {
-                      <span class="inline-flex items-center gap-1.5 text-sm text-text-muted">
-                        <span
-                          class="size-2 animate-pulse rounded-full bg-danger motion-reduce:animate-none"
-                          aria-hidden="true"
-                        ></span>
+                      <span class="voice-panel__state">
+                        <span class="voice-wave" aria-hidden="true">
+                          <span></span><span></span><span></span><span></span><span></span>
+                        </span>
                         {{ t('contact.voice.listening') }}
                       </span>
                     }
                     @case ('requesting-permission') {
-                      <span class="text-sm text-text-muted">{{
+                      <span class="voice-panel__state">{{
                         t('contact.voice.stateRequestingPermission')
                       }}</span>
                     }
                     @case ('connecting') {
-                      <span class="text-sm text-text-muted">{{
-                        t('contact.voice.stateConnecting')
-                      }}</span>
+                      <span class="voice-panel__state">{{ t('contact.voice.stateConnecting') }}</span>
                     }
                     @case ('processing') {
-                      <span class="text-sm text-text-muted">{{
-                        t('contact.voice.stateProcessing')
-                      }}</span>
+                      <span class="voice-panel__state">{{ t('contact.voice.stateProcessing') }}</span>
                     }
                   }
                 </div>
+
                 @if (recorderState() === 'error') {
-                  <p role="alert" class="mt-3 text-sm text-danger">
-                    {{ voiceUnavailableMessage() }}
-                  </p>
+                  <p role="alert" class="voice-panel__error">{{ voiceUnavailableMessage() }}</p>
                 }
                 @if (transcript()) {
-                  <p
-                    class="mt-3 max-h-24 overflow-y-auto rounded-sm bg-surface-card p-2.5 text-sm text-text-muted"
-                  >
-                    {{ transcript() }}
-                  </p>
+                  <p class="voice-panel__transcript">{{ transcript() }}</p>
                 }
               </div>
             } @else if (voiceEnabled && !voiceSupported) {
@@ -185,7 +167,7 @@
             @if (errorCount() > 0) {
               <p
                 role="alert"
-                class="flex items-start gap-2.5 rounded-sm border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
+                class="flex items-start gap-2.5 rounded-md border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
               >
                 <app-icon name="alert" class="mt-0.5 size-4 flex-none text-danger" />
                 <span>{{ t('contact.errorSummary', { count: errorCount() }) }}</span>
@@ -347,7 +329,7 @@
             @if (status() === 'error') {
               <p
                 role="alert"
-                class="flex items-start gap-2.5 rounded-sm border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
+                class="flex items-start gap-2.5 rounded-md border border-danger bg-danger-soft px-4 py-3 text-sm text-text-strong"
               >
                 <app-icon name="alert" class="mt-0.5 size-4 flex-none text-danger" />
                 <span>{{ t('contact.errorSend', { email: contactEmail }) }}</span>
@@ -355,11 +337,11 @@
             }
 
             <button
-              appButton
+              appButton="inverse"
               type="submit"
               [loading]="status() === 'submitting'"
               [attr.aria-label]="status() === 'submitting' ? t('contact.submitting') : null"
-              class="w-full shadow-glow sm:w-auto"
+              class="contact__submit"
             >
               {{ status() === 'error' ? t('contact.retry') : t('contact.submit') }}
               <app-icon name="send" class="size-4 rtl:-scale-x-100" />

@@ -142,3 +142,18 @@ describe('ContactSection — voice integration', () => {
     expect(host.querySelector('#contact-projectType')?.textContent).toContain('Choose a type');
   });
 });
+
+describe('ContactSection — contact details', () => {
+  it('gives each channel a `<div>` holding exactly its term and description', async () => {
+    const { host } = await render();
+
+    // A `<dl>` may group a `<dt>` with its `<dd>` in a `<div>` only as their
+    // direct parent; anything deeper breaks the list for assistive technology.
+    const groups = [...(host.querySelector('dl.contact__channels')?.children ?? [])];
+    expect(groups.length).toBeGreaterThan(0);
+    for (const group of groups) {
+      expect(group.tagName).toBe('DIV');
+      expect([...group.children].map((child) => child.tagName)).toEqual(['DT', 'DD']);
+    }
+  });
+});

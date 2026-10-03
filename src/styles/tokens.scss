@@ -1,5 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Design tokens — the single source of truth for colour, radius, type and motion.
+// Design tokens — the single source of truth for colour, radius, type, space
+// and motion.
 //
 // Everything is a CSS custom property so that Tailwind (see ./tailwind.css) and
 // component styles read the same values. Dark mode redefines tokens; it never
@@ -9,9 +10,12 @@
 // Reaching for a palette primitive or a raw hex inside a component is a bug.
 //
 // ── Theme resolution ─────────────────────────────────────────────────────────
-// Three states, in the order the cascade resolves them:
+// The public site is designed at night: every page outside `/admin` renders
+// inside `.night` (see `app.html`), which pins it to the dark layer whatever the
+// theme preference says. The theme switch only exists in the admin, where the
+// cascade still resolves three states:
 //
-//   1. `:root`                                → light (the default)
+//   1. `:root`                                → light
 //   2. `@media (prefers-color-scheme: dark)`  → dark, unless the visitor pinned light
 //   3. `:root[data-theme='dark']`             → dark, whatever the OS says
 //
@@ -19,50 +23,66 @@
 // inline bootstrap in `index.html`, so the first paint is already correct.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// The dark semantic layer, declared once and emitted into both selectors below.
-// Duplicating it by hand is how the two copies drift apart.
+// The dark semantic layer, declared once and emitted into every selector below.
+// Duplicating it by hand is how the copies drift apart.
+//
+// Near-black grounds, cold white for anything that must be read or pressed, and
+// blue only as light: the icy accent appears in highlights and glows, never as a
+// field of colour.
 @mixin dark-semantics {
-  --surface-page: var(--palette-neutral-950);
-  --surface-card: var(--palette-neutral-900);
-  --surface-raised: var(--palette-neutral-800);
-  --surface-muted: var(--palette-neutral-800);
-  --surface-inverse: var(--palette-neutral-50);
+  --surface-page: var(--palette-ink-950);
+  // The alternate ground for a band that has to separate from its neighbours.
+  --surface-sunken: var(--palette-ink-900);
+  --surface-card: var(--palette-ink-850);
+  --surface-raised: var(--palette-ink-800);
+  --surface-muted: var(--palette-ink-800);
+  --surface-inverse: var(--palette-steel-100);
 
-  --text-strong: var(--palette-neutral-50);
-  --text-body: var(--palette-neutral-200);
-  --text-muted: var(--palette-neutral-400);
-  --text-inverse: var(--palette-neutral-950);
+  --text-strong: var(--palette-steel-100);
+  --text-body: var(--palette-steel-300);
+  // 8:1 on the page ground — muted text carries real copy, so it stays AA.
+  --text-muted: var(--palette-steel-400);
+  // 3.9:1. Ornament only: the `//` of a label, an index numeral, a hairline
+  // caption. Never a sentence someone has to read.
+  --text-faint: var(--palette-steel-600);
+  --text-inverse: var(--palette-ink-950);
 
-  --border-subtle: var(--palette-neutral-800);
-  --border-strong: var(--palette-neutral-700);
+  --border-subtle: color-mix(in srgb, var(--palette-white) 10%, transparent);
+  --border-strong: color-mix(in srgb, var(--palette-white) 18%, transparent);
 
-  // Dark mode lightens the brand rather than inverting it: #59a2e8 on the page
-  // ground clears 7:1, where the light-mode #1a66bd would sit at 1.4:1.
-  --primary: var(--palette-brand-400);
-  --primary-hover: var(--palette-brand-300);
-  --primary-soft: var(--palette-brand-950);
-  --primary-contrast: var(--palette-neutral-950);
+  // The brightest thing on the page is the call to action: cold white with dark
+  // text, not a saturated blue button.
+  --primary: var(--palette-ice-100);
+  --primary-hover: var(--palette-white);
+  --primary-soft: color-mix(in srgb, var(--palette-ice-200) 10%, transparent);
+  --primary-contrast: var(--palette-ink-950);
 
-  --accent: var(--palette-accent-400);
-  --accent-soft: var(--palette-accent-700);
-  --accent-contrast: var(--palette-neutral-950);
+  --accent: var(--palette-ice-400);
+  --accent-soft: color-mix(in srgb, var(--palette-ice-400) 14%, transparent);
+  --accent-contrast: var(--palette-ink-950);
 
   --success: var(--palette-success-300);
   --success-soft: #0d3220;
   --danger: var(--palette-danger-300);
   --danger-soft: #3d1616;
 
-  --focus-ring: var(--palette-brand-300);
+  --focus-ring: var(--palette-ice-200);
 
-  --surface-glass: color-mix(in srgb, var(--palette-white) 4%, transparent);
+  --surface-glass: color-mix(in srgb, var(--palette-white) 3%, transparent);
   --border-glass: color-mix(in srgb, var(--palette-white) 10%, transparent);
-  --glow-primary: color-mix(in srgb, var(--palette-brand-400) 20%, transparent);
-  --glow-accent: color-mix(in srgb, var(--palette-accent-400) 12%, transparent);
+  --glow-primary: color-mix(in srgb, var(--palette-ice-200) 14%, transparent);
+  --glow-accent: color-mix(in srgb, var(--palette-ice-400) 16%, transparent);
+  // The wordmark's blue, as light rather than fill: the deep glow behind the
+  // team, under the About picture's blue ground.
+  --glow-brand: color-mix(in srgb, var(--palette-brand-600) 42%, transparent);
 
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
-  --shadow-md: 0 4px 16px rgb(0 0 0 / 45%);
-  --shadow-lg: 0 12px 40px rgb(0 0 0 / 55%);
-  --shadow-glow: 0 8px 32px color-mix(in srgb, var(--palette-brand-400) 28%, transparent);
+  // The bezel of the devices drawn in the placeholder artwork.
+  --device-frame: var(--palette-ink-700);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 50%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 50%);
+  --shadow-lg: 0 24px 60px rgb(0 0 0 / 60%);
+  --shadow-glow: 0 0 2.5rem color-mix(in srgb, var(--palette-ice-200) 22%, transparent);
 }
 
 :root {
@@ -81,10 +101,27 @@
   --palette-neutral-900: #171d27;
   --palette-neutral-950: #0d1117;
 
+  // Ink — the night grounds, from the page itself up to a pressed fill.
+  --palette-ink-950: #020406;
+  --palette-ink-900: #05080c;
+  --palette-ink-850: #080c11;
+  --palette-ink-800: #0d1218;
+  --palette-ink-700: #161c24;
+
+  // Steel — text on the night grounds.
+  --palette-steel-100: #f5f7fa;
+  --palette-steel-300: #c9cfd6;
+  --palette-steel-400: #9ca4ae;
+  --palette-steel-600: #646d78;
+
+  // Ice — the cold light: highlights, rims, the accent. Never a flat fill.
+  --palette-ice-100: #dcebff;
+  --palette-ice-200: #bfd8ff;
+  --palette-ice-400: #8fb8e8;
+
   // The brand ramp is built around #07528f — the blue of the DabaDigital
-  // wordmark in `public/dabadigital.png`, and the value already declared as
-  // `<meta name="theme-color">`. It replaces an indigo ramp that matched
-  // nothing the company actually ships.
+  // wordmark in `public/dabadigital.png`. It drives the light theme, which only
+  // the admin still uses.
   --palette-brand-50: #eff6fe;
   --palette-brand-100: #d9eafd;
   --palette-brand-200: #bcdbfb;
@@ -97,9 +134,7 @@
   --palette-brand-900: #0d3760;
   --palette-brand-950: #08243f;
 
-  // Warm terracotta — the complement of the brand blue, and the one colour on
-  // the page that is allowed to be loud. Used for a second data hue and for
-  // "new" markers, never for a primary action.
+  // Warm terracotta — the light theme's second hue.
   --palette-accent-100: #fde6dd;
   --palette-accent-200: #fbcbba;
   --palette-accent-300: #f7a68b;
@@ -107,6 +142,11 @@
   --palette-accent-500: #e2593a;
   --palette-accent-600: #c94326;
   --palette-accent-700: #a7331e;
+
+  // Amber — warm light inside the drawn illustrations (lamps, city lights): the
+  // one warm note the night allows, for contrast.
+  --palette-amber-300: #f4c48a;
+  --palette-amber-500: #dd9550;
 
   --palette-success-500: #16a34a;
   --palette-success-300: #6ee7a8;
@@ -118,6 +158,7 @@
 
   // ── Semantic colour — light ────────────────────────────────────────────────
   --surface-page: var(--palette-neutral-50);
+  --surface-sunken: var(--palette-neutral-100);
   --surface-card: var(--palette-white);
   --surface-raised: var(--palette-white);
   --surface-muted: var(--palette-neutral-100);
@@ -125,7 +166,11 @@
 
   --text-strong: var(--palette-neutral-950);
   --text-body: var(--palette-neutral-800);
-  --text-muted: var(--palette-neutral-500);
+  // neutral-600, not 500: muted text carries real copy (ledes, card text, hints),
+  // and 500 sits at 4.2:1 on the page ground — under the 4.5:1 AA floor for
+  // body-size text. 600 clears 6.4:1 and still reads a clear step below body.
+  --text-muted: var(--palette-neutral-600);
+  --text-faint: var(--palette-neutral-500);
   --text-inverse: var(--palette-neutral-50);
 
   --border-subtle: var(--palette-neutral-200);
@@ -149,15 +194,20 @@
   --focus-ring: var(--palette-brand-500);
 
   // ── Glass & ambient light ──────────────────────────────────────────────────
-  // The marketing sections layer translucent panels over soft radial glows. Both
-  // read differently per theme — light mode needs a near-opaque white wash to
-  // stay legible, dark mode needs a barely-there one — so they are tokens, not
-  // rgba() literals sprinkled through templates. Derived with `color-mix` so the
-  // palette above stays the only place a hex lives.
+  // Translucent panels over soft radial glows read differently per theme, so
+  // they are tokens rather than rgba() literals sprinkled through templates.
   --surface-glass: color-mix(in srgb, var(--palette-white) 70%, transparent);
   --border-glass: color-mix(in srgb, var(--palette-neutral-950) 8%, transparent);
   --glow-primary: color-mix(in srgb, var(--palette-brand-500) 14%, transparent);
   --glow-accent: color-mix(in srgb, var(--palette-accent-400) 10%, transparent);
+  --glow-brand: color-mix(in srgb, var(--palette-brand-600) 16%, transparent);
+
+  --device-frame: var(--palette-neutral-900);
+
+  // Warm light in the drawn placeholder artwork. Same in both themes: it is
+  // lamplight in a picture, not interface colour.
+  --art-warm: var(--palette-amber-300);
+  --art-warm-deep: var(--palette-amber-500);
 
   // ── Radius ─────────────────────────────────────────────────────────────────
   --radius-xs: 0.25rem;
@@ -175,11 +225,12 @@
   --shadow-glow: 0 8px 32px color-mix(in srgb, var(--palette-brand-600) 24%, transparent);
 
   // ── Type ───────────────────────────────────────────────────────────────────
-  // One display face for headings, one neutral sans for UI. The Arabic faces are
-  // first in the stack for `ar` (see `[lang='ar']` below) because Arabic is the
-  // primary locale here, not a fallback bolted onto a Latin stack.
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  // One grotesk for everything Latin: Geist carries the oversized headlines and
+  // the 11px labels alike, so the page reads as one voice and costs one font
+  // request. The Arabic faces lead the stack for `ar` (see `[lang='ar']`
+  // below) because Arabic is the primary locale, not a fallback.
+  --font-display: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
 
   // ── Motion — short and functional (150–250 ms) ─────────────────────────────
   --duration-fast: 150ms;
@@ -193,12 +244,24 @@
 
   // ── Layout ─────────────────────────────────────────────────────────────────
   --container-max: 72rem;
-  --header-height: 4rem;
+  // The public pages: a wide editorial measure and gutters that grow with the
+  // screen (24px on a phone, 80px on a wide desktop).
+  --container-wide: 90rem;
+  --gutter: clamp(1.5rem, 5vw, 5rem);
+  // Vertical rhythm between major sections: ~72px on a phone, ~140px on desktop.
+  --section-space: clamp(4.5rem, 2rem + 6.5vw, 8.75rem);
+  --header-height: 4.5rem;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 5.75rem;
+  }
 }
 
 // Arabic is the primary locale, so it gets a real Arabic type stack rather than
 // a Latin stack with a fallback appended. Cairo carries the display weights;
-// Noto Sans Arabic carries body copy at the same optical size as Inter.
+// Noto Sans Arabic carries body copy.
 :root[lang='ar'] {
   --font-display: 'Cairo', 'Noto Sans Arabic', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Noto Sans Arabic', 'Cairo', ui-sans-serif, system-ui, sans-serif;
@@ -207,8 +270,8 @@
 // ── Semantic colour — dark ───────────────────────────────────────────────────
 // Only the semantic layer moves. No component knows dark mode exists.
 //
-// The two blocks below are the same declarations at the same specificity (0,2,0),
-// so source order decides: an explicit `data-theme` always wins over the OS.
+// The blocks below share one specificity (0,2,0), so source order decides: an
+// explicit `data-theme` beats the OS, and the public site's night beats both.
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     @include dark-semantics;
@@ -227,5 +290,14 @@
 }
 
 :root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+// The public site is always night. `.night` pins its subtree; `:has()` lifts
+// the same layer onto the root while a night shell is mounted, so the page
+// ground behind an overscroll and the scrollbars are night too.
+.night,
+:root:has(.night) {
+  @include dark-semantics;
   color-scheme: dark;
 }

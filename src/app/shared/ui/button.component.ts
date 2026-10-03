@@ -10,7 +10,14 @@ import {
   input,
 } from '@angular/core';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'danger-ghost';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'ghost'
+  | 'danger'
+  | 'danger-ghost'
+  | 'inverse'
+  | 'outline';
 export type ButtonSize = 'sm' | 'md' | 'icon';
 
 /**
@@ -118,6 +125,36 @@ export type ButtonSize = 'sm' | 'md' | 'icon';
       :host([data-variant='danger-ghost']:hover:not([aria-disabled='true'])) {
         background-color: var(--danger-soft);
         color: var(--danger);
+      }
+
+      /*
+       * The public site's two calls to action, both pill-shaped. 'inverse' is
+       * the brightest thing on a night page — cold white, dark text — and is
+       * kept for the one action a screen is about. 'outline' is the quiet one:
+       * a hairline that brightens on intent.
+       */
+      :host([data-variant='inverse']) {
+        border-radius: var(--radius-pill);
+        background-color: var(--primary);
+        color: var(--primary-contrast);
+        box-shadow: 0 0 2rem color-mix(in srgb, var(--primary) 18%, transparent);
+      }
+
+      :host([data-variant='inverse']:hover:not([aria-disabled='true'])) {
+        background-color: var(--primary-hover);
+        box-shadow: 0 0 2.75rem color-mix(in srgb, var(--primary) 30%, transparent);
+      }
+
+      :host([data-variant='outline']) {
+        border-color: var(--border-strong);
+        border-radius: var(--radius-pill);
+        background-color: transparent;
+        color: var(--text-strong);
+      }
+
+      :host([data-variant='outline']:hover:not([aria-disabled='true'])) {
+        border-color: color-mix(in srgb, var(--text-strong) 45%, transparent);
+        background-color: var(--surface-glass);
       }
 
       :host([data-size='sm']) {

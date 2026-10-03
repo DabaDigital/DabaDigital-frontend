@@ -77,10 +77,40 @@ try {
   await assert.rejects(upload('projects/member.png'), /row-level security/);
   assert.equal((await db.query('select * from storage.objects')).rows.length, 0);
   assert.equal((await db.query("delete from storage.objects where name = 'projects/cover.png' returning id")).rows.length, 0);
+  // Team members: seeded once, published-only reads, admin-only writes, links checked like everywhere else.
+  await asRole('anon');
+  assert.equal((await db.query('select count(*)::int as count from dd_team_members')).rows[0].count, 2);
+  const addTeammate = (url = 'https://studio.example', role = '{"en":"Designer"}') => db.query(`insert into dd_team_members(name, role, description, url) values ('New teammate', $1, '{"en":"Draws the interfaces."}', $2) returning id`, [role, url]);
+  await assert.rejects(addTeammate(), /permission denied/);
+  await asRole('authenticated', member);
+  await assert.rejects(addTeammate(), /row-level security/);
+  await asRole('authenticated', admin);
+  const teammate = (await addTeammate()).rows[0].id;
+  await assert.rejects(addTeammate('mailto:hello@studio.example'), /check constraint/);
+  await assert.rejects(addTeammate('https://studio.example', '{"en":" "}'), /check constraint/);
+  await asRole('anon');
+  assert.equal((await db.query('select * from dd_team_members where id = $1', [teammate])).rows.length, 0);
+  await asRole('authenticated', admin);
+  await db.query("update dd_team_members set status = 'published' where id = $1", [teammate]);
+  await asRole('anon');
+  assert.equal((await db.query('select * from dd_team_members where id = $1', [teammate])).rows.length, 1);
+  await asRole('authenticated', admin);
+  await db.query('delete from dd_team_members where id = $1', [teammate]);
+  // Uploaded icons: an http(s) file or '' for the built-in glyph, nothing else.
+  await assert.rejects(db.query("update dd_services set icon_url = 'javascript:alert(1)'"), /check constraint/);
+  await db.query("update dd_social_links set icon_url = 'https://cdn.example/icon.svg'");
+  // Media: a public bucket for images, SVG icons included, written by approved admins alone.
+  const media = (await db.query("select public, file_size_limit::int as size, allowed_mime_types from storage.buckets where id = 'dd-media'")).rows[0];
+  assert.deepEqual([media.public, media.size, media.allowed_mime_types.includes('image/svg+xml'), media.allowed_mime_types.includes('text/html')], [true, 5242880, true, false]);
+  await upload('icons/service.svg', 'dd-media');
+  await asRole('authenticated', member);
+  await assert.rejects(upload('team/member.png', 'dd-media'), /row-level security/);
+  await asRole('anon');
+  await assert.rejects(upload('team/anonymous.png', 'dd-media'), /row-level security/);
   // Revoking membership immediately removes permissions without waiting for JWT expiry.
   await db.exec(`reset role; delete from dd_admins where user_id = '${admin}';`);
   await asRole('authenticated', admin);
   assert.equal((await db.query('select * from dd_messages')).rows.length, 0);
   await assert.rejects(upload('projects/revoked.png'), /row-level security/);
-  console.log('Database checks passed: migration, repeatable seed, RLS, admin allowlist, private inbox, server-owned fields, draft visibility, transactional project saves, category protection, project image storage, membership revocation.');
+  console.log('Database checks passed: migration, repeatable seed, RLS, admin allowlist, private inbox, server-owned fields, draft visibility, transactional project saves, category protection, project image storage, team members, uploaded icons, media storage, membership revocation.');
 } finally { await db.close(); }

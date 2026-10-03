@@ -31,6 +31,16 @@ export const IMAGE_TYPES: readonly string[] = [
   'image/gif',
 ];
 
+/** Icons are often vector drawings, so they may also be SVG. */
+const ICON_TYPES: readonly string[] = [...IMAGE_TYPES, 'image/svg+xml'];
+
+/**
+ * How the preview frames the image: a cover fills a landscape frame, an icon
+ * sits whole inside a small square (and may be an SVG), a portrait fills a
+ * frame a little taller than wide with the face kept in view.
+ */
+export type ImageUploadVariant = 'cover' | 'icon' | 'portrait';
+
 type UploadError = 'type' | 'size' | 'failed';
 
 let nextImageUploadId = 0;
@@ -44,12 +54,20 @@ let nextImageUploadId = 0;
  * the previous image stays and the error is announced. `uploadingChange` lets a
  * form hold its submit until the upload lands. There is deliberately no URL field:
  * an image is always a file stored through `upload`.
+ *
+ * Content marked `appUploadEmpty` shows under the drop zone only while there is
+ * no image — what the website falls back to, say.
  */
 @Component({
   selector: 'app-image-upload',
   imports: [ButtonComponent, IconComponent],
   template: `
-    <div class="upload" role="group" [attr.aria-labelledby]="labelId">
+    <div
+      class="upload"
+      role="group"
+      [attr.aria-labelledby]="labelId"
+      [attr.data-variant]="variant()"
+    >
       <span class="upload-label" [id]="labelId">{{ label() }}</span>
       <div
         class="upload-surface"
@@ -114,6 +132,9 @@ let nextImageUploadId = 0;
           </button>
         }
       </div>
+      @if (!preview()) {
+        <ng-content select="[appUploadEmpty]" />
+      }
       <input
         #file
         type="file"
@@ -122,7 +143,7 @@ let nextImageUploadId = 0;
         (change)="onFileSelected(file)"
       />
       <p class="upload-hint" [id]="hintId">
-        {{ t('controls.upload.hint', { size: maxSizeMb() }) }}
+        {{ hint() || t('controls.upload.hint', { size: maxSizeMb() }) }}
       </p>
       @if (errorMessage()) {
         <p class="upload-error" role="alert" [id]="errorId">
@@ -152,9 +173,15 @@ export class ImageUploadComponent implements ControlValueAccessor {
 
   readonly label = input.required<string>();
   readonly upload = input.required<ImageUploader>();
-  readonly accept = input<readonly string[]>(IMAGE_TYPES);
+  readonly variant = input<ImageUploadVariant>('cover');
+  /** The accepted formats, when they should differ from the variant's own. */
+  readonly accept = input<readonly string[] | null>(null);
   /** The largest accepted file, in megabytes. */
   readonly maxSizeMb = input(5);
+  /** Replaces the default formats-and-size line, for an `accept` or purpose of its own. */
+  readonly hint = input('');
+  /** Replaces the default wrong-file message, which names the default formats. */
+  readonly typeError = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly value = model('');
   readonly uploadingChange = output<boolean>();
@@ -168,14 +195,17 @@ export class ImageUploadComponent implements ControlValueAccessor {
   private readonly formDisabled = signal(false);
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly preview = computed(() => this.localPreview() ?? this.value());
-  protected readonly acceptAttribute = computed(() => this.accept().join(','));
+  private readonly types = computed(
+    () => this.accept() ?? (this.variant() === 'icon' ? ICON_TYPES : IMAGE_TYPES),
+  );
+  protected readonly acceptAttribute = computed(() => this.types().join(','));
   protected readonly describedBy = computed(() =>
     joinIds(this.hintId, this.error() ? this.errorId : null),
   );
   protected readonly errorMessage = computed(() => {
     switch (this.error()) {
       case 'type':
-        return this.t('controls.upload.errorType');
+        return this.typeError() || this.t('controls.upload.errorType');
       case 'size':
         return this.t('controls.upload.errorSize', { size: this.maxSizeMb() });
       case 'failed':
@@ -266,7 +296,7 @@ export class ImageUploadComponent implements ControlValueAccessor {
   private async handle(file: File): Promise<void> {
     this.markTouched();
     this.status.set('');
-    if (!this.accept().includes(file.type)) {
+    if (!this.types().includes(file.type)) {
       this.error.set('type');
       return;
     }

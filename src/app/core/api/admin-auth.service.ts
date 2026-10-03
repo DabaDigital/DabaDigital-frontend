@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Router, type CanActivateFn } from '@angular/router';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
 
 @Injectable({ providedIn: 'root' })
@@ -16,18 +17,27 @@ export class AdminAuthService {
 
   authorized(): Promise<boolean> {
     if (!this.supabase.configured()) return Promise.resolve(false);
-    this.watchSession();
-    this.check ??= this.verify().then((ok) => {
-      // Only a success is remembered: a later sign-in, here or in another tab, must re-check.
-      if (!ok) this.check = null;
-      return ok;
-    });
+    this.check ??= this.supabase
+      .connect()
+      .then(
+        (client) => {
+          this.watchSession(client);
+          return this.verify(client);
+        },
+        () => false,
+      )
+      .then((ok) => {
+        // Only a success is remembered: a later sign-in, here or in another tab, must re-check.
+        if (!ok) this.check = null;
+        return ok;
+      });
     return this.check;
   }
 
   async signIn(email: string, password: string): Promise<void> {
     this.check = null;
-    const { error } = await this.supabase.client.auth.signInWithPassword({
+    const client = await this.supabase.connect();
+    const { error } = await client.auth.signInWithPassword({
       email: email.trim(),
       password,
     });
@@ -40,16 +50,17 @@ export class AdminAuthService {
 
   async signOut(): Promise<void> {
     this.check = null;
-    const { error } = await this.supabase.client.auth.signOut({ scope: 'local' });
+    const client = await this.supabase.connect();
+    const { error } = await client.auth.signOut({ scope: 'local' });
     if (error) throw error;
     this.email.set('');
   }
 
-  private async verify(): Promise<boolean> {
+  private async verify(client: SupabaseClient): Promise<boolean> {
     try {
-      const { data, error } = await this.supabase.client.auth.getUser();
+      const { data, error } = await client.auth.getUser();
       if (error || !data.user) return false;
-      const membership = await this.supabase.client
+      const membership = await client
         .from('dd_admins')
         .select('user_id')
         .eq('user_id', data.user.id)
@@ -63,10 +74,10 @@ export class AdminAuthService {
   }
 
   /** Forget the cached check whenever Supabase reports the session ended or changed hands. */
-  private watchSession(): void {
+  private watchSession(client: SupabaseClient): void {
     if (this.watching) return;
     this.watching = true;
-    this.supabase.client.auth.onAuthStateChange((event) => {
+    client.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'USER_UPDATED') {
         this.check = null;
       }

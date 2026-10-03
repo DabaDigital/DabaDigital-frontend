@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { I18nService } from '../../core/i18n/i18n.service';
@@ -8,7 +19,6 @@ import { ButtonComponent } from '../ui/button.component';
 import { IconComponent } from '../ui/icon.component';
 import { LanguageMenuComponent } from '../ui/language-menu.component';
 import { LogoComponent } from '../ui/logo.component';
-import { ThemeToggleComponent } from '../ui/theme-toggle.component';
 
 export interface SectionLink {
   /** Matches the `id` of the `<section>` it scrolls to, and the router fragment. */
@@ -16,53 +26,38 @@ export interface SectionLink {
   readonly label: string;
 }
 
-/** The four navigable sections. The banner is not one — the logo goes there. */
+/**
+ * The navigable sections, in the order they appear on the page (`home.page.html`),
+ * so the current-section marker only moves forward as the page scrolls down.
+ * Home is the banner.
+ */
 const SECTION_IDS: readonly { id: string; key: MessageKey }[] = [
-  { id: 'about', key: 'nav.about' },
+  { id: 'banner', key: 'nav.home' },
   { id: 'projects', key: 'nav.projects' },
   { id: 'services', key: 'nav.services' },
+  { id: 'about', key: 'nav.about' },
+  { id: 'team', key: 'nav.team' },
   { id: 'contact', key: 'nav.contact' },
 ];
 
+/**
+ * The site header and its full-screen menu.
+ *
+ * Transparent over the banner, it gains a night backdrop and a hairline once
+ * the page scrolls (`scrolled`, driven by an IntersectionObserver on a sentinel
+ * at the top of the document — nothing on the scroll path).
+ *
+ * The menu is a native `<dialog>` opened with `showModal()`: the browser makes
+ * the rest of the page inert, traps focus inside, closes it on Escape and
+ * returns focus to the button that opened it. `menuOpen` stays the single
+ * source of truth — the dialog's own `close` event writes back to it, so a
+ * close the browser initiated (Escape) cannot leave the two out of step.
+ */
 @Component({
   selector: 'app-site-header',
-  imports: [
-    RouterLink,
-    ButtonComponent,
-    IconComponent,
-    LogoComponent,
-    ThemeToggleComponent,
-    LanguageMenuComponent,
-  ],
+  imports: [RouterLink, ButtonComponent, IconComponent, LanguageMenuComponent, LogoComponent],
   templateUrl: './site-header.component.html',
-  styles: `
-    /*
-     * The header gains its border and shadow only once the page has scrolled, so
-     * it sits flush against the banner at rest. Driven by a scroll-progress
-     * timeline rather than a scroll listener: no JS on the scroll path, and no
-     * layout read per frame.
-     *
-     * Chrome and Edge support this today; everywhere else the header simply keeps
-     * its resting state, which is a complete design on its own.
-     */
-    @supports (animation-timeline: scroll()) {
-      @media (prefers-reduced-motion: no-preference) {
-        .site-header {
-          animation: header-lift linear both;
-          animation-timeline: scroll(root block);
-          /* Reaches its final state over the first 5rem of scroll. */
-          animation-range: 0 5rem;
-        }
-
-        @keyframes header-lift {
-          to {
-            border-block-end-color: var(--border-subtle);
-            box-shadow: var(--shadow-sm);
-          }
-        }
-      }
-    }
-  `,
+  styleUrl: './site-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SiteHeaderComponent {
@@ -71,8 +66,9 @@ export class SiteHeaderComponent {
 
   protected readonly t = this.i18n.t;
 
-  /** Single source of truth for the mobile menu — the button label, `aria-expanded` and the panel all read it. */
   protected readonly menuOpen = signal(false);
+  /** True once the page has scrolled past its first few pixels. */
+  protected readonly scrolled = signal(false);
 
   protected readonly links = computed<readonly SectionLink[]>(() =>
     SECTION_IDS.map(({ id, key }) => ({ id, label: this.t(key) })),
@@ -81,11 +77,45 @@ export class SiteHeaderComponent {
   /** Empty on any route without landing sections, so nothing is marked current. */
   protected readonly activeSection = this.spy.active;
 
-  protected toggleMenu(): void {
-    this.menuOpen.update((open) => !open);
+  private readonly menu = viewChild.required<ElementRef<HTMLDialogElement>>('menu');
+  private readonly sentinel = viewChild.required<ElementRef<HTMLElement>>('sentinel');
+
+  constructor() {
+    effect(() => {
+      const dialog = this.menu().nativeElement;
+      if (this.menuOpen() && !dialog.open) {
+        dialog.showModal();
+      } else if (!this.menuOpen() && dialog.open) {
+        dialog.close();
+      }
+    });
+
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      if (typeof IntersectionObserver === 'undefined') {
+        return;
+      }
+      const observer = new IntersectionObserver(([entry]) =>
+        this.scrolled.set(!entry.isIntersecting),
+      );
+      observer.observe(this.sentinel().nativeElement);
+      destroyRef.onDestroy(() => observer.disconnect());
+    });
+  }
+
+  protected openMenu(): void {
+    this.menuOpen.set(true);
   }
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  /** `01`, `02`… for the menu, in the locale's own digits. */
+  protected index(position: number): string {
+    return new Intl.NumberFormat(this.i18n.meta().tag, {
+      minimumIntegerDigits: 2,
+      useGrouping: false,
+    }).format(position + 1);
   }
 }

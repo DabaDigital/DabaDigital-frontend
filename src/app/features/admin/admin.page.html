@@ -430,10 +430,22 @@
                                 <app-work-thumb [tone]="record.tone" />
                               }
                             </span>
+                          } @else if ('photo_url' in record) {
+                            <span class="record-avatar">
+                              @if (record.photo_url) {
+                                <img [src]="record.photo_url" alt="" />
+                              } @else {
+                                <span aria-hidden="true">{{ initials(record.name) }}</span>
+                              }
+                            </span>
                           } @else {
-                            <span class="record-icon"
-                              ><app-icon [name]="recordIcon(record)"
-                            /></span>
+                            <span class="record-icon">
+                              @if (recordIconUrl(record); as url) {
+                                <img [src]="url" alt="" />
+                              } @else {
+                                <app-icon [name]="recordIcon(record)" />
+                              }
+                            </span>
                           }
                           <div>
                             <button class="record-name" (click)="openEditor(section(), record)">

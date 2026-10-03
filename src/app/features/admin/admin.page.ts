@@ -73,6 +73,13 @@ const NAV: {
     add: 'admin.addService',
   },
   {
+    id: 'team',
+    icon: 'sparkles',
+    label: 'admin.team',
+    description: 'admin.teamDesc',
+    add: 'admin.addTeamMember',
+  },
+  {
     id: 'social',
     icon: 'globe',
     label: 'admin.social',
@@ -230,6 +237,7 @@ export class AdminPage {
   }
   protected recordDescription(record: ContentRecord): string {
     if ('summary' in record) return this.store.text(record.summary);
+    if ('role' in record) return this.store.text(record.role);
     if ('description' in record) return this.store.text(record.description);
     if ('url' in record) return record.url;
     if ('value' in record) return this.store.text(record.value);
@@ -237,6 +245,19 @@ export class AdminPage {
   }
   protected recordIcon(record: ContentRecord): IconName {
     return 'icon' in record ? record.icon : 'layers';
+  }
+  /** An uploaded icon replaces the built-in glyph, in this list as on the website. */
+  protected recordIconUrl(record: ContentRecord): string {
+    return 'icon_url' in record ? record.icon_url : '';
+  }
+  /** "Keltoum Malouki" → "KM": stands in for a portrait not uploaded yet. */
+  protected initials(name: string): string {
+    return name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
   }
   protected categoryName(id: string): string {
     const category = this.data().categories.find((c) => c.id === id);
@@ -318,13 +339,21 @@ export class AdminPage {
   }
   private errorMessage(error: unknown): string {
     const code = error && typeof error === 'object' && 'code' in error ? error.code : '';
-    return this.t(
-      code === '23503'
-        ? 'admin.categoryInUse'
-        : code === '23505'
-          ? 'admin.duplicate'
-          : 'admin.error',
-    );
+    switch (code) {
+      case '23503':
+        return this.t('admin.categoryInUse');
+      case '23505':
+        return this.t('admin.duplicate');
+      // A check constraint: the forms mirror them, so this is a value saved some other way.
+      case '23514':
+        return this.t('admin.errors.rejected');
+      // A table or column PostgREST does not know: a migration has not been applied yet.
+      case 'PGRST204':
+      case 'PGRST205':
+        return this.t('admin.errors.schema');
+      default:
+        return this.t('admin.error');
+    }
   }
   protected async openMessage(message: ClientMessage): Promise<void> {
     this.selectedMessage.set(message.id);

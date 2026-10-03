@@ -1,0 +1,76 @@
+<form [id]="formId" class="editor-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-field [label]="t('admin.name')" required [error]="errorFor(form.controls.name)">
+    <input appInput formControlName="name" maxlength="160" (blur)="suggestSlug()" />
+  </app-form-field>
+  <app-form-field
+    [label]="t('admin.slug')"
+    required
+    [hint]="t('admin.slugHint')"
+    [error]="errorFor(form.controls.slug)"
+  >
+    <input appInput formControlName="slug" dir="ltr" maxlength="160" placeholder="my-project" />
+  </app-form-field>
+  <p class="hint">{{ t('admin.englishRequired') }}</p>
+  @for (locale of locales; track locale.id) {
+    <fieldset class="locale-group" [attr.dir]="locale.dir" [attr.lang]="locale.id">
+      <legend>{{ locale.label }}</legend>
+      <app-form-field
+        [label]="t('admin.summary')"
+        [required]="locale.id === 'en'"
+        [error]="errorFor(form.controls.summary.controls[locale.id])"
+      >
+        <textarea
+          appInput
+          class="short-text"
+          [formControl]="form.controls.summary.controls[locale.id]"
+          rows="2"
+          maxlength="500"
+        ></textarea>
+      </app-form-field>
+      <app-form-field
+        [label]="t('admin.description')"
+        [error]="errorFor(form.controls.description.controls[locale.id])"
+      >
+        <textarea
+          appInput
+          [formControl]="form.controls.description.controls[locale.id]"
+          rows="3"
+          maxlength="10000"
+        ></textarea>
+      </app-form-field>
+    </fieldset>
+  }
+  <app-form-field [label]="t('admin.categories')">
+    <app-multi-select
+      formControlName="categories"
+      [options]="categoryOptions()"
+      [placeholder]="t('admin.chooseCategories')"
+      [emptyLabel]="t('admin.noCategories')"
+    />
+  </app-form-field>
+  <div class="two-columns">
+    <app-form-field [label]="t('admin.year')" required [error]="errorFor(form.controls.year)">
+      <app-date-picker formControlName="year" precision="year" [min]="minYear" [max]="maxYear" />
+    </app-form-field>
+    <app-form-field [label]="t('admin.tone')">
+      <app-dropdown-list formControlName="tone" [options]="toneOptions()" />
+    </app-form-field>
+  </div>
+  <app-image-upload
+    formControlName="image_url"
+    [label]="t('admin.image')"
+    [upload]="uploadImage"
+    (uploadingChange)="setUploading($event)"
+  />
+  <app-form-field [label]="t('admin.website')" [error]="errorFor(form.controls.website_url)">
+    <input appInput formControlName="website_url" type="url" dir="ltr" placeholder="https://…" />
+  </app-form-field>
+  <div class="two-columns">
+    <app-form-field [label]="t('admin.position')" [error]="errorFor(form.controls.position)">
+      <app-number-input formControlName="position" [min]="0" [max]="9999" />
+    </app-form-field>
+    <app-form-field [label]="t('admin.status')">
+      <app-dropdown-list formControlName="status" [options]="statusOptions()" />
+    </app-form-field>
+  </div>
+</form>

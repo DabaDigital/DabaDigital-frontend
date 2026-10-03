@@ -5,6 +5,7 @@ import {
   computed,
   effect,
   inject,
+  input,
   signal,
   viewChild,
   viewChildren,
@@ -12,7 +13,7 @@ import {
 
 import { I18nService } from '../../core/i18n/i18n.service';
 import type { Locale, LocaleMeta } from '../../core/i18n/locale';
-import { ButtonComponent } from './button.component';
+import { ButtonComponent, type ButtonVariant } from './button.component';
 import { IconComponent } from './icon.component';
 
 /**
@@ -39,7 +40,7 @@ import { IconComponent } from './icon.component';
   template: `
     <button
       #trigger
-      appButton="secondary"
+      [appButton]="appearance()"
       size="sm"
       type="button"
       (click)="toggle()"
@@ -100,6 +101,9 @@ import { IconComponent } from './icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguageMenuComponent {
+  /** The trigger's button style — 'ghost' where it sits in a header beside other controls. */
+  readonly appearance = input<ButtonVariant>('secondary');
+
   protected readonly i18n = inject(I18nService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 

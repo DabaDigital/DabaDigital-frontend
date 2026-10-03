@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   effect,
   inject,
@@ -33,7 +34,7 @@ import {
   type FieldSuggestion,
 } from '../../../core/voice/field-merge';
 import { RealtimeVoiceService } from '../../../core/voice/realtime-voice.service';
-import { RevealDirective } from '../../../shared/directives/reveal.directive';
+import { injectMotion } from '../../../core/motion/motion';
 import { SectionSpyDirective } from '../../../shared/directives/section-spy';
 import { AiBadgeComponent } from '../../../shared/ui/ai-badge.component';
 import { ButtonComponent } from '../../../shared/ui/button.component';
@@ -47,6 +48,7 @@ import { IconComponent } from '../../../shared/ui/icon.component';
 import { SuggestionChipComponent } from '../../../shared/ui/suggestion-chip.component';
 // Shared with the admin inbox, which reads the same labels back.
 import { PROJECT_TYPES } from '../../../core/project-types';
+import { contactMotion } from '../home.motion';
 
 const BUDGET_RANGES: readonly { value: BudgetRange | ''; labelKey: MessageKey }[] = [
   { value: 's', labelKey: 'contact.budget.s' },
@@ -62,7 +64,7 @@ const FIELD_ORDER = ['fullName', 'email', 'projectType', 'message'] as const;
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 /**
- * Section 5 — the contact form, manual **and** voice.
+ * Section 7 — the contact form, manual **and** voice.
  *
  * Two parallel layers stay in sync in exactly one place, this component
  * (CLAUDE.md § Conventions): the typed `form` (the input surface — what's
@@ -90,11 +92,11 @@ type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
     FormFieldComponent,
     InputDirective,
     IconComponent,
-    RevealDirective,
     SectionSpyDirective,
     SuggestionChipComponent,
   ],
   templateUrl: './contact.section.html',
+  styleUrl: './contact.section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactSection {
@@ -186,6 +188,21 @@ export class ContactSection {
 
   constructor() {
     this.wireManualEditDetection();
+
+    // Presentation only: reveals the heading and the two panels. It never touches
+    // the form, the fields or voice state.
+    injectMotion((kit) => contactMotion(kit));
+
+    // `RealtimeVoiceService` is app-wide and has no lifecycle of its own: leaving
+    // the page mid-recording must release the microphone here, or the browser's
+    // recording indicator stays lit after the visitor has gone (CLAUDE.md §
+    // Architecture rules). Only when recording — an idle `stop()` would replay
+    // the last transcript as a turn.
+    inject(DestroyRef).onDestroy(() => {
+      if (this.isRecording()) {
+        this.voice.stop();
+      }
+    });
 
     // A completed turn -> merge -> sync both layers. This is the one place `fields` and `form`
     // are written from voice input, matching the "keep both in sync in one place" rule above.

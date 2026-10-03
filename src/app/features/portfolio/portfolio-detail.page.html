@@ -8,7 +8,16 @@
       class="mt-10 aspect-video overflow-hidden rounded-xl border border-border-subtle bg-surface-card"
     >
       @if (project.image_url) {
-        <img [src]="project.image_url" [alt]="project.name" class="h-full w-full object-cover" />
+        <img
+          [src]="cover().src"
+          [attr.srcset]="cover().srcset"
+          sizes="(min-width: 1024px) 61rem, 100vw"
+          width="1600"
+          height="900"
+          [alt]="project.name"
+          class="h-full w-full object-cover"
+          (error)="resizeFailed.set(true)"
+        />
       } @else {
         <app-work-thumb [tone]="project.tone" class="block h-full w-full" />
       }

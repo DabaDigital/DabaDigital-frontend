@@ -1,0 +1,50 @@
+<form [id]="formId" class="editor-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-field [label]="t('admin.name')" required [error]="errorFor(form.controls.name)">
+    <input appInput formControlName="name" maxlength="160" autocomplete="off" />
+  </app-form-field>
+  <p class="hint">{{ t('admin.englishRequired') }}</p>
+  @for (locale of locales; track locale.id) {
+    <fieldset class="locale-group" [attr.dir]="locale.dir" [attr.lang]="locale.id">
+      <legend>{{ locale.label }}</legend>
+      <app-form-field
+        [label]="t('admin.role')"
+        [required]="locale.id === 'en'"
+        [error]="errorFor(form.controls.role.controls[locale.id])"
+      >
+        <input appInput [formControl]="form.controls.role.controls[locale.id]" maxlength="160" />
+      </app-form-field>
+      <app-form-field
+        [label]="t('admin.memberDescription')"
+        [required]="locale.id === 'en'"
+        [error]="errorFor(form.controls.description.controls[locale.id])"
+      >
+        <textarea
+          appInput
+          class="short-text"
+          [formControl]="form.controls.description.controls[locale.id]"
+          rows="2"
+          maxlength="1000"
+        ></textarea>
+      </app-form-field>
+    </fieldset>
+  }
+  <app-form-field [label]="t('admin.memberUrl')" [error]="errorFor(form.controls.url)">
+    <input appInput formControlName="url" type="url" dir="ltr" placeholder="https://…" />
+  </app-form-field>
+  <app-image-upload
+    variant="portrait"
+    formControlName="photo_url"
+    [label]="t('admin.photo')"
+    [upload]="uploadPhoto"
+    [hint]="t('admin.photoHint', { size: 5 })"
+    (uploadingChange)="setUploading($event)"
+  />
+  <div class="two-columns">
+    <app-form-field [label]="t('admin.position')" [error]="errorFor(form.controls.position)">
+      <app-number-input formControlName="position" [min]="0" [max]="9999" />
+    </app-form-field>
+    <app-form-field [label]="t('admin.status')">
+      <app-dropdown-list formControlName="status" [options]="statusOptions()" />
+    </app-form-field>
+  </div>
+</form>

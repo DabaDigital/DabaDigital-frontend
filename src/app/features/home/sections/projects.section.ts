@@ -1,45 +1,88 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
-import { I18nService } from '../../../core/i18n/i18n.service';
 import { ContentStore } from '../../../core/content.store';
+import { I18nService } from '../../../core/i18n/i18n.service';
 import type { ManagedProject } from '../../../core/models/content.model';
-import { RevealDirective } from '../../../shared/directives/reveal.directive';
-import { SectionSpyDirective } from '../../../shared/directives/section-spy';
 import { ButtonComponent } from '../../../shared/ui/button.component';
-import { IconComponent } from '../../../shared/ui/icon.component';
 import { SearchInputComponent } from '../../../shared/ui/search-input.component';
 import {
   SelectButtonsComponent,
   type SelectButtonOption,
 } from '../../../shared/ui/select-buttons.component';
-import { WorkThumbComponent } from '../components/work-thumb.component';
+import { ProjectCardComponent } from '../components/project-card.component';
+
 /**
- * Section 3 — the work, searchable and filterable by category.
+ * Every project, searchable and filterable by category — the `/portfolio` page.
+ * (The landing page features three in `FeaturedWorkSection` and links here.)
  *
- * The filter is client-side over a fixed list, so it is a signal and a `computed`
- * and nothing else. When `GET /portfolio` lands, `projects` becomes the resource
- * and `visible` stays exactly as it is.
+ * The filter is client-side over the published list, so it is a signal and a
+ * `computed` and nothing else.
  */
 @Component({
   selector: 'app-projects-section',
-  imports: [
-    RouterLink,
-    ButtonComponent,
-    IconComponent,
-    SearchInputComponent,
-    SelectButtonsComponent,
-    WorkThumbComponent,
-    RevealDirective,
-    SectionSpyDirective,
-  ],
+  imports: [ButtonComponent, ProjectCardComponent, SearchInputComponent, SelectButtonsComponent],
   templateUrl: './projects.section.html',
+  styles: `
+    @layer components {
+      :host {
+        display: block;
+        padding-block-end: var(--section-space);
+      }
+
+      .portfolio__tools {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      @media (min-width: 1024px) {
+        .portfolio__tools {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .portfolio__search {
+          inline-size: 100%;
+          max-inline-size: 24rem;
+        }
+      }
+
+      .portfolio__grid {
+        display: grid;
+        gap: 1.25rem;
+        margin: 2.5rem 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      @media (min-width: 640px) {
+        .portfolio__grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .portfolio__grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .portfolio__empty {
+        margin-block-start: 2.5rem;
+        padding: 4rem 1.5rem;
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-lg);
+        text-align: center;
+      }
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsSection {
   private readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
-  protected readonly content = inject(ContentStore);
+  private readonly content = inject(ContentStore);
 
   protected readonly filters = computed<readonly SelectButtonOption[]>(() => [
     { value: 'all', label: this.t('projects.filter.all') },
@@ -73,8 +116,8 @@ export class ProjectsSection {
     this.searchQuery.set('');
   }
 
-  protected categoryLabel(category: string): string {
-    const item = this.content.content().categories.find((item) => item.id === category);
+  private categoryLabel(category: string): string {
+    const item = this.content.content().categories.find((entry) => entry.id === category);
     return item ? this.content.text(item.name) : '';
   }
 

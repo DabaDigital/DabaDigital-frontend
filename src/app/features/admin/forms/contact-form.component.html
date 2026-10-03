@@ -1,0 +1,47 @@
+<form [id]="formId" class="editor-form" [formGroup]="form" (ngSubmit)="submit()">
+  <p class="hint">{{ t('admin.englishRequired') }}</p>
+  @for (locale of locales; track locale.id) {
+    <fieldset class="locale-group" [attr.dir]="locale.dir" [attr.lang]="locale.id">
+      <legend>{{ locale.label }}</legend>
+      <app-form-field
+        [label]="t('admin.label')"
+        [required]="locale.id === 'en'"
+        [error]="errorFor(form.controls.label.controls[locale.id])"
+      >
+        <input appInput [formControl]="form.controls.label.controls[locale.id]" maxlength="160" />
+      </app-form-field>
+      <app-form-field
+        [label]="t('admin.value')"
+        [required]="locale.id === 'en'"
+        [error]="errorFor(form.controls.value.controls[locale.id])"
+      >
+        <input
+          appInput
+          [formControl]="form.controls.value.controls[locale.id]"
+          maxlength="500"
+          (blur)="suggestLink()"
+        />
+      </app-form-field>
+    </fieldset>
+  }
+  <app-form-field
+    [label]="t('admin.url')"
+    [hint]="t('admin.contactLinkHint')"
+    [error]="errorFor(form.controls.href)"
+  >
+    <input appInput formControlName="href" dir="ltr" placeholder="https://… / mailto:… / tel:…" />
+  </app-form-field>
+  <app-icon-field
+    [control]="form.controls.icon_url"
+    [fallback]="glyph()"
+    (uploadingChange)="setUploading($event)"
+  />
+  <div class="two-columns">
+    <app-form-field [label]="t('admin.position')" [error]="errorFor(form.controls.position)">
+      <app-number-input formControlName="position" [min]="0" [max]="9999" />
+    </app-form-field>
+    <app-form-field [label]="t('admin.status')">
+      <app-dropdown-list formControlName="status" [options]="statusOptions()" />
+    </app-form-field>
+  </div>
+</form>

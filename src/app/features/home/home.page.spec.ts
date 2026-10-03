@@ -23,77 +23,101 @@ describe('HomePage', () => {
   });
 
   /**
-   * The accent span inside the h1 splits the heading into three text nodes. The
-   * accessible name has to survive that, because `e2e/navigation.spec.ts` matches
-   * the h1 by its exact name — and so does anyone using a screen reader.
+   * The three beats sit on three lines, and the caret after the last one is an
+   * empty ornament. The accessible name has to survive both, because
+   * `e2e/navigation.spec.ts` matches the h1 by its exact name — and so does
+   * anyone using a screen reader.
    */
-  it('keeps the h1 accessible name intact despite the accent span', async () => {
+  it('keeps the h1 accessible name intact across its three lines', async () => {
     const host = await render();
-    const heading = host.querySelector('h1');
+    const headings = host.querySelectorAll('h1');
 
-    expect(heading?.textContent?.replace(/\s+/g, ' ').trim()).toBe('Build. Launch. Grow.');
+    expect(headings).toHaveLength(1);
+    expect(headings[0].textContent?.replace(/\s+/g, ' ').trim()).toBe('Build. Launch. Grow.');
   });
 
-  it('offers both hero calls to action', async () => {
+  it('offers both banner calls to action', async () => {
     const host = await render();
-    const hrefs = [...host.querySelectorAll('a')].map((a) => a.getAttribute('href'));
+    const hrefs = [...host.querySelectorAll('#banner a')].map((a) => a.getAttribute('href'));
 
     expect(hrefs).toContain('/#contact');
     expect(hrefs).toContain('/#projects');
   });
 
-  it('gives every service teaser a card with an icon and a heading', async () => {
+  it('features the first three projects, each one link named after the project', async () => {
     const host = await render();
-    const cards = [...host.querySelectorAll('#services li')].filter((li) =>
-      li.querySelector(':scope > span > app-icon'),
-    );
+    const links = [...host.querySelectorAll<HTMLAnchorElement>('#projects a.card-link')];
 
-    expect(cards).toHaveLength(6);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/portfolio/nextgen',
+      '/portfolio/le-maitre-du-sandwich',
+      '/portfolio/casablanca-night',
+    ]);
+    // The category, the summary and the arrow stay outside the anchor.
+    expect(links.map((a) => a.textContent?.trim())).toEqual([
+      'NextGen',
+      'Le Maître du Sandwich',
+      'Casablanca Night',
+    ]);
+  });
+
+  it('links to the full portfolio and the full service list', async () => {
+    const host = await render();
+    const hrefs = [...host.querySelectorAll('a')].map((a) => a.getAttribute('href'));
+
+    expect(hrefs).toContain('/portfolio');
+    expect(hrefs).toContain('/services');
+  });
+
+  it('gives each of the four services a card with an icon and a heading', async () => {
+    const host = await render();
+    const cards = [...host.querySelectorAll('#services [data-card]')];
+
+    expect(cards).toHaveLength(4);
     for (const card of cards) {
+      expect(card.querySelector('.service-card__icon app-icon')).toBeTruthy();
       expect(card.querySelector('h3')?.textContent?.trim()).toBeTruthy();
     }
   });
 
-  it('links each featured project to its portfolio slug', async () => {
+  /** The order is the page's argument — see the comment in `home.page.html`. */
+  it('lays the sections out in order, the team between About and the closing call', async () => {
     const host = await render();
-    const hrefs = [...host.querySelectorAll('a.card-link')].map((a) => a.getAttribute('href'));
 
-    expect(hrefs).toEqual([
-      '/portfolio/neural-ledger',
-      '/portfolio/aura-commerce',
-      '/portfolio/atlas-cargo',
-      '/portfolio/souk-connect',
-      '/portfolio/zellige-studio',
-      '/portfolio/riad-atlas',
+    expect([...host.children].map((child) => child.tagName.toLowerCase())).toEqual([
+      'app-banner-section',
+      'app-featured-work-section',
+      'app-services-section',
+      'app-about-section',
+      'app-team-section',
+      'app-cta-section',
+      'app-contact-section',
     ]);
   });
 
-  /**
-   * A project card is one link, not three. Tag chips and the summary must stay
-   * outside the anchor so its accessible name is only the project name.
-   */
-  it('gives each project card a single link named after the project', async () => {
+  /** The phone reads the markup top to bottom, so the markup holds its order. */
+  it('reads About as the statement, then the picture, then the figures', async () => {
     const host = await render();
-    const links = [...host.querySelectorAll<HTMLAnchorElement>('a.card-link')];
+    const parts = [...host.querySelectorAll('#about .about > *')].map((part) => part.className);
 
-    expect(links.map((a) => a.textContent?.trim())).toEqual([
-      'Neural Ledger',
-      'Aura Commerce',
-      'Atlas Cargo',
-      'Souk Connect',
-      'Zellige Studio',
-      'Riad Atlas',
-    ]);
+    expect(parts).toEqual(['about__intro', 'about__frame', 'about__stats']);
+  });
+
+  it('sends the closing call to action to the contact form', async () => {
+    const host = await render();
+    const cta = host.querySelector('app-cta-section');
+
+    expect(cta?.querySelector('h2')?.textContent?.trim()).toBe('Ready to start your next project?');
+    expect(cta?.querySelector('a')?.getAttribute('href')).toBe('/#contact');
   });
 
   /** Decorative artwork must never reach the accessibility tree. */
-  it('hides the decorative artwork and glows from assistive technology', async () => {
+  it('hides the 3D visuals and the drawn artwork from assistive technology', async () => {
     const host = await render();
 
-    for (const glow of host.querySelectorAll('.ambient-glow')) {
-      expect(glow.getAttribute('aria-hidden')).toBe('true');
+    for (const visual of host.querySelectorAll('app-night-visual, app-office-art')) {
+      expect(visual.getAttribute('aria-hidden')).toBe('true');
     }
-
     for (const svg of host.querySelectorAll('svg')) {
       expect(svg.getAttribute('aria-hidden')).toBe('true');
     }

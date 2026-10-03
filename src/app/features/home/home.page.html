@@ -1,12 +1,16 @@
 <!--
-  The five MVP sections. The order is the argument the page makes: what we do →
-  who we are → proof → what you can buy → how to reach us.
+  The order is the argument the page makes: what we are (banner) → proof
+  (featured work) → what you can buy (services) → who we are (about) → the
+  people who build it (team) → the invitation (closing call to action) → the
+  form it leads to (contact).
 
-  Each `<section>` carries the `id` its header link scrolls to and registers
-  itself with `SectionSpyService`, which is what highlights that link.
+  Each `<section>` with a header link carries the `id` that link scrolls to and
+  registers itself with `SectionSpyService`, which is what highlights the link.
 -->
 <app-banner-section />
-<app-about-section />
-<app-projects-section />
+<app-featured-work-section />
 <app-services-section />
+<app-about-section />
+<app-team-section />
+<app-cta-section />
 <app-contact-section />
