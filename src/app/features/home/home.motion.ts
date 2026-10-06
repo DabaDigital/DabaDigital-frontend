@@ -1,4 +1,4 @@
-import { revealOnScroll, type MotionKit } from '../../core/motion/motion';
+import { belowTheFold, revealOnScroll, type MotionKit } from '../../core/motion/motion';
 import type { NightVisualComponent } from './components/night-visual.component';
 
 /**
@@ -13,14 +13,14 @@ import type { NightVisualComponent } from './components/night-visual.component';
  * - Short travel (20–40px), calm easing. Things are revealed, never thrown.
  * - Under `prefers-reduced-motion` only opacity changes remain: no transforms,
  *   no parallax, no scrubbing, no idle animation.
- * - Nothing is hidden by CSS waiting for JavaScript; starting states are set
- *   here, just before the first paint.
+ * - Nothing is hidden by CSS waiting for JavaScript, and nothing already on
+ *   screen is hidden by JavaScript either: the landing pages arrive prerendered,
+ *   painted long before this runs. So the banner's entrance is CSS that plays
+ *   with the first paint (see banner.section.scss), and the reveals below only
+ *   take what is still under the fold (see `revealOnScroll`).
  */
 
 const WIDE = '(min-width: 1024px)';
-
-/** The header fades in with the first banner only — not on every return to `/`. */
-let headerIntroPlayed = false;
 
 export function bannerMotion(kit: MotionKit, visual: NightVisualComponent): () => void {
   const { gsap, ScrollTrigger, root, reduced } = kit;
@@ -38,19 +38,6 @@ export function bannerMotion(kit: MotionKit, visual: NightVisualComponent): () =
   if (reduced) {
     return () => media.revert();
   }
-
-  const timeline = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  const header = root.ownerDocument.querySelector('.site-header__inner');
-  if (header && !headerIntroPlayed) {
-    headerIntroPlayed = true;
-    timeline.from(header, { opacity: 0, y: -16, duration: 1.1 }, 0);
-  }
-  timeline
-    .from(q('[data-hero="eyebrow"]'), { opacity: 0, y: 20, duration: 1 }, 0.1)
-    .from(q('[data-hero-line]'), { yPercent: 105, opacity: 0, duration: 1.3, stagger: 0.12 }, 0.18)
-    .from(q('[data-hero="fade"]'), { opacity: 0, y: 28, duration: 1.1, stagger: 0.1 }, 0.66)
-    .from(q('.nv-object'), { opacity: 0, scale: 0.9, duration: 2, ease: 'power3.out' }, 0.3)
-    .from(q('.nv-arc'), { opacity: 0, duration: 2.4, ease: 'power2.out' }, 0.45);
 
   media.add(WIDE, () => {
     // The scene drifts up more slowly than the copy above it.
@@ -87,7 +74,8 @@ export function aboutMotion(kit: MotionKit): void {
   const { gsap, root, reduced } = kit;
   const q = gsap.utils.selector(root);
   const frame = q('[data-shutter]');
-  if (frame.length && !reduced) {
+  // Like the reveals: never close a shutter the visitor can already see.
+  if (frame.length && !reduced && belowTheFold(frame[0])) {
     gsap.from(frame, {
       clipPath: 'inset(12% 8% 12% 8% round 1rem)',
       scale: 1.04,

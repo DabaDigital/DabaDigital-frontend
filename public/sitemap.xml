@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The pages worth finding: the landing page, once per language (LOCALE_HOME_PATH in
+  src/app/core/i18n/locale.ts). Each entry names all three versions, so a search engine
+  shows each searcher the one in their language. The other pages are `noindex` for now
+  (see app.routes.ts); add a page here when it stops being one.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.dabadigital.ma/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.dabadigital.ma/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.dabadigital.ma/fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.dabadigital.ma/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.dabadigital.ma/" />
+  </url>
+  <url>
+    <loc>https://www.dabadigital.ma/fr</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.dabadigital.ma/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.dabadigital.ma/fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.dabadigital.ma/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.dabadigital.ma/" />
+  </url>
+  <url>
+    <loc>https://www.dabadigital.ma/en</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.dabadigital.ma/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.dabadigital.ma/fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.dabadigital.ma/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.dabadigital.ma/" />
+  </url>
+</urlset>

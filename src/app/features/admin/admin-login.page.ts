@@ -31,7 +31,9 @@ import { AdminStore } from './admin.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLoginPage {
-  protected readonly t = inject(I18nService).t;
+  private readonly i18n = inject(I18nService);
+  protected readonly t = this.i18n.t;
+  protected readonly home = this.i18n.homePath;
   protected readonly supabase = inject(SupabaseService);
   private readonly auth = inject(AdminAuthService);
   private readonly workspace = inject(AdminStore);

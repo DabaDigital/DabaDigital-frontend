@@ -1,6 +1,6 @@
 <div class="login-page">
   <header>
-    <a routerLink="/" aria-label="DabaDigital"><app-logo /></a>
+    <a [routerLink]="home()" aria-label="DabaDigital"><app-logo /></a>
     <div><app-theme-toggle /><app-language-menu /></div>
   </header>
   <div class="login-layout">
@@ -60,7 +60,7 @@
         </button>
       </form>
       <p class="private-note"><app-icon name="shield" />{{ t('admin.adminOnly') }}</p>
-      <a routerLink="/" class="back-link"
+      <a [routerLink]="home()" class="back-link"
         >{{ t('admin.viewSite') }}<app-icon name="arrow-up-right"
       /></a>
     </section>

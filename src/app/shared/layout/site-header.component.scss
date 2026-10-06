@@ -313,6 +313,22 @@
     background-color: var(--surface-glass);
   }
 
+  // The header settles in with the banner's entrance (banner.section.scss explains why
+  // that is CSS). The header is rendered once and kept, so this plays on arrival only —
+  // never again on the way back to a page.
+  @media (prefers-reduced-motion: no-preference) {
+    .site-header__inner {
+      animation: header-in 1.1s var(--ease-out) both;
+    }
+  }
+
+  @keyframes header-in {
+    from {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+  }
+
   @keyframes menu-in {
     from {
       opacity: 0;

@@ -5,6 +5,7 @@ import { filter, map, take } from 'rxjs';
 
 import { ContentStore } from './core/content.store';
 import { I18nService } from './core/i18n/i18n.service';
+import { SeoService } from './core/seo/seo.service';
 import { ThemeService } from './core/theme/theme.service';
 import { SiteFooterComponent } from './shared/layout/site-footer.component';
 import { SiteHeaderComponent } from './shared/layout/site-header.component';
@@ -59,5 +60,8 @@ export class App {
     // painted (see its constructor). Left to the page, a lazy route — a project
     // page, whose content is entirely live — would start it only after its chunk.
     inject(ContentStore);
+    // And this one: it owns the title, the meta tags and the structured data of every page,
+    // and must be listening before the first navigation ends.
+    inject(SeoService);
   }
 }

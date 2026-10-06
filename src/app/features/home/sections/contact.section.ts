@@ -1,8 +1,9 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  PLATFORM_ID,
   computed,
   effect,
   inject,
@@ -166,7 +167,14 @@ export class ContactSection {
   // ── Voice assistant ───────────────────────────────────────────────────
 
   protected readonly voiceEnabled = environment.voice.enabled;
-  protected readonly voiceSupported = RealtimeVoiceService.isSupported();
+  /**
+   * Assumed at build time. The prerendered page is for browsers, where the panel almost
+   * always works; the build itself has no microphone, and its "unavailable" note is not what
+   * a crawler should index or a visitor should see first. A browser that lacks the APIs
+   * shows the note once the page hydrates, as it always did.
+   */
+  protected readonly voiceSupported =
+    !isPlatformBrowser(inject(PLATFORM_ID)) || RealtimeVoiceService.isSupported();
   protected readonly recorderState = this.voice.recorderState;
   protected readonly transcript = this.voice.transcript;
   protected readonly voiceErrorReason = this.voice.errorReason;

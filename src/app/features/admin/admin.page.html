@@ -32,7 +32,7 @@
       }
     </nav>
     <div class="sidebar-bottom">
-      <a routerLink="/" class="site-link"
+      <a [routerLink]="i18n.homePath()" class="site-link"
         ><app-icon name="globe" />{{ t('admin.viewSite') }}<app-icon name="arrow-up-right"
       /></a>
       <div class="account">
@@ -73,7 +73,7 @@
         <app-theme-toggle /><app-language-menu /><a
           appButton="secondary"
           size="sm"
-          routerLink="/"
+          [routerLink]="i18n.homePath()"
           class="preview-link"
           >{{ t('admin.viewSite') }}<app-icon name="arrow-up-right"
         /></a>

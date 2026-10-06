@@ -30,7 +30,7 @@ import { finalCtaMotion } from '../home.motion';
         </p>
         <h2 id="cta-title" class="cta__title" data-reveal>{{ t('cta.title') }}</h2>
         <div data-reveal>
-          <a appButton="inverse" routerLink="/" fragment="contact" class="cta__button">
+          <a appButton="inverse" [routerLink]="home()" fragment="contact" class="cta__button">
             {{ t('nav.cta') }}
             <app-icon name="arrow-right" class="cta-arrow" />
           </a>
@@ -110,6 +110,7 @@ import { finalCtaMotion } from '../home.motion';
 export class CtaSection {
   private readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
+  protected readonly home = this.i18n.homePath;
 
   private readonly visual = viewChild.required(NightVisualComponent);
 

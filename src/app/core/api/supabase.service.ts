@@ -33,9 +33,21 @@ export interface RestResult<T> {
 export class SupabaseService {
   private config: { readonly url: string; readonly publishableKey: string } | null = null;
   private connection: Promise<SupabaseClient> | null = null;
+  private initializing: Promise<void> | null = null;
   readonly configured = signal(false);
 
-  async initialize(): Promise<void> {
+  /**
+   * Once per app, however many callers: the browser's app initializer, and at build time
+   * the prerender initializer too (`app.config.server.ts`), which needs the config before
+   * it can read the live content. During `ng build` the relative URL still works — the
+   * prerenderer answers same-origin requests for files in `public/` from disk.
+   */
+  initialize(): Promise<void> {
+    this.initializing ??= this.readConfig();
+    return this.initializing;
+  }
+
+  private async readConfig(): Promise<void> {
     try {
       const response = await fetch('/supabase-config.json', { cache: 'no-store' });
       if (!response.ok) return;
@@ -57,7 +69,11 @@ export class SupabaseService {
       this.configured.set(true);
       // An invite or recovery link lands with its tokens in the URL, and only the client can
       // consume them (`detectSessionInUrl`), so on such a visit it is created straight away.
-      if (/[#&?](access_token|refresh_token|error_description|code)=/.test(location.href)) {
+      // Never at build time: the prerenderer has no `location`, and no visitor's tokens.
+      if (
+        typeof location !== 'undefined' &&
+        /[#&?](access_token|refresh_token|error_description|code)=/.test(location.href)
+      ) {
         void this.connect().catch(() => undefined);
       }
     } catch {

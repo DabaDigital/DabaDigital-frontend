@@ -1,5 +1,13 @@
-import { DOCUMENT } from '@angular/common';
-import { DestroyRef, Injectable, computed, effect, inject, signal } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+  DestroyRef,
+  Injectable,
+  PLATFORM_ID,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 
 export type ThemeChoice = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';
@@ -64,9 +72,15 @@ export class ThemeService {
   constructor() {
     this.watchSystemPreference();
 
+    // At build time there is no visitor to read a preference from — prerendering would
+    // write `light` into every landing page. The template's `data-theme="dark"` stays, and
+    // the inline bootstrap in `index.html` applies the real preference before the first paint.
+    const browser = isPlatformBrowser(inject(PLATFORM_ID));
     effect(() => {
       const theme = this.resolved();
-      this.document.documentElement.setAttribute('data-theme', theme);
+      if (browser) {
+        this.document.documentElement.setAttribute('data-theme', theme);
+      }
       this.applyBrowserChromeColor(this.nightLocked() ? 'dark' : theme);
     });
   }

@@ -33,7 +33,7 @@
         @for (section of sections(); track section.id) {
           <li>
             <a
-              routerLink="/"
+              [routerLink]="i18n.homePath()"
               [fragment]="section.id"
               class="inline-flex min-h-10 items-center text-sm text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
             >
@@ -77,7 +77,7 @@
         gives it the same motion a script would.
       -->
       <a
-        routerLink="/"
+        [routerLink]="i18n.homePath()"
         fragment="banner"
         class="group inline-flex min-h-10 items-center gap-2 text-xs font-medium text-text-muted transition-colors duration-(--duration-fast) ease-standard hover:text-text-strong"
       >

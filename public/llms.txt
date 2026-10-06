@@ -1,0 +1,32 @@
+# Daba Digital
+
+> Daba Digital (also written DabaDigital; in Arabic, دبا ديجيتال) is a digital agency based in Casablanca, Morocco. It designs, builds, hosts and maintains websites, web applications, online stores, mobile apps and AI integrations for businesses. Its website is published in Arabic, French and English.
+
+- Website: https://www.dabadigital.ma
+- Email: contact@dabadigital.ma
+- Location: Casablanca, Morocco
+- Instagram: https://www.instagram.com/dabadigital_/
+
+## Services
+
+- Websites and web apps: fast, responsive interfaces built with Angular and Next.js, designed mobile-first.
+- E-commerce: online stores, local payment methods, and a checkout tuned for conversion.
+- AI integration: conversational assistants, data extraction, and automation that genuinely helps the business.
+- Mobile apps: iOS and Android applications from a single codebase, with native performance.
+- UI/UX design: design systems, clickable prototypes, and accessibility audits.
+- Hosting and maintenance: deployment, monitoring and backups, with the team itself on call.
+
+## Team
+
+- Keltoum Malouki, co-founder and full-stack developer: https://keltoummalouki.com
+- Jawad Boulmal, co-founder and full-stack developer: https://jawadboulmal.com
+
+## Pages
+
+- [Daba Digital, in English](https://www.dabadigital.ma/en): services, selected projects, the team, and the project request form.
+- [Daba Digital, en français](https://www.dabadigital.ma/fr): agence web et digitale à Casablanca — services, réalisations, équipe et formulaire de demande de projet.
+- [دبا ديجيتال، بالعربية](https://www.dabadigital.ma/): وكالة رقمية في الدار البيضاء — الخدمات والأعمال والفريق ونموذج طلب مشروع.
+
+## Starting a project
+
+Describe the project in the contact form at the bottom of any of the pages above, or write to contact@dabadigital.ma. The team replies within two working days.

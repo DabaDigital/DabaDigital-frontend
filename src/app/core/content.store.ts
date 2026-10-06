@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { Injectable, afterNextRender, computed, inject, signal } from '@angular/core';
+import {
+  Injectable,
+  TransferState,
+  afterNextRender,
+  computed,
+  inject,
+  makeStateKey,
+  signal,
+} from '@angular/core';
 import { PROJECTS, PROJECT_FILTERS, SERVICES, TEAM } from '../features/home/home.content';
 import { ContentApi } from './api/content.api';
 import { SupabaseService } from './api/supabase.service';
@@ -118,14 +126,24 @@ export function seedContent(): SiteContent {
   };
 }
 
+/** The content a prerendered page was built from, carried in the page to the browser. */
+const PRERENDERED_CONTENT = makeStateKey<SiteContent>('dabadigital.content');
+
 @Injectable({ providedIn: 'root' })
 export class ContentStore {
   private readonly api = inject(ContentApi);
   private readonly supabase = inject(SupabaseService);
   private readonly i18n = inject(I18nService);
-  readonly content = signal<SiteContent>(seedContent());
+  private readonly transferState = inject(TransferState);
+  /**
+   * On a prerendered page, the live content the build rendered it with. Hydration has to
+   * start from exactly that: from the seed instead, the projects would not match the cards
+   * already in the page.
+   */
+  private readonly prerendered = this.transferState.get(PRERENDERED_CONTENT, null);
+  readonly content = signal<SiteContent>(this.prerendered ?? seedContent());
   /** False until the first Supabase read settles, so a page can tell "loading" from "not found". */
-  readonly loaded = signal(!this.supabase.configured());
+  readonly loaded = signal(this.prerendered !== null || !this.supabase.configured());
   readonly projects = computed(() =>
     this.content().projects.filter((p) => p.status === 'published'),
   );
@@ -160,5 +178,25 @@ export class ContentStore {
   async refresh(): Promise<void> {
     if (!this.supabase.configured()) return;
     this.content.set(await this.api.load());
+  }
+
+  /**
+   * Build time: reads the live content before the page is prerendered, and stores it in the
+   * page for the browser to hydrate from (see `app.config.server.ts`). The browser still
+   * refreshes after its first paint, so an edit made in the admin since the build shows up.
+   *
+   * Throws when Supabase cannot be read, which fails `ng build`. A prerendered page built
+   * from the seed — the brief's placeholder projects, a placeholder phone number — would be
+   * what search engines and AI crawlers index; the previous deployment stays live instead.
+   */
+  async prerender(): Promise<void> {
+    if (!this.supabase.configured()) {
+      throw new Error(
+        'Prerendering needs the live content, but public/supabase-config.json is missing or invalid.',
+      );
+    }
+    await this.refresh();
+    this.loaded.set(true);
+    this.transferState.set(PRERENDERED_CONTENT, this.content());
   }
 }

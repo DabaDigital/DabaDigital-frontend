@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { I18nService } from '../../core/i18n/i18n.service';
+import { LOCALE_STORAGE_KEY } from '../../core/i18n/locale';
 import { HomePage } from './home.page';
 
 async function render(): Promise<HTMLElement> {
@@ -40,8 +41,44 @@ describe('HomePage', () => {
     const host = await render();
     const hrefs = [...host.querySelectorAll('#banner a')].map((a) => a.getAttribute('href'));
 
-    expect(hrefs).toContain('/#contact');
-    expect(hrefs).toContain('/#projects');
+    expect(hrefs).toContain('/en#contact');
+    expect(hrefs).toContain('/en#projects');
+  });
+
+  /**
+   * Each language has its own landing URL (`/`, `/fr`, `/en`). A link to `/` from the
+   * English page would drop the visitor on the Arabic one.
+   */
+  it('points its links at the landing page in the language on screen', async () => {
+    const i18n = TestBed.inject(I18nService);
+    const fixture = TestBed.createComponent(HomePage);
+    const host = fixture.nativeElement as HTMLElement;
+    const contactLink = (): string | null | undefined =>
+      host.querySelector('#banner a.hero__cta')?.getAttribute('href');
+
+    i18n.setLocale('fr');
+    fixture.detectChanges();
+    expect(contactLink()).toBe('/fr#contact');
+
+    i18n.setLocale('ar');
+    fixture.detectChanges();
+    expect(contactLink()).toBe('/#contact');
+  });
+
+  /** Arriving on `/fr` follows the URL; it is not a choice, so nothing is remembered. */
+  it('takes its language from the route, without remembering it', async () => {
+    const i18n = TestBed.inject(I18nService);
+    localStorage.removeItem(LOCALE_STORAGE_KEY);
+    const fixture = TestBed.createComponent(HomePage);
+
+    fixture.componentRef.setInput('locale', 'fr');
+    fixture.detectChanges();
+
+    expect(i18n.locale()).toBe('fr');
+    expect(
+      fixture.nativeElement.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim(),
+    ).toBe('Concevoir. Lancer. Grandir.');
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBeNull();
   });
 
   it('features the first three projects, each one link named after the project', async () => {
@@ -108,7 +145,7 @@ describe('HomePage', () => {
     const cta = host.querySelector('app-cta-section');
 
     expect(cta?.querySelector('h2')?.textContent?.trim()).toBe('Ready to start your next project?');
-    expect(cta?.querySelector('a')?.getAttribute('href')).toBe('/#contact');
+    expect(cta?.querySelector('a')?.getAttribute('href')).toBe('/en#contact');
   });
 
   /** Decorative artwork must never reach the accessibility tree. */

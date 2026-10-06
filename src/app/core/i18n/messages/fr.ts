@@ -13,9 +13,10 @@ export const FR: Catalog = {
   ...ADMIN_FR,
   ...CONTROLS_FR,
   // ── Document ──────────────────────────────────────────────────────────────
-  'meta.title': 'Daba Digital — Agence digitale technique',
+  'meta.title': 'Daba Digital — Agence web et digitale à Casablanca, Maroc',
   'meta.description':
-    'Daba Digital conçoit des sites et des produits digitaux performants, des applications mobiles et des expériences digitales intelligentes.',
+    'Agence digitale à Casablanca : création de sites et d’applications web, e-commerce, applications mobiles, design UI/UX et intégration d’IA pour les entreprises au Maroc.',
+  'meta.ogImageAlt': 'Le logo Daba Digital sur fond bleu',
 
   // ── Header / navigation ───────────────────────────────────────────────────
   'nav.home': 'Accueil',

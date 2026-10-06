@@ -75,7 +75,7 @@ test('contact controls validate, show a busy button and submit only once', async
   });
 
   try {
-    await page.goto('/');
+    await page.goto('/en');
     const submit = page.locator('#contact button[type="submit"]');
     await expect(submit).toBeEnabled();
     await submit.click();
@@ -148,7 +148,7 @@ test('a failed request restores the button and preserves the fields for retry', 
     attempts += 1;
     await respond(route, attempts === 1 ? 503 : 201);
   });
-  await page.goto('/');
+  await page.goto('/en');
   await fillContact(page);
   await page.getByRole('button', { name: 'Send request', exact: true }).click();
 
@@ -169,7 +169,7 @@ test('a failed request restores the button and preserves the fields for retry', 
 test('project search combines with the category and offers clear and empty-state recovery', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/en');
   const projects = page.locator('#projects');
   const cards = projects.locator('a.card-link');
   const search = page.getByRole('searchbox', { name: 'Search projects' });
@@ -204,7 +204,7 @@ test('project search combines with the category and offers clear and empty-state
 test('all shared controls follow the selected theme and retain it after reload', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/en');
   const root = page.locator('html');
   await expect(root).toHaveAttribute('data-theme', 'light');
 
@@ -243,7 +243,7 @@ test('the controls stay keyboard accessible on a narrow Arabic page without over
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 800 });
-  await page.goto('/');
+  await page.goto('/en');
   await page.getByRole('button', { name: 'Current language: English' }).click();
   await page.getByRole('menuitemradio', { name: /العربية/ }).click();
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');

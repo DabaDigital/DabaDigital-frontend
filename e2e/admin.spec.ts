@@ -67,7 +67,7 @@ test('projects can be created, filtered, edited, published, and deleted', async 
   );
   await editor.getByRole('button', { name: 'Save changes' }).click();
   await expect(editor).not.toBeVisible();
-  await page.goto('/');
+  await page.goto('/en');
   await expect(page.getByRole('link', { name: 'Atlas Platform', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Atlas Platform', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Atlas Platform', exact: true })).toBeVisible();
@@ -167,7 +167,7 @@ test('all content editors save and contact settings update the website', async (
     await expect(dialog).not.toBeVisible();
     await expect(page.getByRole('status')).toContainText('Changes saved');
   }
-  await page.goto('/');
+  await page.goto('/en');
   await expect(
     page.locator('#contact').getByRole('link', { name: 'team@dabadigital.ma' }),
   ).toBeVisible();
@@ -258,7 +258,7 @@ test('team members are managed with a role, a description, a portfolio and a pho
 
 test('website contact submissions arrive in the inbox and can be triaged', async ({ page }) => {
   await mockSupabase(page);
-  await page.goto('/');
+  await page.goto('/en');
   await page.locator('#contact-fullName').fill('Sara Alaoui');
   await page.locator('#contact-email').fill('sara@example.com');
   await page.locator('#contact-company').fill('Atlas Studio');

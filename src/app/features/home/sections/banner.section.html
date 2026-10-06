@@ -1,7 +1,9 @@
 <!--
   The opening. The night scene fills the section behind the copy on a wide
-  screen; the stacked phone and tablet layout leaves it out. `data-hero` marks
-  what the entrance timeline animates — none of it changes the static design.
+  screen; the stacked phone and tablet layout leaves it out. `data-hero` and
+  `data-hero-line` mark what the entrance animates (in banner.section.scss) and
+  what follows the scroll (in `bannerMotion`) — none of it changes the static
+  design.
 -->
 <section id="banner" appSectionSpy class="hero">
   <div class="grain" aria-hidden="true"></div>
@@ -36,14 +38,14 @@
       <p class="hero__lede" data-hero="fade">{{ t('banner.lede') }}</p>
 
       <div class="hero__actions" data-hero="fade">
-        <a appButton="inverse" routerLink="/" fragment="contact" class="hero__cta">
+        <a appButton="inverse" [routerLink]="home()" fragment="contact" class="hero__cta">
           <span class="cta-orb" aria-hidden="true">
             <app-icon name="arrow-right" class="cta-arrow" />
           </span>
           {{ t('banner.ctaPrimary') }}
         </a>
 
-        <a routerLink="/" fragment="projects" class="hero__secondary group">
+        <a [routerLink]="home()" fragment="projects" class="hero__secondary group">
           <span class="hero__secondary-orb" aria-hidden="true">
             <app-icon name="arrow-down" class="size-4" />
           </span>

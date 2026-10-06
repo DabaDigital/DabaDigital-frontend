@@ -12,9 +12,11 @@ import { bannerMotion } from '../home.motion';
 /**
  * Section 1 — the banner: three beats of type, one object in the dark.
  *
- * Everything paints with the first frame. The entrance timeline (see
- * `bannerMotion`) sets its starting states before that frame and plays from
- * there; under reduced motion it never runs, and the page is simply there.
+ * Everything paints with the first frame — on a landing page, from the
+ * prerendered HTML, before any script has loaded. The entrance is CSS for that
+ * reason (see banner.section.scss), and plays from that frame; under reduced
+ * motion there is none, and the page is simply there. `bannerMotion` only adds
+ * what follows the scroll.
  */
 @Component({
   selector: 'app-banner-section',
@@ -26,6 +28,7 @@ import { bannerMotion } from '../home.motion';
 export class BannerSection {
   private readonly i18n = inject(I18nService);
   protected readonly t = this.i18n.t;
+  protected readonly home = this.i18n.homePath;
 
   private readonly visual = viewChild.required(NightVisualComponent);
 

@@ -6,11 +6,15 @@
  *
  * ── Why this exists next to `@angular/localize` ──────────────────────────────
  * `$localize` resolves at build time: one bundle per locale, and switching means
- * a full navigation to `/ar/`, `/fr/` or `/en/`. The landing page needs a
- * selector that switches in place, which build-time i18n cannot do. So the
- * landing page reads this runtime catalogue instead, and the rule that matters —
- * no user-facing string inside a component — is kept by putting every string in
- * `./messages/`. The `$localize` calls elsewhere in the app still work unchanged.
+ * a full page load of another bundle. The landing page needs a selector that
+ * switches in place, which build-time i18n cannot do. So the landing page reads
+ * this runtime catalogue instead, and the rule that matters — no user-facing
+ * string inside a component — is kept by putting every string in `./messages/`.
+ * The `$localize` calls elsewhere in the app still work unchanged.
+ *
+ * The landing page still has one URL per language (`LOCALE_HOME_PATH`), because
+ * search engines index URLs, not languages: switching is a router navigation
+ * between them, in place, with no reload.
  */
 export const LOCALE_LIST = ['ar', 'fr', 'en'] as const;
 
@@ -35,7 +39,31 @@ export const LOCALES: Readonly<Record<Locale, LocaleMeta>> = {
   en: { code: 'en', nativeName: 'English', short: 'EN', dir: 'ltr', tag: 'en' },
 };
 
-/** Shared with the inline bootstrap in `index.html` — change both together. */
+/**
+ * Where each locale's landing page lives — one URL per language, so a search engine can
+ * index all three and an AI crawler that never runs JavaScript still reads the right one.
+ * Arabic, the primary locale, owns the root.
+ *
+ * Shared with the inline bootstrap in `index.html`, the redirects in `vercel.json`, the
+ * prerendered routes in `app.routes.server.ts` and `public/sitemap.xml` — change them together.
+ */
+export const LOCALE_HOME_PATH: Readonly<Record<Locale, string>> = {
+  ar: '/',
+  fr: '/fr',
+  en: '/en',
+};
+
+/** The locale a landing-page path is written in, or `null` for any other page. */
+export function localeOfPath(pathname: string): Locale | null {
+  const path = pathname.replace(/\/+$/, '') || '/';
+  return LOCALE_LIST.find((code) => LOCALE_HOME_PATH[code] === path) ?? null;
+}
+
+/**
+ * Shared with the inline bootstrap in `index.html` — change both together. The same name is
+ * the cookie `vercel.json` reads to send a returning visitor from `/` to the language they
+ * chose; storage alone never reaches the server.
+ */
 export const LOCALE_STORAGE_KEY = 'dabadigital.locale';
 
 /** Narrows an untrusted value (storage, `navigator.language`) to a supported locale. */

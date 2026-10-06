@@ -26,6 +26,9 @@ export type MotionBuilder = (kit: MotionKit) => void | (() => void);
  * - The builder runs in `afterNextRender`: after Angular has written the DOM,
  *   before the browser paints it. Starting states (`gsap.from`, `gsap.set`)
  *   are therefore in place for the first frame — no flash of the final layout.
+ *   Except on a prerendered page, which the browser painted from its HTML long
+ *   before this runs: there, only what is still under the fold may be given a
+ *   starting state (`belowTheFold`). It never runs on the server.
  * - It runs outside Angular's zone: GSAP ticks on every animation frame, and
  *   inside the zone each tick would schedule change detection for the app.
  * - Everything it creates lives in one `gsap.context` scoped to the host, so
@@ -78,16 +81,31 @@ export function injectMotion(builder: MotionBuilder): void {
 }
 
 /**
+ * True when the element starts below the bottom of the viewport: not yet seen.
+ *
+ * Motion only ever hides what is still under the fold. A prerendered page has
+ * been on screen, fully painted, for a second or more before its scripts run;
+ * a page restored by Back lands mid-scroll. Hiding what is already in view, to
+ * animate it in again, would flash content the visitor is reading.
+ */
+export function belowTheFold(element: Element): boolean {
+  const view = element.ownerDocument.defaultView;
+  return !!view && element.getBoundingClientRect().top >= view.innerHeight;
+}
+
+/**
  * Elements rise a short distance into place as they enter the viewport, in
  * batches, so a row of cards arrives as a sequence rather than a block.
  * Under reduced motion they only fade. Focus inside an element reveals it at
- * once, so nothing a keyboard reaches is ever invisible.
+ * once, so nothing a keyboard reaches is ever invisible. What is already on
+ * screen, or above it, is left as it is (see `belowTheFold`).
  */
 export function revealOnScroll(
   kit: MotionKit,
-  targets: readonly Element[],
+  allTargets: readonly Element[],
   options: { y?: number; stagger?: number; start?: string } = {},
 ): void {
+  const targets = allTargets.filter(belowTheFold);
   if (targets.length === 0) {
     return;
   }

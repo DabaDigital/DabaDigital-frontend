@@ -30,16 +30,17 @@ instead of typing.
 4. [Getting started](#getting-started)
 5. [Configuration](#configuration)
 6. [Routes](#routes)
-7. [Project structure](#project-structure)
-8. [The voice assistant](#the-voice-assistant)
-9. [Form state and field sources](#form-state-and-field-sources)
-10. [Merge rules](#merge-rules)
-11. [Error and empty states](#error-and-empty-states)
-12. [Design guidelines](#design-guidelines)
-13. [Accessibility](#accessibility)
-14. [Testing](#testing)
-15. [Build & deploy](#build--deploy)
-16. [Roadmap](#roadmap)
+7. [Search engines and AI assistants](#search-engines-and-ai-assistants)
+8. [Project structure](#project-structure)
+9. [The voice assistant](#the-voice-assistant)
+10. [Form state and field sources](#form-state-and-field-sources)
+11. [Merge rules](#merge-rules)
+12. [Error and empty states](#error-and-empty-states)
+13. [Design guidelines](#design-guidelines)
+14. [Accessibility](#accessibility)
+15. [Testing](#testing)
+16. [Build & deploy](#build--deploy)
+17. [Roadmap](#roadmap)
 
 ---
 
@@ -169,17 +170,64 @@ the tested balance between "feels live" and "not one request per word".
 
 | Path | Page | Notes |
 | --- | --- | --- |
-| `/` | Home | hero (*Build. Launch. Grow.*), services teaser, featured work, CTA → `/start` |
-| `/about` | About | vision, mission, approach, technologies |
-| `/services` | Services | catalogue from `GET /services` |
-| `/portfolio` | Portfolio | grid, filterable by category |
-| `/portfolio/:slug` | Project detail | screenshot, features, stack, demo link |
-| `/start` | Start a Project | the form + voice assistant |
-| `/start/confirmation` | Confirmation | reference number, next steps |
-| `**` | Not found | |
+| `/` | Home, in Arabic | the primary locale; prerendered; indexed |
+| `/fr` | Home, in French | prerendered; indexed |
+| `/en` | Home, in English | prerendered; indexed |
+| `/about` | About | scaffold; `noindex` |
+| `/services` | Services | the services section on its own; `noindex` |
+| `/portfolio` | Portfolio | grid, filterable by category; `noindex` |
+| `/portfolio/:slug` | Project detail | name, summary, cover, link to the live site; `noindex` |
+| `/start` | Start a Project | scaffold; `noindex` |
+| `/start/confirmation` | Confirmation | scaffold; `noindex` |
+| `/admin/**` | Admin | Supabase sign-in; `noindex`, and disallowed in `robots.txt` |
+| `**` | Not found | `noindex` |
+
+The landing page is one component at three URLs, one per language (`LOCALE_HOME_PATH` in
+`core/i18n/locale.ts`): the language menu navigates between them in place, without a reload, and
+`LandingReuseStrategy` keeps the page — form in progress included — alive across the switch. Every
+other page has a single URL and follows the visitor's chosen language. See
+[Search engines and AI assistants](#search-engines-and-ai-assistants).
 
 Content pages are prefetched with a resolver and cached in a signal store, so navigating back to
 `/services` does not refetch.
+
+---
+
+## Search engines and AI assistants
+
+Most AI crawlers (GPTBot, ClaudeBot, PerplexityBot…) and every link-preview scraper read the HTML
+and never run JavaScript, and Google indexes a URL, not a language. So:
+
+- **The three landing pages are prerendered** by `ng build` (`outputMode: "static"`,
+  `app.routes.server.ts`), each in its own language, with the live content from Supabase. Angular
+  then hydrates that HTML instead of drawing the page again. The build reads Supabase in an app
+  initializer (`app.config.server.ts`) and **fails if it cannot** — a page built from the seed
+  would publish its placeholder projects; the previous deployment stays live instead. Admin edits
+  reach the prerendered HTML on the next deploy (the browser still refreshes the content after
+  its first paint, so visitors see them at once).
+- **`core/seo/seo.service.ts` owns `<head>`**: title, description, `robots`, canonical, `hreflang`
+  alternates, Open Graph and X cards, and the JSON-LD graph built by `structured-data.ts` (the
+  studio as a `ProfessionalService`, its website, the page, the portfolio). Nothing else writes
+  those tags. Titles and descriptions are `meta.*` in the catalogues.
+- **Static files in `public/`**: `robots.txt` (everything public is crawlable, AI assistants
+  included; `/admin` is not), `sitemap.xml` (the three landing pages and their alternates),
+  `llms.txt` (a plain summary for language models), `og-image.jpg` (the 1200×630 preview).
+  `robots.txt`, `sitemap.xml` and `llms.txt` repeat the origin, the paths and the service list by
+  hand — update them with `core/seo/site.ts`, `LOCALE_HOME_PATH` and the services.
+- **`vercel.json`** sends `/` to `/fr` or `/en` — by the `dabadigital.locale` cookie the language
+  menu sets, else by `Accept-Language` — so a visitor lands in their language with no flash, while
+  a crawler (no cookie, no `Accept-Language`) reads the Arabic page. It serves `index.csr.html` for
+  every other page path, and a real 404 for a missing file.
+
+**Making another page findable**: give it real content of its own, drop `data: NOINDEX` from its
+route, add it to `app.routes.server.ts` as `RenderMode.Prerender` (its code must then run on the
+server — browser APIs only in `afterNextRender` or behind `isPlatformBrowser`) and to
+`public/sitemap.xml`.
+
+**Checking it**: `npm run build`, then look at `dist/dabadigital-frontend/browser/{index,fr/index,en/index}.html`
+— the content, the tags and `<script id="structured-data">` are all in the file. On the live site:
+[Rich Results Test](https://search.google.com/test/rich-results),
+[Schema validator](https://validator.schema.org/), and Search Console's URL inspection.
 
 ---
 
@@ -435,13 +483,19 @@ npm run e2e       # Playwright
 ## Build & deploy
 
 ```bash
-npm run build            # dist/dabadigital-frontend/browser
+npm run build            # dist/dabadigital-frontend/browser — needs network: it reads Supabase
 ```
 
-Deploy as a static bundle behind any CDN or static host, with:
+The output is static — no server at runtime: `index.html`, `fr/index.html` and `en/index.html`
+(the prerendered landing pages), `index.csr.html` (the empty shell every other page boots from),
+and `public/`. Vercel deploys it as configured in `vercel.json`. Elsewhere, deploy it behind any
+CDN or static host with:
 
 - **HTTPS mandatory** — the microphone is unavailable otherwise.
-- SPA fallback rewriting unknown paths to `index.html`.
+- `/fr` and `/en` served from `fr/index.html` and `en/index.html`, and every other extension-less
+  path rewritten to **`index.csr.html`** — not `index.html`, which is the prerendered Arabic landing
+  page and would be hydrated as the wrong page. Missing files should answer 404.
+- The `/` redirects in `vercel.json`, if visitors should land in their own language.
 - `environment.production.ts` pointing `apiBaseUrl` at the deployed API, whose `FRONTEND_ORIGIN` must
   list this origin for CORS.
 - `Permissions-Policy: microphone=(self)` so the mic works while staying scoped to this origin.

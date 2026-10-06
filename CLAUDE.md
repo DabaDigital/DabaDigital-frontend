@@ -60,6 +60,13 @@ Two notes on the layout, which differ slightly from `README.md` § Project struc
 lives at `src/styles/` (a sibling of `src/app/`, per Angular convention), and Tailwind has its own entry
 there — `tailwind.css` maps the tokens onto Tailwind's namespaces with `@theme inline`.
 
+**The landing page is prerendered, once per language.** `/` (Arabic), `/fr` and `/en` are built into
+static HTML by `ng build` (`outputMode: "static"`, `app.routes.server.ts`) with the live Supabase
+content, and hydrated in the browser; every other page renders in the browser from `index.csr.html`.
+`ng serve`, `ng test` and the e2e run stay client-only (`"server": false` in the development
+configuration), so **only `ng build` exercises the server path** — run it before calling a landing-page
+change done. README § Search engines and AI assistants has the whole picture.
+
 **Global CSS must live in a cascade layer.** Tailwind v4 emits utilities into `@layer utilities`, and an
 *unlayered* rule outranks every layered one whatever its specificity — an unlayered `a { color: inherit }`
 silently defeats `class="text-primary"` on every link in the app. Base rules go in `@layer base`, shared
@@ -70,7 +77,7 @@ classes in `@layer components`.
 ```bash
 npm install
 npm start           # ng serve → http://localhost:4200 (backend must be on :3000)
-npm run build       # production build → dist/
+npm run build       # production build → dist/ — prerenders /, /fr, /en from live Supabase (needs network)
 npm test            # unit tests (Vitest)
 npm run e2e         # Playwright — needs `npx playwright install chromium` once
 npm run lint        # ESLint
@@ -150,6 +157,22 @@ same explicit way. A voice-driven update goes the other direction, `patchValue(.
 })`, specifically so it never fires those same `valueChanges` listeners and gets mistaken for a manual
 edit.
 
+**Everything the landing page runs also runs at build time.** The prerenderer has no `window`, no
+storage, no `matchMedia`, no microphone. Browser APIs belong in `afterNextRender` or behind
+`isPlatformBrowser`, and the first render must come out the same on both sides, or hydration adopts
+the wrong DOM: the language comes from the URL (`I18nService.resolveInitialLocale`), the content from
+`TransferState` (`ContentStore`), and a capability the server cannot detect is assumed present there
+(`voiceSupported` in `ContactSection`). Nothing on screen may be hidden by script to animate it in —
+the page has been painted for seconds before scripts run: entrances above the fold are CSS
+(`banner.section.scss`), and GSAP reveals only take what is still below the fold (`belowTheFold`).
+
+**`SeoService` owns `<head>`.** Title, description, `robots`, canonical, `hreflang`, the Open Graph and
+X cards and the JSON-LD are written there and nowhere else; a page keeps itself out of search results
+with `data: NOINDEX` on its route. Structured data says only what the page shows (`structured-data.ts`
+is built from the catalogues and the live content), and never a placeholder: the build fails rather
+than prerender the seed. Links home use `I18nService.homePath()`, never `routerLink="/"` — that is the
+Arabic page.
+
 ## Conventions
 
 - **Standalone components only**; no NgModules. `ChangeDetectionStrategy.OnPush` everywhere.
@@ -196,6 +219,7 @@ READMEs in the same change. Flag it explicitly rather than shipping one half.
 
 ## Definition of done
 
-`npm test` and `npm run lint` green, the manual form still submits with `voice.enabled: false`, the
-microphone indicator goes dark when recording stops, no new user-facing string outside the locale files,
-and the MVP scenario test passing.
+`npm test` and `npm run lint` green, `npm run build` green (it prerenders the landing pages, so it is
+the only check that the server path still works), the manual form still submits with
+`voice.enabled: false`, the microphone indicator goes dark when recording stops, no new user-facing
+string outside the locale files, and the MVP scenario test passing.

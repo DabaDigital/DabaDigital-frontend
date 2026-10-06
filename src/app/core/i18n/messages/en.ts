@@ -7,9 +7,10 @@ export const EN: Catalog = {
   ...ADMIN_EN,
   ...CONTROLS_EN,
   // ── Document ──────────────────────────────────────────────────────────────
-  'meta.title': 'Daba Digital — Technical Digital Agency',
+  'meta.title': 'Daba Digital — Web, Mobile & AI Agency in Casablanca',
   'meta.description':
-    'Daba Digital builds high-performance websites, digital products, mobile applications and intelligent digital experiences.',
+    'Daba Digital is a digital agency in Casablanca, Morocco, building websites, web apps, online stores, mobile apps and AI integrations for ambitious businesses.',
+  'meta.ogImageAlt': 'The Daba Digital logo on a blue background',
 
   // ── Header / navigation ───────────────────────────────────────────────────
   'nav.home': 'Home',

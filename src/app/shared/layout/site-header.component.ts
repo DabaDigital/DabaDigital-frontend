@@ -13,6 +13,8 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { I18nService } from '../../core/i18n/i18n.service';
+import type { Locale } from '../../core/i18n/locale';
+import { LocaleSwitchService } from '../../core/i18n/locale-switch.service';
 import type { MessageKey } from '../../core/i18n/messages/ar';
 import { SectionSpyService } from '../directives/section-spy';
 import { ButtonComponent } from '../ui/button.component';
@@ -63,8 +65,11 @@ const SECTION_IDS: readonly { id: string; key: MessageKey }[] = [
 export class SiteHeaderComponent {
   protected readonly i18n = inject(I18nService);
   private readonly spy = inject(SectionSpyService);
+  private readonly localeSwitch = inject(LocaleSwitchService);
 
   protected readonly t = this.i18n.t;
+  /** The landing page in the language on screen: `/`, `/fr` or `/en`. */
+  protected readonly home = this.i18n.homePath;
 
   protected readonly menuOpen = signal(false);
   /** True once the page has scrolled past its first few pixels. */
@@ -109,6 +114,10 @@ export class SiteHeaderComponent {
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  protected switchLocale(locale: Locale): void {
+    this.localeSwitch.switchTo(locale, this.activeSection());
   }
 
   /** `01`, `02`… for the menu, in the locale's own digits. */

@@ -8,7 +8,7 @@
       the component and the link carries the name.
     -->
     <a
-      routerLink="/"
+      [routerLink]="home()"
       fragment="banner"
       class="site-header__brand"
       [attr.aria-label]="t('nav.homeLabel')"
@@ -25,7 +25,7 @@
               the current page, and the page itself has not changed.
             -->
             <a
-              routerLink="/"
+              [routerLink]="home()"
               [fragment]="link.id"
               class="site-nav__link"
               [attr.aria-current]="activeSection() === link.id ? 'location' : null"
@@ -40,7 +40,13 @@
     <div class="site-header__actions">
       <app-language-menu appearance="ghost" class="site-header__lang" />
 
-      <a appButton="outline" size="sm" routerLink="/" fragment="contact" class="site-header__cta">
+      <a
+        appButton="outline"
+        size="sm"
+        [routerLink]="home()"
+        fragment="contact"
+        class="site-header__cta"
+      >
         {{ t('nav.cta') }}
         <app-icon name="arrow-right" class="cta-arrow" />
       </a>
@@ -85,7 +91,7 @@
         @for (link of links(); track link.id; let i = $index) {
           <li [style.--i]="i">
             <a
-              routerLink="/"
+              [routerLink]="home()"
               [fragment]="link.id"
               (click)="closeMenu()"
               class="site-menu__link"
@@ -107,14 +113,14 @@
             class="site-menu__lang"
             [attr.lang]="locale.code"
             [attr.aria-pressed]="locale.code === i18n.locale()"
-            (click)="i18n.setLocale(locale.code)"
+            (click)="switchLocale(locale.code)"
           >
             {{ locale.nativeName }}
           </button>
         }
       </div>
 
-      <a appButton="inverse" routerLink="/" fragment="contact" (click)="closeMenu()">
+      <a appButton="inverse" [routerLink]="home()" fragment="contact" (click)="closeMenu()">
         {{ t('nav.cta') }}
         <app-icon name="arrow-right" class="cta-arrow" />
       </a>

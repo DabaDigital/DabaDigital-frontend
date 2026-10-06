@@ -13,6 +13,8 @@ import {
 
 import { I18nService } from '../../core/i18n/i18n.service';
 import type { Locale, LocaleMeta } from '../../core/i18n/locale';
+import { LocaleSwitchService } from '../../core/i18n/locale-switch.service';
+import { SectionSpyService } from '../directives/section-spy';
 import { ButtonComponent, type ButtonVariant } from './button.component';
 import { IconComponent } from './icon.component';
 
@@ -105,6 +107,8 @@ export class LanguageMenuComponent {
   readonly appearance = input<ButtonVariant>('secondary');
 
   protected readonly i18n = inject(I18nService);
+  private readonly localeSwitch = inject(LocaleSwitchService);
+  private readonly spy = inject(SectionSpyService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   private readonly triggerRef = viewChild.required<ButtonComponent, ElementRef<HTMLButtonElement>>(
@@ -148,7 +152,7 @@ export class LanguageMenuComponent {
   }
 
   protected select(locale: Locale): void {
-    this.i18n.setLocale(locale);
+    this.localeSwitch.switchTo(locale, this.spy.active());
     this.close(true);
   }
 

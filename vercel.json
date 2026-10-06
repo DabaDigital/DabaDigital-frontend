@@ -1,0 +1,50 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "angular",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/dabadigital-frontend/browser",
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/fr/index.html", "destination": "/fr", "permanent": true },
+    { "source": "/en/index.html", "destination": "/en", "permanent": true },
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "dabadigital.locale", "value": { "eq": "fr" } }],
+      "destination": "/fr",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "dabadigital.locale", "value": { "eq": "en" } }],
+      "destination": "/en",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "missing": [{ "type": "cookie", "key": "dabadigital.locale" }],
+      "has": [{ "type": "header", "key": "accept-language", "value": { "pre": "fr" } }],
+      "destination": "/fr",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "missing": [{ "type": "cookie", "key": "dabadigital.locale" }],
+      "has": [{ "type": "header", "key": "accept-language", "value": { "pre": "en" } }],
+      "destination": "/en",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    { "source": "/fr", "destination": "/fr/index.html" },
+    { "source": "/en", "destination": "/en/index.html" },
+    { "source": "/:path([^.]*)", "destination": "/index.csr.html" }
+  ],
+  "headers": [
+    {
+      "source": "/admin/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}

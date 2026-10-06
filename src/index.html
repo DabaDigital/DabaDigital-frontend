@@ -1,40 +1,45 @@
 <!doctype html>
 <!--
-  Arabic is the primary locale, so it is what the document declares before any
-  script runs. The inline bootstrap at the end of <head> rewrites `lang`, `dir`
-  and `data-theme` from the visitor's stored preferences.
+  The template for every page. The three landing pages (`/`, `/fr`, `/en`) are
+  prerendered from it at build time, already in their own language, with their
+  title, meta tags, canonical and hreflang links and JSON-LD written by
+  `core/seo/seo.service.ts`. Every other page renders in the browser from the
+  untouched copy (`index.csr.html`), and the inline bootstrap at the end of
+  <head> sets its `lang`, `dir` and `data-theme` before the first paint.
 -->
 <html lang="ar" dir="rtl" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <title>Daba Digital — Technical Digital Agency</title>
+    <title>Daba Digital — Web, Mobile & AI Agency in Casablanca</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--
-      The defaults a crawler sees before any script runs. `HomePage` rewrites
-      the title and the descriptions in the visitor's language.
+      Defaults, for a page rendered in the browser, until its script runs — and
+      for the link-preview scrapers that never run it. Absolute URLs: a scraper
+      does not resolve a relative image against the page. On a landing page
+      `SeoService` replaces every one of them in the page's language.
     -->
     <meta
       name="description"
-      content="Daba Digital builds high-performance websites, digital products, mobile applications and intelligent digital experiences."
+      content="Daba Digital is a digital agency in Casablanca, Morocco, building websites, web apps, online stores, mobile apps and AI integrations for ambitious businesses."
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Daba Digital" />
-    <meta property="og:title" content="Daba Digital — Technical Digital Agency" />
+    <meta property="og:title" content="Daba Digital — Web, Mobile & AI Agency in Casablanca" />
     <meta
       property="og:description"
-      content="Daba Digital builds high-performance websites, digital products, mobile applications and intelligent digital experiences."
+      content="Daba Digital is a digital agency in Casablanca, Morocco, building websites, web apps, online stores, mobile apps and AI integrations for ambitious businesses."
     />
-    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image" content="https://www.dabadigital.ma/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Daba Digital — Technical Digital Agency" />
+    <meta name="twitter:title" content="Daba Digital — Web, Mobile & AI Agency in Casablanca" />
     <meta
       name="twitter:description"
-      content="Daba Digital builds high-performance websites, digital products, mobile applications and intelligent digital experiences."
+      content="Daba Digital is a digital agency in Casablanca, Morocco, building websites, web apps, online stores, mobile apps and AI integrations for ambitious businesses."
     />
-    <meta name="twitter:image" content="/og-image.jpg" />
+    <meta name="twitter:image" content="https://www.dabadigital.ma/og-image.jpg" />
 
     <!-- Brand icons derived from the DabaDigital wordmark: the D alone, since the
          full lockup is unreadable at 32px. favicon.ico stays for the browsers
@@ -65,8 +70,12 @@
       This duplicates the resolution in `core/theme/theme.service.ts` and
       `core/i18n/i18n.service.ts` on purpose: Angular boots after the browser has
       already painted, so without this an Arabic visitor sees one frame of
-      left-to-right layout. The storage keys are the contract between the three
-      — change them together.
+      left-to-right layout. The storage keys, and the landing paths
+      (`LOCALE_HOME_PATH` in core/i18n/locale.ts), are the contract between the
+      three — change them together.
+
+      A landing page is in its URL's language, and its prerendered HTML already
+      says so; only the other pages take the stored choice or the browser's.
 
       The public site is dark whatever the theme says (see `.night` in
       tokens.scss); the theme only matters in the admin.
@@ -77,6 +86,25 @@
     <script>
       (function () {
         var root = document.documentElement;
+        var locales = { ar: 'rtl', fr: 'ltr', en: 'ltr' };
+        var homes = { '/': 'ar', '/fr': 'fr', '/en': 'en' };
+        var path = location.pathname.replace(/\/+$/, '') || '/';
+        var stored = null;
+
+        try {
+          stored = localStorage.getItem('dabadigital.locale');
+        } catch (e) {
+          /* No storage, so no remembered choice. */
+        }
+
+        // Back at the root after choosing French or English: straight to that
+        // language, before anything paints. vercel.json does the same from the
+        // cookie; this covers storage that outlived it, and `ng serve`. A crawler
+        // has no stored choice, so it always reads the Arabic page here.
+        if (path === '/' && (stored === 'fr' || stored === 'en')) {
+          location.replace('/' + stored + location.search + location.hash);
+          return;
+        }
 
         try {
           var theme = localStorage.getItem('dabadigital.theme');
@@ -88,20 +116,15 @@
           /* Keep the `data-theme="dark"` already on <html>. */
         }
 
-        try {
-          var locales = { ar: 'rtl', fr: 'ltr', en: 'ltr' };
-          var locale = localStorage.getItem('dabadigital.locale');
-          if (!locales[locale]) {
-            locale = (navigator.language || 'ar').split('-')[0];
-          }
+        var locale = homes[path];
+        if (!locale) {
+          locale = locales[stored] ? stored : (navigator.language || 'ar').split('-')[0];
           if (!locales[locale]) {
             locale = 'ar';
           }
-          root.setAttribute('lang', locale);
-          root.setAttribute('dir', locales[locale]);
-        } catch (e) {
-          /* Keep the `lang="ar" dir="rtl"` already on <html>. */
         }
+        root.setAttribute('lang', locale);
+        root.setAttribute('dir', locales[locale]);
       })();
     </script>
   </head>

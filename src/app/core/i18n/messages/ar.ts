@@ -17,9 +17,13 @@ export const AR = {
   ...ADMIN_AR,
   ...CONTROLS_AR,
   // ── Document ──────────────────────────────────────────────────────────────
-  'meta.title': 'دبا ديجيتال — وكالة رقمية تقنية',
+  // What a search result shows: the name first, then what we do and where — the words people
+  // search with. Keep the title under ~60 characters and the description under ~160, or
+  // Google cuts them off. `SeoService` also uses them in the cards and the structured data.
+  'meta.title': 'دبا ديجيتال — وكالة رقمية لتطوير المواقع والتطبيقات بالدار البيضاء',
   'meta.description':
-    'تبني دبا ديجيتال مواقع ومنتجات رقمية عالية الأداء، وتطبيقات للهاتف، وتجارب رقمية ذكية.',
+    'دبا ديجيتال وكالة رقمية في الدار البيضاء بالمغرب: تصميم وتطوير المواقع وتطبيقات الويب، والمتاجر الإلكترونية، وتطبيقات الهاتف، ودمج الذكاء الاصطناعي.',
+  'meta.ogImageAlt': 'شعار دبا ديجيتال على خلفية زرقاء',
 
   // ── Header / navigation ───────────────────────────────────────────────────
   'nav.home': 'الرئيسية',
